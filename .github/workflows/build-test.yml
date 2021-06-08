@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2     # checkout the repo
+      - run: cd App/ba-project        # switch to app
       - run: npm ci                   # install packages
       - run: npm test                 # run tests (configured to use jest-junit reporter)
 
