@@ -1,0 +1,36 @@
+{
+  "stats": {
+    "suites": 2,
+    "tests": 1,
+    "passes": 1,
+    "pending": 0,
+    "failures": 0,
+    "start": "2021-06-08T09:36:44.958Z",
+    "end": "2021-06-08T09:36:44.963Z",
+    "duration": 5
+  },
+  "tests": [
+    {
+      "title": "should return -1 when the value is not present",
+      "fullTitle": "Array #indexOf() should return -1 when the value is not present",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    }
+  ],
+  "pending": [],
+  "failures": [],
+  "passes": [
+    {
+      "title": "should return -1 when the value is not present",
+      "fullTitle": "Array #indexOf() should return -1 when the value is not present",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    }
+  ]
+}
