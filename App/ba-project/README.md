@@ -1,6 +1,6 @@
 # ba-project
 
-![superlinter](https://github.com/github/docs/actions/workflows/superlinter.yml/badge.svg)
+![superlinter](https://github.com/leandergebhardti8/ba-2021/actions/workflows/superlinter.yml/badge.svg)
 
 
 ## Project setup
