@@ -1,10 +1,11 @@
 <template>
 <div class="navbar">
   <b-nav pills>
-    <b-nav-item active>Active</b-nav-item>
-    <b-nav-item>Link</b-nav-item>
-    <b-nav-item>Another Link</b-nav-item>
-    <b-nav-item disabled>Disabled</b-nav-item>
+    <router-link to="/" tag="b-navbar-brand" active-class="active"><a>CI / CD Tool ⚙️</a></router-link>
+    <router-link to="/projects" tag="b-nav-item" active-class="active"><a>Projects</a></router-link>
+    <router-link to="/environments" tag="b-nav-item" active-class="active"><a>Environments</a></router-link>
+    <router-link to="/user" tag="b-nav-item" active-class="active"><a>Profile</a></router-link> 
+    <router-link to="/login" tag="b-nav-item" active-class="active"><a>Login</a></router-link> 
     <b-nav-item-dropdown
       id="my-nav-dropdown"
       text="Dropdown"
@@ -37,6 +38,11 @@ export default {
   }
   a {
     color: white !important;
+    text-decoration: none;
+    
+    &:active {
+      background: blue;
+    }
   }
   .nav-link {
     color: white;
