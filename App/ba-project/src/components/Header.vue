@@ -4,7 +4,7 @@
     <router-link to="/" tag="b-navbar-brand" active-class="active"><a>CI / CD Tool ⚙️</a></router-link>
     <router-link to="/projects" tag="b-nav-item" active-class="active"><a>Projects</a></router-link>
     <router-link to="/environments" tag="b-nav-item" active-class="active"><a>Environments</a></router-link>
-    <router-link to="/user" tag="b-nav-item" active-class="active"><a>Profile</a></router-link> 
+    <router-link to="/user/a124iudfaspdf" tag="b-nav-item" active-class="active"><a>Profile</a></router-link> 
     <router-link to="/login" tag="b-nav-item" active-class="active"><a>Login</a></router-link> 
     <b-nav-item-dropdown
       id="my-nav-dropdown"
@@ -39,16 +39,12 @@ export default {
   a {
     color: white !important;
     text-decoration: none;
-    
-    &:active {
-      background: blue;
-    }
   }
-  .nav-link {
-    color: white;
+  li {
     
     &:hover {
-      color: white;
+      border-radius: 5px 5px 0 0;
+      background-color: #1CB5E0;
     }
   }
 </style>
