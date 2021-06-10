@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
-import { routes } from './routes';
+import { routes } from './routes'
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)
 import 'bootstrap/dist/css/bootstrap.css'
@@ -17,11 +17,10 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   routes,
-  mode: 'history',
-});
+  mode: 'history'
+})
 
 Vue.config.productionTip = false
-
 
 new Vue({
   router,
