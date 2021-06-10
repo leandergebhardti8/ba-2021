@@ -1,5 +1,8 @@
 # ba-project
 
+![superlinter](https://github.com/github/docs/actions/workflows/superlinter.yml/badge.svg)
+
+
 ## Project setup
 ```bash
 npm install
