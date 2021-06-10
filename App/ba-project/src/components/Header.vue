@@ -35,6 +35,7 @@ export default {
   .navbar {
     background: black;
     color: white;
+    padding: 0.5rem;
   }
   a {
     color: white !important;

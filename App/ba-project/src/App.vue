@@ -23,7 +23,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
+  /* color: black; */
   color: white;
+  -webkit-font-smoothing: antialiased;
 }
 body {
   background: linear-gradient(90deg, #1CB5E0 0%, #000851 100%);
