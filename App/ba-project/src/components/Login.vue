@@ -23,13 +23,13 @@
                   </b-form-valid-feedback>
                   <label class="sr-only" for="inline-form-input-username">Password</label>
                   <div @click="togglePassword" class="eye-icon">
-                    <b-icon-eye-fill v-if="showPassword"></b-icon-eye-fill>
-                    <b-icon-eye-slash-fill v-if="!showPassword"></b-icon-eye-slash-fill>
+                    <b-icon-eye v-if="!showPassword"></b-icon-eye>
+                    <b-icon-eye-slash v-if="showPassword"></b-icon-eye-slash>
                   </div>
                   
                   <b-form-input :type="this.type" id="inline-form-input-password" v-model="password"></b-form-input>
                   <b-form-invalid-feedback :state="passwordValidation">
-                    <b-icon icon="exclamation-triangle"></b-icon>Your password must be 5-12 characters long.
+                    <b-icon icon="exclamation-triangle"></b-icon>Your password must be at least 6 characters long.
                   </b-form-invalid-feedback>
                   <b-form-valid-feedback :state="passwordValidation">
                    <b-icon-check></b-icon-check> Looks Good.
@@ -87,7 +87,7 @@ export default {
       return this.username.length > 4 && this.username.length < 13
     },
     passwordValidation() {
-      return this.password.length > 4
+      return this.password.length > 6
     },
     passwordValidationNumbers() {
       return /\d/.test(this.password);
