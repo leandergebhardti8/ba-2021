@@ -1,25 +1,21 @@
-- name: Heroku Action
+name: Heroku-Action
+on: push
+jobs:
+  heroku-action:
+    name: build project
+    runs-on: ubunte-latest
+    steps:
+     -  name: building for heroku
   # You may pin to the exact commit or the version.
   # uses: CDNievas/heroku-action@c9cf9c85571e67583e44ec92c0d1113f66b0e838
-  uses: CDNievas/heroku-action@v1.0
-  with:
-    # Used for authentication. You can find it in your heroku homepage account settings
-    heroku_api_key: e366affa-fd44-49d5-9053-dcd66c77d1df
-    # Email from Heroku Account
-    heroku_email: l.gebhardt@integr8.com
-    # The appname to use for deploying/updating
-    heroku_app_name: ba-2021
-    # The branch that you would like to deploy to Heroku
-    branch: # optional, default is HEAD
-    # Set this to true if want to use --force
-    useforce: # optional
-    # Set if your app is located in a subdirectory.
-    appdir: /app/baba-project # optional, default is 
-    # Contents of the Procfile to save and deploy
-    procfile: # optional, default is 
-    # Set to true if you need upload files generated dynamically by the GitHub Action to Heroku
-    dynamicFiles: # optional
-    # Buildpacks to install on Heroku
-    buildpacks: # optional, default is 
-    # Path to an localized env file
-    env_file: # optional, default is 
+        uses: behe/heroku-build@v1
+        with:
+          # Used for authentication. You can find it in your heroku homepage account settings
+          api_key: e366affa-fd44-49d5-9053-dcd66c77d1df
+          # Email from Heroku Account
+          heroku_email: l.gebhardt@integr8.com
+          # The appname to use for deploying/updating
+          app_name: ba-2021
+          # Set if your app is located in a subdirectory.
+          path: /app/baba-project # optional, default is 
+          # Contents of the Procfile to save and deploy
