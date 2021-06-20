@@ -8,7 +8,7 @@ import Register from './components/Register.vue'
 
 export const routes = [
   {
-    name:'home',
+    name: 'home',
     path: '',
     component: Home
   },

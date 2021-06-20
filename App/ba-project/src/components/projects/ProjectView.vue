@@ -2,7 +2,8 @@
     <div class="project">
         <h1>{{project.name}}</h1>
         <hr>
-        <h2 class="info">{{ project.name }} (ID: {{ project.id }}) <b-icon-github v-if="project.github"></b-icon-github></h2>
+        <h2 class="info">{{ project.name }} (ID: {{ project.id }})</h2>
+        <p class="github-url" v-if="project.github"><b-icon-github></b-icon-github> <a :href="project.githubURL" target="_blank">{{ project.githubURL }}</a></p>
         <!-- <div>Total workflow runs: {{ info.run_number }}</div> -->
         <!-- ![superlinter](https://github.com/leandergebhardti8/ba-2021/actions/workflows/superlinter.yml/badge.svg)
         ![node](https://github.com/leandergebhardti8/ba-2021/actions/workflows/node.yml/badge.svg) -->
@@ -41,5 +42,13 @@ export default {
     padding: 10px;
     margin-left: 5px;
     border-radius: 15px;
+  }
+  .github-url {
+      background: white;
+      color: black;
+      padding: 5px;
+      border-radius: 5px;
+      margin: auto;
+      text-decoration: none;
   }
 </style>

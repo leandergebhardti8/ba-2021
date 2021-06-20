@@ -14,28 +14,37 @@
         <button v-if="addBtn" @click="showTemplate" class="btn btn-primary">
             Add new Project
         </button>
-        <button v-if="!addBtn" @click="hideTemplate" class="btn btn-primary">
-            <b-icon-x></b-icon-x>
-        </button>
-        <div class="template" v-if="showNewProjectTemplate">
-            <b-form inline>
-                <label class="sr-only" for="inline-form-input-id">Project Name</label>
-                <b-form-input
-                    id="inline-form-input-name"
-                    class="mb-2 mr-sm-2 mb-sm-0"
-                    placeholder="Name"
-                    v-model="name"
-                ></b-form-input>
+        <div :class="showNewProjectTemplate ? 'activeForm' : 'form'">
+            <button v-if="!addBtn" @click="hideTemplate" class="btn btn-primary">
+                <b-icon-x></b-icon-x>
+            </button>
+            <div class="template" v-if="showNewProjectTemplate">
+                <b-form inline>
+                    <label class="sr-only" for="inline-form-input-id">Project Name</label>
+                    <b-form-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        placeholder="Name"
+                        v-model="name"
+                    ></b-form-input>
 
-                <label class="sr-only" for="inline-form-input-username">Project Id</label>
-                <b-input-group prepend="#" class="mb-2 mr-sm-2 mb-sm-0">
-                <b-form-input id="inline-form-input-id" placeholder="ID" v-model="id"></b-form-input>
-                </b-input-group>
+                    <label class="sr-only" for="inline-form-input-username">Project Id</label>
+                    <b-input-group prepend="#" class="mb-2 mr-sm-2 mb-sm-0">
+                    <b-form-input id="inline-form-input-id" placeholder="ID" v-model="id"></b-form-input>
+                    </b-input-group>
 
-                <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-0" v-model="github">On GitHub</b-form-checkbox>
-
-                <b-button variant="primary" @click="addProject">Save</b-button>
-            </b-form>
+                    <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-0" v-model="github">On GitHub</b-form-checkbox>
+                    <div v-if="github">
+                        <b-form-input
+                            id="inline-form-input-name"
+                            class="mb-2 mr-sm-2 mb-sm-0"
+                            placeholder="GitHub HTTPS URL"
+                            v-model="githubURL"
+                        ></b-form-input>
+                    </div>
+                    <b-button variant="primary" @click="addProject">Save</b-button>
+                </b-form>
+            </div>
         </div>
     </div>
 </template>
@@ -55,6 +64,7 @@ export default {
           name: '',
           id: '',
           github: false, 
+          githubURL: ''
       }
   },
   provide() {
@@ -70,7 +80,7 @@ export default {
   },
   methods: {
       addProject() {
-        this.projects.push({name: this.name, id: this.id, github: this.github});
+        this.projects.push({name: this.name, id: this.id, github: this.github, githubURL: this.githubURL});
         this.name = '';
         this.id = '';
         this.github = false;
@@ -98,27 +108,27 @@ export default {
     .projects {
         text-align: left;
     }
-  ul {
-    list-style-type:none;
-    li {
-    //   border: 1px solid black;
+    ul {
+        list-style-type:none;
+        li {
+        //   border: 1px solid black;
+        }
     }
-  }
-
-  .template {
-      width: 45%;
-      margin: 0 2rem;
-      padding-top: 2rem;
-  }
-
-button {
-    margin: 2rem;
-}
-
-  label {
-      margin: 0;
-  }
-  .project-item {
-      cursor: pointer;
-  }
+    .template {
+        width: 45%;
+        margin: 0 2rem;
+    }
+    button {
+        margin: 15px 2rem;
+    }
+    label {
+        margin: 0;
+    }
+    .project-item {
+        cursor: pointer;
+    }
+    .activeForm {
+        border: 1px solid white;
+        border-radius: 15px;
+    }
 </style>

@@ -17,8 +17,8 @@ export default {
   data() {
     return{
       projects: [
-              { name: 'ExampleName', id: '01', github: true },
-              { name: 'ExampleName', id: '02', github: false },
+              { name: 'ExampleName', id: '01', github: true, githubURL: 'https://github.com/leandergebhardti8/ba-2021.git' },
+              { name: 'ExampleName', id: '02', github: false,  },
           ],
     }
   },
