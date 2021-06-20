@@ -1,8 +1,8 @@
 <template>
     <div class="user">
         <h1>Userpage</h1>
-        <p>User ID: {{ id }}</p>
         <hr>
+        <p>User ID: {{ id }}</p>
         <button @click="navigateToHome" class="btn btn-primary">Go to Home</button>
     </div>
 </template>

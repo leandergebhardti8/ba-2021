@@ -15,18 +15,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-  .navbar {
-    background: black;
-    color: white;
-  }
-  a {
-    color: white !important;
-  }
-  .nav-link {
-    color: white;
-    
-    &:hover {
-      color: white;
-    }
+  h1 {
+    padding: 20px;
   }
 </style>

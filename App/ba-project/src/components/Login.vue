@@ -180,4 +180,11 @@ export default {
       // border: 1px solid white;
     }
   }
+
+  @media screen and (max-width: 400px) {
+    .login{
+      padding: 0;
+      margin: 0;
+    }
+  }
 </style>

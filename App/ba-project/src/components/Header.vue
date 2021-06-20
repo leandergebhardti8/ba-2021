@@ -12,7 +12,7 @@
       toggle-class="nav-link-custom"
       right
     >
-      <b-dropdown-item>One</b-dropdown-item>
+      <router-link to="/register" tag="b-dropdown-item" active-class="active">Register</router-link> 
       <b-dropdown-item>Two</b-dropdown-item>
       <b-dropdown-divider></b-dropdown-divider>
       <b-dropdown-item>Three</b-dropdown-item>
@@ -23,7 +23,7 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'Header',
   props: {
     msg: String
   }
