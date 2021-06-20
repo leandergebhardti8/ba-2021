@@ -17,5 +17,5 @@ jobs:
           # The appname to use for deploying/updating
           app_name: ba-2021
           # Set if your app is located in a subdirectory.
-          subfolder: /app/baba-project # optional, default is 
+          subfolder: /app/ba-project # optional, default is 
           # Contents of the Procfile to save and deploy
