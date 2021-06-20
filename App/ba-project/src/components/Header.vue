@@ -3,7 +3,7 @@
   <b-nav pills>
     <router-link to="/" tag="b-navbar-brand" active-class="active"><a>CI / CD Tool ⚙️</a></router-link>
     <router-link to="/projects" tag="b-nav-item" active-class="active"><a>Projects</a></router-link>
-    <router-link to="/environments" tag="b-nav-item" active-class="active"><a>Environments</a></router-link>
+    <!-- <router-link to="/environments" tag="b-nav-item" active-class="active"><a>Environments</a></router-link> -->
     <router-link to="/user/a124iudfaspdf" tag="b-nav-item" active-class="active"><a>Profile</a></router-link> 
     <router-link to="/login" tag="b-nav-item" active-class="active"><a>Login</a></router-link> 
     <b-nav-item-dropdown
