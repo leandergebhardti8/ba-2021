@@ -1,7 +1,7 @@
 <template>
-    <div class="projects">
+    <div class="project-wrapper">
         <h1>Project Page</h1>
-        <ul>
+        <ul class="projects">
             <router-link 
                 :to="'/project/' + project.id" 
                 tag="li" 
@@ -27,11 +27,6 @@
                         placeholder="Name"
                         v-model="name"
                     ></b-form-input>
-
-                    <label class="sr-only" for="inline-form-input-username">Project Id</label>
-                    <b-input-group prepend="#" class="mb-2 mr-sm-2 mb-sm-0">
-                    <b-form-input id="inline-form-input-id" placeholder="ID" v-model="id"></b-form-input>
-                    </b-input-group>
 
                     <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-0" v-model="github">On GitHub</b-form-checkbox>
                     <div v-if="github">
@@ -62,7 +57,6 @@ export default {
           showNewProjectTemplate: false,
           addBtn: true,
           name: '',
-          id: '',
           github: false, 
           githubURL: ''
       }
@@ -80,10 +74,13 @@ export default {
   },
   methods: {
       addProject() {
-        this.projects.push({name: this.name, id: this.id, github: this.github, githubURL: this.githubURL});
+        const intID = this.projects.length + 1;
+        const projectID = intID.toString();
+        this.projects.push({name: this.name, id: projectID, github: this.github, githubURL: this.githubURL});
         this.name = '';
         this.id = '';
         this.github = false;
+        this.hideTemplate();
       },
       showTemplate() {
           this.showNewProjectTemplate = true;
@@ -92,9 +89,6 @@ export default {
       hideTemplate() {
           this.showNewProjectTemplate = false;
           this.addBtn = true;
-          this.name = '';
-          this.id = '';
-          this.github = false;
       }
   },
   components: {
@@ -105,7 +99,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-    .projects {
+    .project-wrapper {
         text-align: left;
     }
     ul {
@@ -130,5 +124,6 @@ export default {
     .activeForm {
         border: 1px solid white;
         border-radius: 15px;
+        margin-left: 2rem;
     }
 </style>

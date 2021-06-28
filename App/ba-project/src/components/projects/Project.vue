@@ -1,14 +1,18 @@
 <template>
     <div class="project">
-        <p class="info">{{ project.name }} (ID: {{ project.id }}) <b-icon-github v-if="project.github"></b-icon-github></p>
-        <!-- <div>Total workflow runs: {{ info.run_number }}</div> -->
+        <p class="info">{{ project.name }} (ID: {{ project.id }}) <b-icon-github v-if="project.github"></b-icon-github> <img :src="info.data.workflows[1].badge_url" alt="GitHub Action Badge"/></p>
+        <!-- <div> -->
+          <!-- <ul>
+            <li v-for="workflow in info.workflows" :key="workflow.id"> {{ workflow.badge_url }}</li>
+          </ul> -->
+        <!-- </div> -->
         <!-- ![superlinter](https://github.com/leandergebhardti8/ba-2021/actions/workflows/superlinter.yml/badge.svg)
         ![node](https://github.com/leandergebhardti8/ba-2021/actions/workflows/node.yml/badge.svg) -->
     </div>
 </template>
 
 <script>
-// import axios from 'axios';
+import axios from 'axios';
 
 export default {
   name: 'Project',
@@ -17,31 +21,42 @@ export default {
   ], 
   data() {
     return {
-      info: null
+      info: null,
     }
   },
   mounted () {
-    // axios.interceptors.request.use(config => {
-    //   // perform a task before the request is sent
-    //   console.log('Request was sent');
+    axios.interceptors.request.use(config => {
+      // perform a task before the request is sent
+      console.log('Request was sent');
 
-    //   return config;
-    // }, error => {
-    //   // handle the error
-    //   return Promise.reject(error);
-    // })
+      return config;
+    }, error => {
+      // handle the error
+      return Promise.reject(error);
+    })
 
     // sent a GET request
     // TODO Get API request working
-    //const headers = { "Content-Type": "application/json" };
+    // const headers = { "Content-Type": "application/json" };
+    var username = 'leandergebhardti8';
+    var password = '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';
     // const authorization = {'Authorization': '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'};
-    // axios
-    //   .get('https://api.github.com/repos/leandergebhardti8/ba-2021/actions/runs', { headers })
-    //   .then(response => (this.info = response))
-    //   .catch(error => {
-    //   this.errorMessage = error.message;
-    //   console.error("There was an error!", error);
-    // });
+    // var credentials = btoa(username + ':' + password);
+    // var basicAuth = 'Basic' + credentials;
+    axios
+      .get('https://api.github.com/repos/leandergebhardti8/ba-2021/actions/workflows', { 
+        auth: {
+          username: username,
+          password: password
+        }
+       })
+      .then(response => (
+        this.info = response
+      ))
+      .catch(error => {
+      this.errorMessage = error.message;
+      console.error("There was an error!", error);
+    });
   },
   methods: {
     
@@ -71,5 +86,9 @@ export default {
     padding: 10px;
     margin-left: 5px;
     border-radius: 15px;
+  }
+
+  .badge {
+    
   }
 </style>
