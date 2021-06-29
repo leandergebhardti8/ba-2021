@@ -10,6 +10,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Remove files before linting
+        run: |
+          cd App/ba-project
+          rm -rf dist
+
       - name: Run Super-Linter
         uses: github/super-linter@v3
         env:
