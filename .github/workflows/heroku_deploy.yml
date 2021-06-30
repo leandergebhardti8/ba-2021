@@ -1,6 +1,8 @@
 name: Heroku Deploy
 
-on: workflow_dispatch
+on: 
+  repository_dispatch:
+    types: [build]
 
 jobs:
   build:
