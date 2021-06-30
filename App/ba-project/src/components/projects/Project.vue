@@ -1,6 +1,6 @@
 <template>
     <div class="project">
-        <p class="info">{{ project.name }} (ID: {{ project.id }}) <b-icon-github v-if="project.github"></b-icon-github> <img :src="info.data.workflows[1].badge_url" alt="GitHub Action Badge"/></p>
+        <p class="info">{{ project.name }} (ID: {{ project.id }}) <b-icon-github v-if="project.github"></b-icon-github> <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/leandergebhardti8/ba-2021/node"></p>
         <!-- <div> -->
           <!-- <ul>
             <li v-for="workflow in info.workflows" :key="workflow.id"> {{ workflow.badge_url }}</li>

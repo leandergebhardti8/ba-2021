@@ -1,18 +1,40 @@
 <template>
     <div class="project">
         <h1>{{project.name}}</h1>
-        <hr>
-        <h2 class="info">{{ project.name }} (ID: {{ project.id }})</h2>
-        <p class="github-url" v-if="project.github"><b-icon-github></b-icon-github> <a :href="project.githubURL" target="_blank">{{ project.githubURL }}</a></p>
-        <h2>Total workflow runs: {{ info.data.total_count }}</h2>
-        <!-- ![superlinter](https://github.com/leandergebhardti8/ba-2021/actions/workflows/superlinter.yml/badge.svg)
-        ![node](https://github.com/leandergebhardti8/ba-2021/actions/workflows/node.yml/badge.svg) -->
         <div>
-          <ul>
-            <li v-for="run in this.info.data.worflow_runs" :key="run.id">
-                <p>{{ run.name }}</p>
-            </li>
-          </ul>
+          <b-button-group>
+            <b-button>Run Actions</b-button>
+            <b-dropdown right text="Deploy in ...">
+              <b-dropdown-item v-for="env in this.project.environments" :key="env.name">{{ env.name }}</b-dropdown-item>
+            </b-dropdown>
+            <b-dropdown right text="Edit Environments">
+              <router-link 
+                tag="b-dropdown-item" 
+                :to="'/environment/' + env.id" 
+                v-for="env in this.project.environments" 
+                :key="env.name">
+                {{ env.name }}
+              </router-link>
+              <!-- <b-dropdown-item ></b-dropdown-item> -->
+            </b-dropdown>
+          </b-button-group>
+        </div>
+        <hr>
+        <p class="github-url" v-if="project.github"><b-icon-github></b-icon-github> <a :href="project.githubURL" target="_blank">{{ project.githubURL }}</a></p>
+        
+        <div class="project_details">
+          
+          <div class="build_history">
+            <h3>Build History</h3>
+            <p>Total workflow runs: {{ apiData.total_count }}</p>
+            <hr style="color:black;">
+            <b-table hover :items="creteTableWithAPIData(apiData.workflow_runs)"></b-table>
+            <!-- <b-list-group class="build_history">
+              <b-list-group-item v-for="run in apiData.workflow_runs" :key="run.id">
+                  <p>{{ run.name }} <span :class="run.conclusion">{{ run.conclusion }}</span></p>
+              </b-list-group-item>
+            </b-list-group> -->
+          </div>
         </div>
     </div>
 </template>
@@ -28,12 +50,30 @@ export default {
   data() {
     return {
         project: null,
-        projectId: '',
-        info: null
+        apiData: {},
+    }
+  },
+  methods: {
+    creteTableWithAPIData(data) {
+      const items = []
+      let element = {}
+      for(let index = 0; index < data.length; index++) {
+        if (data[index].conclusion === 'failure')
+          element._rowVariant = 'danger';
+        element = { _rowVariant: data[index].conclusion, name: data[index].name, created: data[index].created_at };
+        items.push(element)
+      }
+      return items
     }
   },
   mounted () {
-    axios.interceptors.request.use(config => {
+   
+  },
+  created() {
+    const projectId = this.$route.params.projectId;
+    this.project = this.projects.find(project => project.id === projectId);
+
+     axios.interceptors.request.use(config => {
       // perform a task before the request is sent
       console.log('Request was sent');
 
@@ -43,14 +83,10 @@ export default {
       return Promise.reject(error);
     })
 
-    // sent a GET request
-    // TODO Get API request working
-    // const headers = { "Content-Type": "application/json" };
+
     var username = 'leandergebhardti8';
     var password = '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';
-    // const authorization = {'Authorization': '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'};
-    // var credentials = btoa(username + ':' + password);
-    // var basicAuth = 'Basic' + credentials;
+
     axios
       .get('https://api.github.com/repos/leandergebhardti8/ba-2021/actions/runs', { 
         auth: {
@@ -59,16 +95,13 @@ export default {
         }
        })
       .then(response => (
-        this.info = response
+        this.apiData = response.data
+        // this.runs = response.data.workflow_runs
       ))
       .catch(error => {
-      this.errorMessage = error.message;
-      console.error("There was an error!", error);
+        this.errorMessage = error.message;
+        console.error("There was an error!", error);
     });
-  },
-  created() {
-    const projectId = this.$route.params.projectId;
-    this.project = this.projects.find(project => project.id === projectId);
   }
 }
 </script>
@@ -83,11 +116,47 @@ export default {
     border-radius: 15px;
   }
   .github-url {
-      background: white;
-      color: black;
-      padding: 5px;
-      border-radius: 5px;
-      margin: auto;
-      text-decoration: none;
+    background: white;
+    color: black;
+    padding: 5px;
+    border-radius: 5px;
+    margin: auto;
+    text-decoration: none;
+  }
+  .project_details {
+    margin-top: 2rem !important;
+    // font-size: 11px;
+  }
+  .build_history {
+    list-style: none;
+    text-align: left;
+    background-color: white;
+    width: 20%;
+    color: black;
+    h3 {
+      color: white;
+      text-align: center;
+      background-color: #1E92CC;
+      padding: 15px;
+      margin: 0;
+    }
+    p {
+      // width: 150px;
+      span {
+        padding: 10px;
+        // color: white;
+        border-radius: 5px;
+        
+        &.success {
+          background-color: green;
+        }
+        &.failure {
+          background-color: indianred;
+        }
+      }
+
+      
+
+    }
   }
 </style>

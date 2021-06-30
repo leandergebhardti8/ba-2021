@@ -1,15 +1,30 @@
 <template>
     <div class="environments">
-        <h1>Environments</h1>
+        <h1>{{ environment.name }}</h1>
     </div>
 </template>
 
 <script>
 export default {
-  name: 'User',
-  props: {
-    msg: String
-  }
+  name: 'Environment',
+  inject: [
+    'projects'
+  ], 
+  data() {
+    return {
+        environment: null,
+        projectId: '',
+        apiData: {},
+    }
+  },
+  created() {
+    const environmentId = this.$route.params.environmentId;
+    let environemtFound;
+    for(let index = 0; index < this.projects.length; index++) {
+      environemtFound = this.projects[index].environemnts.find(environment => environment.id === environmentId);
+    }
+    this.environment = environemtFound;
+  },
 }
 </script>
 

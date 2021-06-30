@@ -17,8 +17,8 @@ export default {
   data() {
     return{
       projects: [
-              { name: 'BA - Projekt', id: '1', github: true, githubURL: 'https://github.com/leandergebhardti8/ba-2021' },
-              { name: 'ExampleName', id: '2', github: false,  },
+              { name: 'BA - Projekt', id: '1', github: true, githubURL: 'https://github.com/leandergebhardti8/ba-2021', environments: [{name: 'Heroku', action: 'Heroku Deploy', id: 1}, {name: 'Dev', action: 'Dev Deploy', id: 2}]},
+              { name: 'ExampleName', id: '2', github: false, environments: [] },
           ],
     }
   },
