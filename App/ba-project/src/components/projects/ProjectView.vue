@@ -1,14 +1,30 @@
 <template>
     <div class="project">
         <h1>{{project.name}}</h1>
+        <div class="settings_button">
+          <b-dropdown right>
+            <b-dropdown-item @click="showRenameTemplate(); showTemplate();">Rename</b-dropdown-item>
+            <b-dropdown-item @click="showURLTemplate(); showTemplate();">Edit Project</b-dropdown-item>
+            <b-dropdown-divider></b-dropdown-divider>
+            <b-dropdown-item @click="deleteEnv(environment.id)"><b-icon-exclamation-triangle variant="danger"></b-icon-exclamation-triangle> Delete</b-dropdown-item>
+          </b-dropdown>
+        </div>
         <div class="control_bar">
           <b-button-group>
-            <b-button @click="fakeDeploy">Run Actions</b-button>
+            <b-button @click="fakeDeploy">Test</b-button>
+            <b-dropdown right text="Run Actions">
+              <b-dropdown-item v-for="workflow in this.workflows" :key="workflow.id" @click="runAction(workflow.id)">
+                {{ workflow.name }}
+              </b-dropdown-item>
+            </b-dropdown>
             <b-dropdown right text="Deploy in ... 🚀">
               <b-dropdown-item v-for="env in this.project.environments" :key="env.name" @click="startDeployment(env.action)">
                 {{ env.name }} ({{ env.action }})
               </b-dropdown-item>
             </b-dropdown>
+            <b-button>
+              Add Environment
+            </b-button>
             <b-dropdown right text="Edit Environments">
               <router-link 
                 tag="b-dropdown-item" 
@@ -17,17 +33,18 @@
                 :key="env.name">
                 {{ env.name }}
               </router-link>
-              <!-- <b-dropdown-item ></b-dropdown-item> -->
             </b-dropdown>
+            
           </b-button-group>
         </div>
         <hr>
+        
         <p class="github-url" v-if="project.github">
           <b-icon-github></b-icon-github> 
           <a :href="project.githubURL" target="_blank">{{ project.githubURL }}</a>
         </p>
         
-        <div class="project_details">
+        <div v-if="showProjectDetails" class="project_details">
           
           <div class="build_history">
             <h3>Build History</h3>
@@ -67,6 +84,8 @@ export default {
         deploying: false,
         deployStatus: [{title: 'Deploying ...'}],
         success: false,
+        workflows: [],
+        showProjectDetails: true,
     }
   },
   methods: {
@@ -182,6 +201,7 @@ export default {
     const projectId = this.$route.params.projectId;
     this.project = this.projects.find(project => project.id === projectId);
 
+    // Get Runs from API
     axios.interceptors.request.use(config => {
     // perform a task before the request is sent
     console.log('Requesting runs from API');
@@ -191,7 +211,6 @@ export default {
       // handle the error
       return Promise.reject(error);
     })
-
 
     var username = 'leandergebhardti8';
     var password = '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';
@@ -211,12 +230,44 @@ export default {
         this.errorMessage = error.message;
         console.error("There was an error!", error);
     });
+
+    // Get Workflows from API
+    axios.interceptors.request.use(config => {
+      // perform a task before the request is sent
+      console.log('Requesting workflows from API');
+
+      return config;
+      }, error => {
+        // handle the error
+        return Promise.reject(error);
+      })
+      axios
+        .get('https://api.github.com/repos/leandergebhardti8/ba-2021/actions/workflows', { 
+          auth: {
+            username: username,
+            password: password
+          }
+        })
+        .then(response => (
+          this.workflows = response.data.workflows
+          // this.runs = response.data.workflow_runs
+        ))
+        .catch(error => {
+          this.errorMessage = error.message;
+          console.error("There was an error!", error);
+      });
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+    h1 {
+      display: inline-block;
+    }
+    .settings_button {
+      display: inline;
+    }
     .github {
     background-color: black;
     color: white;
