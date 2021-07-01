@@ -24,10 +24,10 @@ export default {
       info: null,
     }
   },
-  mounted () {
+  created () {
     axios.interceptors.request.use(config => {
       // perform a task before the request is sent
-      console.log('Request was sent');
+      console.log('Requesting workflow badge from API');
 
       return config;
     }, error => {

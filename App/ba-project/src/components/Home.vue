@@ -1,14 +1,23 @@
 <template>
 <div class="home">
     <h1>Home</h1>
+    <hr>
+    <button @click="navigateToProjects" class="btn btn-primary">Go to Projects</button>
 </div>
 </template>
 
 <script>
+
+
 export default {
   name: 'Home',
   props: {
     msg: String
+  },
+   methods: {
+      navigateToProjects() {
+          this.$router.push('/projects');
+      }
   }
 }
 </script>
