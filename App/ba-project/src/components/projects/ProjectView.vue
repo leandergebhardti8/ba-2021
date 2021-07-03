@@ -81,6 +81,8 @@ export default {
         success: false,
         workflows: [],
         showProjectDetails: true,
+        buildHistoryItems: [],
+        stageViewItems: [],
     }
   },
   methods: {
@@ -93,7 +95,7 @@ export default {
         element = { _rowVariant: data[index].conclusion, name: data[index].name, created: data[index].created_at };
         items.push(element)
       }
-      return items
+      return items;
     },
     creteTableForStageView(data) {
       const items = []
@@ -106,9 +108,10 @@ export default {
         element = {Job: data[index].title};
         items.push(element)
       }
-      return items
+      return items;
     },
     startDeployment(envName){
+    // Trigger GitHub Action in Repo, which deploys the project
 
       this.deploying = true;
       this.deployStatus.push({title: 'Fetching Repo'});
@@ -116,7 +119,7 @@ export default {
       const username = 'leandergebhardti8';
       const password = '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';
       
-    // // Fetching workflow ID
+    // Fetching workflow ID
       // let workflows = []
 
       // axios.interceptors.request.use(config => {
@@ -192,13 +195,18 @@ export default {
       console.log(response)
       this.deployStatus.push({title: 'Deploying Porject in Environment ...'})
       this.deployStatus.push({title: 'Done!'})
-      setTimeout(function(){ this.deploying = false }, 5000);
+      // TODO Get Verification action is finished
+      setTimeout(() => { 
+        this.deploying = false 
+      }, 3000);
       this.updateDeployHistoryInEnv(envName);
-      // setTimeout(function(){ this.deploying = false }, 5000);
     },
     fakeDeploy() {
       this.deploying = true;
       this.deployStatus.push({title: 'Run Action #1'});
+      setTimeout(() => { 
+        this.deploying = false 
+      }, 3000);
       // this.deployStatus.push({title: 'Run Action #2'});
       // this.deployStatus.push({title: 'Run Action #3'});
     },
@@ -224,62 +232,68 @@ export default {
   created() {
     const projectId = this.$route.params.projectId;
     this.project = this.projects.find(project => project.id === projectId);
-
-    // Get Runs from API
-    axios.interceptors.request.use(config => {
-    // perform a task before the request is sent
-    console.log('Requesting runs from API');
-
-    return config;
-    }, error => {
-      // handle the error
-      return Promise.reject(error);
-    })
-
-    const username = 'leandergebhardti8';
-    const password = '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';
-
-    axios
-      .get('https://api.github.com/repos/leandergebhardti8/ba-2021/actions/runs', { 
-        auth: {
-          username: username,
-          password: password
-        }
-       })
-      .then(response => (
-        this.apiData = response.data
-        // this.runs = response.data.workflow_runs
-      ))
-      .catch(error => {
-        this.errorMessage = error.message;
-        console.error("There was an error!", error);
-    });
-
-    // Get Workflows from API
-    axios.interceptors.request.use(config => {
+    
+      const username = 'leandergebhardti8';
+      const password = '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';
+    
+    // TODO check if API info is alread there
+    // if( !this.apiData) {
+      // Get Runs from API
+      axios.interceptors.request.use(config => {
       // perform a task before the request is sent
-      console.log('Requesting workflows from API');
+      console.log('Requesting runs from API');
 
       return config;
       }, error => {
         // handle the error
         return Promise.reject(error);
       })
+      
       axios
-        .get('https://api.github.com/repos/leandergebhardti8/ba-2021/actions/workflows', { 
+        .get('https://api.github.com/repos/leandergebhardti8/ba-2021/actions/runs', { 
           auth: {
             username: username,
             password: password
           }
         })
         .then(response => (
-          this.workflows = response.data.workflows
+          this.apiData = response.data
           // this.runs = response.data.workflow_runs
         ))
         .catch(error => {
           this.errorMessage = error.message;
           console.error("There was an error!", error);
       });
+    // }
+
+    // TODO check if API info is alread there
+    // if( !this.workflows ) {
+    // Get Workflows from API
+      axios.interceptors.request.use(config => {
+        // perform a task before the request is sent
+        console.log('Requesting workflows from API');
+
+        return config;
+        }, error => {
+          // handle the error
+          return Promise.reject(error);
+        })
+        axios
+          .get('https://api.github.com/repos/leandergebhardti8/ba-2021/actions/workflows', { 
+            auth: {
+              username: username,
+              password: password
+            }
+          })
+          .then(response => (
+            this.workflows = response.data.workflows
+            // this.runs = response.data.workflow_runs
+          ))
+          .catch(error => {
+            this.errorMessage = error.message;
+            console.error("There was an error!", error);
+        });
+    // }
   }
 }
 </script>
@@ -310,7 +324,6 @@ export default {
   .project_details {
     display: grid;
     grid-template-columns: minmax(20%, 25%) 1fr;
-    // font-size: 11px;
   }
   .build_history {
     list-style: none;
@@ -329,21 +342,6 @@ export default {
       margin: 0;
       font-weight: 800;
     }
-    p {
-      // width: 150px;
-      span {
-        padding: 10px;
-        // color: white;
-        border-radius: 5px;
-        
-        &.success {
-          background-color: green;
-        }
-        &.failure {
-          background-color: indianred;
-        }
-      }
-    }
   }
   .stage_view {
     margin: 2rem;
@@ -360,8 +358,5 @@ export default {
       margin: 0;
       font-weight: 800;
     }
-  }
-  .control_bar {
-    // color: black;
   }
 </style>

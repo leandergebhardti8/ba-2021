@@ -62,7 +62,7 @@
 
         <div class="deploy_history">
             <h3>Deploy History</h3>
-            <p style="padding: 10px;"><strong>Last deploy:</strong> {{ latestDeploy }}</p>
+            <p style="padding: 10px;"><strong>Last Deploy:</strong> {{ latestDeploy }}</p>
             <hr style="color:black;">
             <b-table hover :items="deployItems" v-if="latestDeploy"></b-table>
         </div>
@@ -142,18 +142,18 @@ export default {
     },
   },
   created() {
+    //Get Environment ID From route
     const envId = this.$route.params.environmentId;
-
     console.log(`envID ${envId}`)
 
+    // Get this Environment with Environment ID
     for(let projectIndex = 0; projectIndex < this.projects.length; projectIndex++) {
       for(let envIndex = 0; envIndex < this.projects[projectIndex].environments.length; envIndex++){
         this.allEnvs.push(this.projects[projectIndex].environments[envIndex]);
       }
     }
-
     this.environment = this.allEnvs.find(env => env.id === envId);
-    console.log(`envFound ${this.environment}`)
+    // console.log(`envFound ${this.environment}`)
 
     this.createDeployTable(this.environment.builds);
   },
@@ -177,7 +177,6 @@ export default {
       display: inline-block;
       padding: 10px;
       cursor: pointer;
-      // float: right;
     }
     .template {
       width: 45%;
