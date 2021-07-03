@@ -15,9 +15,7 @@
             Add new Project
         </button>
         <div :class="showNewProjectTemplate ? 'activeForm' : 'form'">
-            <button v-if="!addBtn" @click="hideTemplate" class="btn btn-primary">
-                <b-icon-x></b-icon-x>
-            </button>
+            <b-icon-x v-if="!addBtn" @click="hideTemplate" class="close_btn" font-scale="2"></b-icon-x>
             <div class="template" v-if="showNewProjectTemplate">
                 <b-form inline>
                     <label class="sr-only" for="inline-form-input-id">Project Name</label>
@@ -104,9 +102,6 @@ export default {
     }
     ul {
         list-style-type:none;
-        li {
-        //   border: 1px solid black;
-        }
     }
     .template {
         width: 45%;
@@ -125,5 +120,8 @@ export default {
         border: 1px solid white;
         border-radius: 15px;
         margin-left: 2rem;
+    }
+    .close_btn {
+        margin: 0.75rem;
     }
 </style>

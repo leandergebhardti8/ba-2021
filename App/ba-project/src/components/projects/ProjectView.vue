@@ -3,15 +3,15 @@
         <h1>{{project.name}}</h1>
         <div class="settings_button">
           <b-dropdown right>
-            <b-dropdown-item @click="showRenameTemplate(); showTemplate();">Rename</b-dropdown-item>
-            <b-dropdown-item @click="showURLTemplate(); showTemplate();">Edit Project</b-dropdown-item>
+            <b-dropdown-item>Rename</b-dropdown-item>
+            <b-dropdown-item><b-icon-pencil></b-icon-pencil> Edit Project</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item @click="deleteEnv(environment.id)"><b-icon-exclamation-triangle variant="danger"></b-icon-exclamation-triangle> Delete</b-dropdown-item>
           </b-dropdown>
         </div>
         <div class="control_bar">
           <b-button-group>
-            <b-button @click="fakeDeploy">Test</b-button>
+            <b-button @click="fakeDeploy()">Test</b-button>
             <b-dropdown right text="Run Actions">
               <b-dropdown-item v-for="workflow in this.workflows" :key="workflow.id" @click="runAction(workflow.id)">
                 {{ workflow.name }}
@@ -22,9 +22,6 @@
                 {{ env.name }} ({{ env.action }})
               </b-dropdown-item>
             </b-dropdown>
-            <b-button>
-              Add Environment
-            </b-button>
             <b-dropdown right text="Environments">
               <router-link 
                 tag="b-dropdown-item" 
@@ -33,6 +30,8 @@
                 :key="env.name">
                 {{ env.name }}
               </router-link>
+              <b-dropdown-divider></b-dropdown-divider>
+              <b-dropdown-item v-b-modal.modal-prevent-closing><b-icon-plus-circle></b-icon-plus-circle> Add New </b-dropdown-item>
             </b-dropdown>
             
           </b-button-group>
@@ -40,8 +39,7 @@
         <hr>
         
         <p class="github-url" v-if="project.github">
-          <b-icon-github></b-icon-github> 
-          <a :href="project.githubURL" target="_blank">{{ project.githubURL }}</a>
+          <b-icon-github></b-icon-github> <a :href="project.githubURL" target="_blank">{{ project.githubURL }}</a>
         </p>
         
         <div v-if="showProjectDetails" class="project_details">
@@ -61,6 +59,41 @@
             </div>
           </div>
         </div>
+        <div>
+          <b-modal 
+            id="modal-prevent-closing" 
+            title="Adding new Environment"
+            @ok="handleOk">
+            <b-form inline>
+                    <label class="sr-only" for="inline-form-input-id">Environment Name</label>
+                    <b-form-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        placeholder="Name"
+                        v-model="envName"
+                    ></b-form-input>
+                    <label class="sr-only" for="inline-form-input-id">Environment URl</label>
+                    <b-form-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        placeholder="URL"
+                        v-model="envURL"
+                    ></b-form-input>
+
+                    <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-0" v-model="github">With Action</b-form-checkbox>
+                    <div v-if="github">
+                        <b-form-input
+                            id="inline-form-input-name"
+                            class="mb-2 mr-sm-2 mb-sm-0"
+                            placeholder="GitHub HTTPS URL"
+                            v-model="githubURL"
+                        ></b-form-input>
+                    </div>
+                    <b-button variant="primary" @click="addProject">Save</b-button>
+                </b-form>
+            <!-- <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button> -->
+          </b-modal>
+        </div>
     </div>
 </template>
 
@@ -72,6 +105,9 @@ export default {
   inject: [
     'projects'
   ], 
+  components: {
+
+  },
   data() {
     return {
         project: null,
@@ -82,7 +118,7 @@ export default {
         workflows: [],
         showProjectDetails: true,
         buildHistoryItems: [],
-        stageViewItems: [],
+        stageViewItems: [], 
     }
   },
   methods: {
@@ -110,6 +146,15 @@ export default {
       }
       return items;
     },
+    handleOk(bvModalEvt) {
+        // Prevent modal from closing
+        bvModalEvt.preventDefault()
+        // Trigger submit handler
+        console.log("Hello there!")
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-prevent-closing')
+        })
+      },
     startDeployment(envName){
     // Trigger GitHub Action in Repo, which deploys the project
 
@@ -193,9 +238,9 @@ export default {
     },
     handleDeployResponse(response, envName) {
       console.log(response)
-      this.deployStatus.push({title: 'Deploying Porject in Environment ...'})
-      this.deployStatus.push({title: 'Done!'})
+      this.deployStatus.push({title: 'Deploying Porject in Environment ...'});
       // TODO Get Verification action is finished
+      // this.deployStatus.push({title: 'Done!'});
       setTimeout(() => { 
         this.deploying = false 
       }, 3000);
@@ -204,6 +249,7 @@ export default {
     fakeDeploy() {
       this.deploying = true;
       this.deployStatus.push({title: 'Run Action #1'});
+      // this.deployStatus.push({title: 'Done!'});
       setTimeout(() => { 
         this.deploying = false 
       }, 3000);
@@ -223,6 +269,10 @@ export default {
       const currentTime = this.getCurrentTime();
       const environment = this.project.environments.find(env => env.name === envName)
       environment.builds.push(`${currentTime}`);
+    },
+    addNewEnv() {
+      this.project.environments.push({name: 'NewEnvironment', action: '', id: `${this.project.environments.length++}`, url: '', builds: []});
+      console.log(this.project.environments)
     }
   },
   mounted () {
@@ -314,12 +364,15 @@ export default {
     border-radius: 15px;
   }
   .github-url {
-    background: white;
     color: black;
-    padding: 5px;
-    border-radius: 5px;
     margin: auto;
     text-decoration: none;
+    a{
+      background: white;
+      padding: 5px;
+      border-radius: 5px;
+      text-decoration: none;
+    }
   }
   .project_details {
     display: grid;
@@ -345,6 +398,7 @@ export default {
   }
   .stage_view {
     margin: 2rem;
+    margin-left: 0;
     background-color: white;
     color: black;
     -webkit-box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
