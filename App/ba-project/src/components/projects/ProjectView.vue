@@ -18,14 +18,14 @@
               </b-dropdown-item>
             </b-dropdown>
             <b-dropdown right text="Deploy in ... 🚀">
-              <b-dropdown-item v-for="env in this.project.environments" :key="env.name" @click="startDeployment(env.action)">
+              <b-dropdown-item v-for="env in this.project.environments" :key="env.name" @click="startDeployment(env.name)">
                 {{ env.name }} ({{ env.action }})
               </b-dropdown-item>
             </b-dropdown>
             <b-button>
               Add Environment
             </b-button>
-            <b-dropdown right text="Edit Environments">
+            <b-dropdown right text="Environments">
               <router-link 
                 tag="b-dropdown-item" 
                 :to="'/environment/' + env.id" 
@@ -51,11 +51,6 @@
             <p style="padding: 10px;">Total workflow runs: {{ apiData.total_count }}</p>
             <hr style="color:black;">
             <b-table hover :items="creteTableWithAPIData(apiData.workflow_runs)" v-if="apiData"></b-table>
-            <!-- <b-list-group class="build_history">
-              <b-list-group-item v-for="run in apiData.workflow_runs" :key="run.id">
-                  <p>{{ run.name }} <span :class="run.conclusion">{{ run.conclusion }}</span></p>
-              </b-list-group-item>
-            </b-list-group> -->
           </div>
 
           <div class="stage_view">
@@ -113,84 +108,113 @@ export default {
       }
       return items
     },
-    startDeployment(workflowName){
+    startDeployment(envName){
 
       this.deploying = true;
       this.deployStatus.push({title: 'Fetching Repo'});
 
-      // Fetching workflow ID
       const username = 'leandergebhardti8';
       const password = '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';
+      
+    // // Fetching workflow ID
+      // let workflows = []
 
-      let workflows = []
+      // axios.interceptors.request.use(config => {
+      // // perform a task before the request is sent
+      // console.log('Requesting workflows from API');
 
-      axios.interceptors.request.use(config => {
-      // perform a task before the request is sent
-      console.log('Requesting workflows from API');
+      // return config;
+      // }, error => {
+      //   // handle the error
+      //   return Promise.reject(error);
+      // })
+      // axios
+      //   .get('https://api.github.com/repos/leandergebhardti8/ba-2021/actions/workflows', { 
+      //     auth: {
+      //       username,
+      //       password
+      //     }
+      //   })
+      //   .then(response => (
+      //     workflows = response.data.workflows
+      //     // this.runs = response.data.workflow_runs
+      //   ))
+      //   .catch(error => {
+      //     this.errorMessage = error.message;
+      //     console.error("There was an error!", error);
+      // });
 
-      return config;
-      }, error => {
-        // handle the error
-        return Promise.reject(error);
-      })
+      // const workflowToBeExecuted = workflows.find(workflow => workflow.name === workflowName)
+      // console.log(`Filtered workflow: ${workflowToBeExecuted}`)
+
+      // // Create workflow dispatcher event
+      // axios.interceptors.request.use(config => {
+      // // perform a task before the request is sent
+      // console.log('Post workflow dispatcher event');
+
+      // return config;
+      // }, error => {
+      //   // handle the error
+      //   return Promise.reject(error);
+      // })
+
+      // TODO Fetch info from env
+      const owner = 'leandergebhardti8';
+      const repo = 'ba-2021';
+      const token = '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';
+
+      if(!owner || !repo || !token) {
+        throw new Error('Owner, repo and token required');
+      }
+
+      const dispatchUrl = `https://api.github.com/repos/${owner}/${repo}/dispatches`;
+      const payload = { "event_type": "run-deploy" };
+
       axios
-        .get('https://api.github.com/repos/leandergebhardti8/ba-2021/actions/workflows', { 
+        .post(dispatchUrl, payload, {
+          headers: { 
+            Accept: "application/vnd.github.v3+json"
+          },
           auth: {
-            username: username,
-            password: password
-          }
-        })
-        .then(response => (
-          workflows = response.data.workflows
-          // this.runs = response.data.workflow_runs
-        ))
-        .catch(error => {
-          this.errorMessage = error.message;
-          console.error("There was an error!", error);
+            username,
+            password
+          },
+      })
+      .then(response => (
+        this.handleDeployResponse(response, envName)
+      ))
+      .catch(error => {
+        this.errorMessage = error.message;
+        console.error("There was an error!", error);
       });
-
-      const workflowToBeExecuted = workflows.find(workflow => workflow.name === workflowName)
-      console.log(`Filtered workflow: ${workflowToBeExecuted}`)
-
-      // Create workflow dispatcher event
-      axios.interceptors.request.use(config => {
-      // perform a task before the request is sent
-      console.log('Post workflow dispatcher event');
-
-      return config;
-      }, error => {
-        // handle the error
-        return Promise.reject(error);
-      })
-
-      axios
-        .post(`https://api.github.com/repos/leandergebhardti8/ba-2021/actions/workflows/heroku_deploy.yml/dispatches`, {
-          headers: {
-            'Authorization': `Basix ${password}`,
-            "Content-Type": "application/json"
-          },
-          auth: {
-            username: username,
-            password: password
-          },
-          // owner: 'leandergebhardti8',
-          // repo: 'hello-world',
-          // workflow_id: 42,
-          ref: 'main',
-          data: {"event_type":"build"}
-      })
-      .then(function (response) {
-        console.log(response);
-        this.deployStatus.push({title: 'Deploying Porject'});
-        this.deploying = false;
-        setTimeout(function(){ this.deploying = false }, 5000);
-      })
+    },
+    handleDeployResponse(response, envName) {
+      console.log(response)
+      this.deployStatus.push({title: 'Deploying Porject in Environment ...'})
+      this.deployStatus.push({title: 'Done!'})
+      setTimeout(function(){ this.deploying = false }, 5000);
+      this.updateDeployHistoryInEnv(envName);
+      // setTimeout(function(){ this.deploying = false }, 5000);
     },
     fakeDeploy() {
       this.deploying = true;
       this.deployStatus.push({title: 'Run Action #1'});
       // this.deployStatus.push({title: 'Run Action #2'});
       // this.deployStatus.push({title: 'Run Action #3'});
+    },
+    getCurrentTime() {
+      // Get Current Time Stamp
+      const today = new Date();
+      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      const dateTime = date+' '+time;
+      return dateTime;
+    }, 
+    updateDeployHistoryInEnv(envName) {
+      // Adding Deploy to Env Deploy History
+      const currentTime = this.getCurrentTime();
+      const environment = this.project.environments.find(env => env.name === envName)
+      environment.builds.push(`${currentTime}`);
     }
   },
   mounted () {
@@ -212,8 +236,8 @@ export default {
       return Promise.reject(error);
     })
 
-    var username = 'leandergebhardti8';
-    var password = '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';
+    const username = 'leandergebhardti8';
+    const password = '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';
 
     axios
       .get('https://api.github.com/repos/leandergebhardti8/ba-2021/actions/runs', { 
@@ -284,7 +308,6 @@ export default {
     text-decoration: none;
   }
   .project_details {
-    margin-top: 2rem !important;
     display: grid;
     grid-template-columns: minmax(20%, 25%) 1fr;
     // font-size: 11px;
