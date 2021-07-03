@@ -9,7 +9,7 @@
             <b-dropdown-item @click="deleteEnv(environment.id)"><b-icon-exclamation-triangle variant="danger"></b-icon-exclamation-triangle> Delete</b-dropdown-item>
           </b-dropdown>
         </div>
-        <p><b-icon-arrow-right></b-icon-arrow-right> Visit Here: <a :href="environment.url">{{ environment.url }}</a></p>
+        <p><b-icon-arrow-right></b-icon-arrow-right> Visit Here: <a :href="environment.url" target="_blank">{{ environment.url }}</a></p>
         <hr>
         <div class="detail_area">
           <!-- <button v-if="templateOpen" @click="closeTemplate" class="btn btn-primary close_button">
@@ -59,6 +59,13 @@
               </b-form>
           </div>
         </div>
+
+        <div class="deploy_history">
+            <h3>Deploy History</h3>
+            <p style="padding: 10px;"><strong>Last deploy:</strong> {{ latestDeploy }}</p>
+            <hr style="color:black;">
+            <b-table hover :items="deployItems" v-if="latestDeploy"></b-table>
+        </div>
     </div>
 </template>
 
@@ -79,6 +86,8 @@ export default {
         URLTemplate: false,
         newEnvName: '',
         newEnvURL: '',
+        deployItems: [],
+        latestDeploy: null,
     }
   },
   methods: {
@@ -117,6 +126,20 @@ export default {
     }
       this.$router.push('/projects');
     },
+    getLatestBuildDate(builds) {
+      new Date(Math.max(...builds.map(build => this.latestDeploy = new Date(build))));
+    },
+    createDeployTable(builds) {
+      const items = []
+      let element = {}
+
+      this.getLatestBuildDate(builds)
+      for(let index = 0; index < builds.length; index++) {
+        element = { Date: builds[index]};
+        items.push(element)
+      }
+      this.deployItems = items;
+    },
   },
   created() {
     const envId = this.$route.params.environmentId;
@@ -132,6 +155,7 @@ export default {
     this.environment = this.allEnvs.find(env => env.id === envId);
     console.log(`envFound ${this.environment}`)
 
+    this.createDeployTable(this.environment.builds);
   },
 }
 </script>
@@ -143,6 +167,11 @@ export default {
     }
     a {
       color: white;
+      &:hover{
+        color: white;
+        background: grey;
+        border-radius: 5px;
+      }
     }
     .settings_button {
       display: inline-block;
@@ -157,12 +186,10 @@ export default {
         margin: 1rem;
       }
     }
-    .close_button {
-      float: right;
-    }
-    .red {
-      a {
-        color: red;
-      }
+    .deploy_history {
+      color: black;
+      background: white;
+      width: 50%;
+      margin: auto;
     }
 </style>
