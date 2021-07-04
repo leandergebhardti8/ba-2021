@@ -1,13 +1,6 @@
 <template>
     <div class="project">
-        <p class="info">{{ project.name }} (ID: {{ project.id }}) <b-icon-github v-if="project.github"></b-icon-github> <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/leandergebhardti8/ba-2021/node"></p>
-        <!-- <div> -->
-          <!-- <ul>
-            <li v-for="workflow in info.workflows" :key="workflow.id"> {{ workflow.badge_url }}</li>
-          </ul> -->
-        <!-- </div> -->
-        <!-- ![superlinter](https://github.com/leandergebhardti8/ba-2021/actions/workflows/superlinter.yml/badge.svg)
-        ![node](https://github.com/leandergebhardti8/ba-2021/actions/workflows/node.yml/badge.svg) -->
+        <p class="info">{{ project.name }} <b-icon-github v-if="project.github"></b-icon-github> <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/leandergebhardti8/ba-2021/node"></p>
     </div>
 </template>
 

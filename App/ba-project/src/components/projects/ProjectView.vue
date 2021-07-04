@@ -159,8 +159,8 @@ export default {
       this.deploying = true;
       this.deployStatus.push({title: 'Fetching Repo'});
 
-      const username = 'leandergebhardti8';
-      const password = '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';
+      // const username = 'leandergebhardti8';
+      // const password = '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';
       
     // Fetching workflow ID
       // let workflows = []
@@ -205,9 +205,15 @@ export default {
       // })
 
       // TODO Fetch info from env
-      const owner = 'leandergebhardti8';
-      const repo = 'ba-2021';
-      const token = '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';
+      // const owner = 'leandergebhardti8';
+      // const repo = 'ba-2021';
+      // const token = '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';
+      
+      const {
+        REPO_OWNER: owner,
+        REPO_NAME: repo,
+        GITHUB_TOKEN: token,
+      } = process.env;
 
       if(!owner || !repo || !token) {
         throw new Error('Owner, repo and token required');
@@ -222,8 +228,8 @@ export default {
             Accept: "application/vnd.github.v3+json"
           },
           auth: {
-            username,
-            password
+            username: owner,
+            password: token
           },
       })
       .then(response => (

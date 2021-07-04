@@ -11,7 +11,7 @@
                 <Project :project="project"/>
             </router-link>
         </ul>
-        <button v-if="addBtn" @click="showTemplate" class="btn btn-primary">
+        <button v-if="addBtn" class="btn btn-primary" v-b-modal.modal-prevent-closing>
             Add new Project
         </button>
         <div :class="showNewProjectTemplate ? 'activeForm' : 'form'">
@@ -39,6 +39,32 @@
                 </b-form>
             </div>
         </div>
+        <b-modal 
+            id="modal-prevent-closing" 
+            title="Adding new Project"
+            @ok="addProject">
+            <b-form inline>
+                    <label class="sr-only" for="inline-form-input-id">Project Name</label>
+                    <b-form-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        placeholder="Name"
+                        v-model="name"
+                    ></b-form-input>
+
+                    <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-0" v-model="github">On GitHub</b-form-checkbox>
+                    <div v-if="github">
+                        <b-form-input
+                            id="inline-form-input-name"
+                            class="mb-2 mr-sm-2 mb-sm-0"
+                            placeholder="GitHub HTTPS URL"
+                            v-model="githubURL"
+                        ></b-form-input>
+                    </div>
+                    <b-button variant="primary" @click="addProject">Add Another</b-button>
+                </b-form>
+            <!-- <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button> -->
+          </b-modal>
     </div>
 </template>
 
