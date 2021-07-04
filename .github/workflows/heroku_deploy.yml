@@ -1,5 +1,10 @@
 name: Heroku Deploy
 
+env:
+  REPO_OWNER: leandergebhardti8
+  REPO_NAME: ba-2021
+  GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
 on: 
   repository_dispatch:
     types: [run-deploy]
