@@ -17,7 +17,7 @@ export default {
   data() {
     return{
       projects: [
-              { name: 'BA - Projekt', id: '1', github: true, githubURL: 'https://github.com/leandergebhardti8/ba-2021.git', environments: [{name: 'Heroku', action: 'Heroku Deploy', id: '1', url: 'https://ba-2021.herokuapp.com/', builds: ["03.07.2021 11:12:40"]}, {name: 'Dev', action: 'Dev Deploy', id: '2'}]},
+              { name: 'BA - Projekt', id: '1', github: true, githubURL: 'https://github.com/leandergebhardti8/ba-2021.git', environments: [{name: 'Heroku', action: 'Heroku Deploy', id: '1', url: 'https://ba-2021.herokuapp.com/', builds: ["07.03.2021 11:12:40"]}, {name: 'Dev', action: 'Dev Deploy', id: '2'}]},
               { name: 'ExampleName', id: '2', github: false, environments: [] },
           ],
     }

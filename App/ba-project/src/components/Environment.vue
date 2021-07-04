@@ -1,5 +1,6 @@
 <template>
     <div class="environments">
+      <button @click="navigateToProjects" class="btn btn-primary close_btn"><b-icon-arrow-left></b-icon-arrow-left> Go back to Project</button>
         <h1>{{ environment.name }}</h1>
         <div class="settings_button">  
           <b-dropdown right>
@@ -9,7 +10,7 @@
             <b-dropdown-item @click="deleteEnv(environment.id)"><b-icon-exclamation-triangle variant="danger"></b-icon-exclamation-triangle> Delete</b-dropdown-item>
           </b-dropdown>
         </div>
-        <p><b-icon-arrow-right></b-icon-arrow-right> Visit Here: <a :href="environment.url" target="_blank">{{ environment.url }}</a></p>
+        <p><b-icon-arrow-right></b-icon-arrow-right> Visit Here: <a :href="environment.url" target="_blank" class="env_url">{{ environment.url }}</a></p>
         <hr>
         <div class="detail_area">
           <!-- <button v-if="templateOpen" @click="closeTemplate" class="btn btn-primary close_button">
@@ -79,6 +80,7 @@ export default {
     return {
         environment: null,
         projectId: '',
+        project: null,
         apiData: {},
         allEnvs: [],
         templateOpen: false,
@@ -91,6 +93,9 @@ export default {
     }
   },
   methods: {
+    navigateToProjects() {
+      this.$router.push('/project/' + this.project.id);
+    },
     showTemplate() {
       this.templateOpen = true;
     },
@@ -113,17 +118,11 @@ export default {
       this.environment.url = this.newEnvURL;
       this.closeTemplate();
     },
-    deleteEnv(id) {
-      this.environment = null;
-      for(let projectIndex = 0; projectIndex < this.projects.length; projectIndex++) {
-      for(let envIndex = 0; envIndex < this.projects[projectIndex].environments.length; envIndex++){
-        const envToRemove = this.projects[projectIndex].environments[envIndex]
-        if (envToRemove.id === id) {
-          const index = this.projects[projectIndex].environments.indexOf(envToRemove)
-          this.projects[projectIndex].environments.splice(index, 1);
+    deleteEnv(envId) {
+        if (envId != null && envId != '') {
+          const index = this.project.environments.indexOf(envId)
+          this.project.environments.splice(index, 1);
         }
-      }
-    }
       this.$router.push('/projects');
     },
     getLatestBuildDate(builds) {
@@ -144,18 +143,15 @@ export default {
   created() {
     //Get Environment ID From route
     const envId = this.$route.params.environmentId;
+    const projectId = this.$route.params.projectId;
     console.log(`envID ${envId}`)
 
-    // Get this Environment with Environment ID
-    for(let projectIndex = 0; projectIndex < this.projects.length; projectIndex++) {
-      for(let envIndex = 0; envIndex < this.projects[projectIndex].environments.length; envIndex++){
-        this.allEnvs.push(this.projects[projectIndex].environments[envIndex]);
-      }
-    }
-    this.environment = this.allEnvs.find(env => env.id === envId);
-    // console.log(`envFound ${this.environment}`)
+    // Get this Environment with Project ID & Environment ID
+    this.project = this.projects.find(project => project.id === projectId);
+    this.environment = this.project.environments.find(env => env.id === envId);
 
-    this.createDeployTable(this.environment.builds);
+    if(this.environment.builds)
+      this.createDeployTable(this.environment.builds);
   },
 }
 </script>
@@ -165,12 +161,13 @@ export default {
     h1 {
       display: inline-block;
     }
-    a {
-      color: white;
-      &:hover{
-        color: white;
-        background: grey;
-        border-radius: 5px;
+    .env_url {
+      background: white;
+      padding: 5px;
+      border-radius: 5px;
+      text-decoration: none;
+      :hover {
+        color: rgb(134, 134, 255);
       }
     }
     .settings_button {
@@ -190,5 +187,19 @@ export default {
       background: white;
       width: 50%;
       margin: auto;
+      h3 {
+        color: white;
+        text-align: center;
+        background-color: #1E92CC;
+        padding: 15px;
+        margin: 0;
+        font-weight: 800;
+      }
+    }
+    .close_btn {
+      left: 0;
+      float: left;
+      position: absolute;
+      margin: 1.75rem;
     }
 </style>

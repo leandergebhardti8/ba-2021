@@ -25,7 +25,7 @@
             <b-dropdown right text="Environments">
               <router-link 
                 tag="b-dropdown-item" 
-                :to="'/environment/' + env.id" 
+                :to="'/environment/' + env.id + '/' + project.id" 
                 v-for="env in this.project.environments" 
                 :key="env.name">
                 {{ env.name }}
@@ -60,6 +60,7 @@
           </div>
         </div>
         <div>
+          <!-- TODO Make this modal functional (addin v-model) -->
           <b-modal 
             id="modal-prevent-closing" 
             title="Adding new Environment"
@@ -70,26 +71,23 @@
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"
                         placeholder="Name"
-                        v-model="envName"
                     ></b-form-input>
                     <label class="sr-only" for="inline-form-input-id">Environment URl</label>
                     <b-form-input
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"
                         placeholder="URL"
-                        v-model="envURL"
                     ></b-form-input>
 
-                    <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-0" v-model="github">With Action</b-form-checkbox>
-                    <div v-if="github">
+                    <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-0">With Action</b-form-checkbox>
+                    <div>
                         <b-form-input
                             id="inline-form-input-name"
                             class="mb-2 mr-sm-2 mb-sm-0"
                             placeholder="GitHub HTTPS URL"
-                            v-model="githubURL"
                         ></b-form-input>
                     </div>
-                    <b-button variant="primary" @click="addProject">Save</b-button>
+                    <b-button variant="primary" @click="addNewEnv()">Save</b-button>
                 </b-form>
             <!-- <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button> -->
           </b-modal>
@@ -270,6 +268,7 @@ export default {
       const environment = this.project.environments.find(env => env.name === envName)
       environment.builds.push(`${currentTime}`);
     },
+    // TODO fix adding envs
     addNewEnv() {
       this.project.environments.push({name: 'NewEnvironment', action: '', id: `${this.project.environments.length++}`, url: '', builds: []});
       console.log(this.project.environments)

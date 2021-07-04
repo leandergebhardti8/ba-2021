@@ -21,7 +21,7 @@ export const routes = [
     component: Projects
   },
   {
-    path: '/environment/:environmentId',
+    path: '/environment/:environmentId/:projectId',
     component: Environemnt
   },
   {
