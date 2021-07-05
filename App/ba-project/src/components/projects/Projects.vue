@@ -54,14 +54,36 @@
 
                     <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-0" v-model="github">On GitHub</b-form-checkbox>
                     <div v-if="github">
+                        <label class="sr-only" for="inline-form-input-id">Github URL</label>
                         <b-form-input
                             id="inline-form-input-name"
                             class="mb-2 mr-sm-2 mb-sm-0"
                             placeholder="GitHub HTTPS URL"
                             v-model="githubURL"
                         ></b-form-input>
+                        <label class="sr-only" for="inline-form-input-id">Repositroy Owner</label>
+                        <b-form-input
+                            id="inline-form-input-name"
+                            class="mb-2 mr-sm-2 mb-sm-0"
+                            placeholder="Repo Owner"
+                            v-model="repoOwner"
+                        ></b-form-input>
+                        <label class="sr-only" for="inline-form-input-id">Repositroy Name</label>
+                        <b-form-input
+                            id="inline-form-input-name"
+                            class="mb-2 mr-sm-2 mb-sm-0"
+                            placeholder="Repo Name"
+                            v-model="repoName"
+                        ></b-form-input>
+                        <label class="sr-only" for="inline-form-input-id">GitHub Token</label>
+                        <b-form-input
+                            id="inline-form-input-name"
+                            class="mb-2 mr-sm-2 mb-sm-0"
+                            placeholder="GitHub Token"
+                            v-model="ghToken"
+                        ></b-form-input>
                     </div>
-                    <b-button variant="primary" @click="addProject">Add Another</b-button>
+                    <!-- <b-button variant="primary" @click="addProject">Add Another</b-button> -->
                 </b-form>
             <!-- <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button> -->
           </b-modal>
@@ -82,7 +104,10 @@ export default {
           addBtn: true,
           name: '',
           github: false, 
-          githubURL: ''
+          githubURL: '',
+          repoOwner: '',
+          repoName: '',
+          ghToken: '',
       }
   },
   provide() {
@@ -100,11 +125,20 @@ export default {
       addProject() {
         const intID = this.projects.length + 1;
         const projectID = intID.toString();
-        this.projects.push({name: this.name, id: projectID, github: this.github, githubURL: this.githubURL});
+        this.projects.push({
+            name: this.name, 
+            id: projectID, 
+            github: this.github, 
+            repoOwner: this.repoOwner,
+            repoName: this.repoName,
+            ghToken: this.ghToken,
+        });
         this.name = '';
         this.id = '';
         this.github = false;
-        this.hideTemplate();
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-prevent-closing')
+        })
       },
       showTemplate() {
           this.showNewProjectTemplate = true;
