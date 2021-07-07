@@ -1,10 +1,11 @@
 <template>
     <div class="project">
+        <button @click="navigateToProjects" class="btn btn-primary close_btn"><b-icon-arrow-left></b-icon-arrow-left> Go back to Projects</button>
         <h1>{{project.name}}</h1>
         <div class="settings_button">
           <b-dropdown right>
             <b-dropdown-item>Rename</b-dropdown-item>
-            <b-dropdown-item><b-icon-pencil></b-icon-pencil> Edit Project</b-dropdown-item>
+            <b-dropdown-item v-b-modal.modal-edit-current-project><b-icon-pencil></b-icon-pencil> Edit</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item @click="deleteEnv(environment.id)"><b-icon-exclamation-triangle variant="danger"></b-icon-exclamation-triangle> Delete</b-dropdown-item>
           </b-dropdown>
@@ -31,7 +32,7 @@
                 {{ env.name }}
               </router-link>
               <b-dropdown-divider></b-dropdown-divider>
-              <b-dropdown-item v-b-modal.modal-prevent-closing><b-icon-plus-circle></b-icon-plus-circle> Add New </b-dropdown-item>
+              <b-dropdown-item v-b-modal.modal-add-new-env><b-icon-plus-circle></b-icon-plus-circle> Add New </b-dropdown-item>
             </b-dropdown>
             
           </b-button-group>
@@ -60,36 +61,56 @@
           </div>
         </div>
         <div>
-          <!-- TODO Make this modal functional (addin v-model) -->
+          <!-- MODALS -->
           <b-modal 
-            id="modal-prevent-closing" 
+            id="modal-add-new-env" 
             title="Adding new Environment"
-            @ok="handleOk">
+            @ok="addNewEnv">
             <b-form inline>
                     <label class="sr-only" for="inline-form-input-id">Environment Name</label>
                     <b-form-input
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"
                         placeholder="Name"
+                        v-model="newEnv.name"
                     ></b-form-input>
                     <label class="sr-only" for="inline-form-input-id">Environment URl</label>
                     <b-form-input
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"
                         placeholder="URL"
+                        v-model="newEnv.url"
                     ></b-form-input>
-
-                    <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-0">With Action</b-form-checkbox>
-                    <div>
-                        <b-form-input
-                            id="inline-form-input-name"
-                            class="mb-2 mr-sm-2 mb-sm-0"
-                            placeholder="GitHub HTTPS URL"
-                        ></b-form-input>
-                    </div>
-                    <b-button variant="primary" @click="addNewEnv()">Save</b-button>
+                    <label class="sr-only" for="inline-form-input-id">GitHub Action Name</label>
+                    <b-form-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        placeholder="GitHub HTTPS URL"
+                        v-model="newEnv.action"
+                    ></b-form-input>
                 </b-form>
             <!-- <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button> -->
+          </b-modal>
+
+          <b-modal 
+            id="modal-edit-current-project" 
+            title="Edit Porject">
+            <b-form inline>
+                    <label class="sr-only" for="inline-form-input-id">Porject Name</label>
+                    <b-form-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        placeholder="Name"
+                        v-model="project.name"
+                    ></b-form-input>
+                    <label class="sr-only" for="inline-form-input-id">Project GitHub URL</label>
+                    <b-form-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        placeholder="URL"
+                        v-model="project.githubURL"
+                    ></b-form-input>
+                </b-form>
           </b-modal>
         </div>
     </div>
@@ -116,10 +137,19 @@ export default {
         workflows: [],
         showProjectDetails: true,
         buildHistoryItems: [],
-        stageViewItems: [], 
+        stageViewItems: [],
+        newEnv: {
+          name: '', 
+          action: '', 
+          url: '', 
+          id: null,
+        }
     }
   },
   methods: {
+    navigateToProjects() {
+      this.$router.push('/projects');
+    },
     creteTableWithAPIData(data) {
       const items = []
       let element = {}
@@ -135,7 +165,6 @@ export default {
       const items = []
       let element = {}
       for(let index = 0; index < data.length; index++) {
-        // TODO Adding Icons
         if (items.length > 1) {
           items[index--] = {Status: '<b-icon-check-circle></b-icon-check-circle>'};
         }
@@ -144,14 +173,10 @@ export default {
       }
       return items;
     },
-    handleOk(bvModalEvt) {
-        // Prevent modal from closing
-        bvModalEvt.preventDefault()
-        // Trigger submit handler
-        console.log("Hello there!")
-        this.$nextTick(() => {
-          this.$bvModal.hide('modal-prevent-closing')
-        })
+    addNewEnv() {
+        const envID = this.project.environments.length + 1;
+        this.newEnv.id = envID.toString();
+        this.project.environments.push(this.newEnv);
       },
     startDeployment(envName){
     // Trigger GitHub Action in Repo, which deploys the project
@@ -275,11 +300,6 @@ export default {
       const environment = this.project.environments.find(env => env.name === envName)
       environment.builds.push(`${currentTime}`);
     },
-    // TODO fix adding envs
-    addNewEnv() {
-      this.project.environments.push({name: 'NewEnvironment', action: '', id: `${this.project.environments.length++}`, url: '', builds: []});
-      console.log(this.project.environments)
-    }
   },
   mounted () {
 
@@ -419,4 +439,10 @@ export default {
       font-weight: 800;
     }
   }
+  .close_btn {
+      left: 0;
+      float: left;
+      position: absolute;
+      margin: 1.75rem;
+    }
 </style>

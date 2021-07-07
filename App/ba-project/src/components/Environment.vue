@@ -1,21 +1,61 @@
 <template>
     <div class="environments">
-      <button @click="navigateToProjects" class="btn btn-primary close_btn"><b-icon-arrow-left></b-icon-arrow-left> Go back to Project</button>
+      <button @click="navigateToProject" class="btn btn-primary close_btn"><b-icon-arrow-left></b-icon-arrow-left> Go back to Project</button>
         <h1>{{ environment.name }}</h1>
         <div class="settings_button">  
           <b-dropdown right>
-            <b-dropdown-item @click="showRenameTemplate(); showTemplate();">Rename</b-dropdown-item>
-            <b-dropdown-item @click="showURLTemplate(); showTemplate();">Reset URL</b-dropdown-item>
+            <b-dropdown-item v-b-modal.modal-rename>Rename</b-dropdown-item>
+            <b-dropdown-item v-b-modal.modal-edit-env><b-icon-pencil></b-icon-pencil> Edit</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
             <b-dropdown-item @click="deleteEnv(environment.id)"><b-icon-exclamation-triangle variant="danger"></b-icon-exclamation-triangle> Delete</b-dropdown-item>
           </b-dropdown>
         </div>
         <p><b-icon-arrow-right></b-icon-arrow-right> Visit Here: <a :href="environment.url" target="_blank" class="env_url">{{ environment.url }}</a></p>
         <hr>
-        <div class="detail_area">
-          <!-- <button v-if="templateOpen" @click="closeTemplate" class="btn btn-primary close_button">
-                  <b-icon-x></b-icon-x>
-          </button> -->
+        <p>Environment Action Name <i>(needed to deploy Project in Environment)</i>: <strong>{{environment.action}}</strong></p>
+        <!-- MODALS -->
+        <b-modal 
+            id="modal-edit-env" 
+            title="Edit Environment">
+            <b-form inline>
+                    <label class="sr-only" for="inline-form-input-id">Environment Name</label>
+                    <b-form-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        placeholder="Name"
+                        v-model="environment.name"
+                    ></b-form-input>
+                    <label class="sr-only" for="inline-form-input-id">Environment URl</label>
+                    <b-form-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        placeholder="URL"
+                        v-model="environment.url"
+                    ></b-form-input>
+                    <label class="sr-only" for="inline-form-input-id">GitHub action name</label>
+                    <b-form-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        placeholder="GitHub Actions Name"
+                        v-model="environment.action"
+                    ></b-form-input>
+                </b-form>
+          </b-modal>
+
+          <b-modal 
+            id="modal-rename" 
+            title="Edit Environment">
+            <b-form inline>
+                    <label class="sr-only" for="inline-form-input-id">Environment Name</label>
+                    <b-form-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        placeholder="Name"
+                        v-model="environment.name"
+                    ></b-form-input>
+                </b-form>
+          </b-modal>
+        <!-- <div class="detail_area">
           <div class="template" v-if="renameTemplate && templateOpen">
               <b-form inline>
                   <strong>Rename Environment</strong>
@@ -59,7 +99,7 @@
                   <b-button variant="primary" @click="closeTemplate">Cancel</b-button>
               </b-form>
           </div>
-        </div>
+        </div> -->
 
         <div class="deploy_history">
             <h3>Deploy History</h3>
@@ -93,30 +133,8 @@ export default {
     }
   },
   methods: {
-    navigateToProjects() {
+    navigateToProject() {
       this.$router.push('/project/' + this.project.id);
-    },
-    showTemplate() {
-      this.templateOpen = true;
-    },
-    closeTemplate() {
-      this.templateOpen = false;
-    },
-    showRenameTemplate() {
-      this.URLTemplate = false;
-      this.renameTemplate = true;
-    },
-    showURLTemplate() {
-      this.renameTemplate = false;
-      this.URLTemplate = true;
-    },
-    renameEnv() {
-      this.environment.name = this.newEnvName;
-      this.closeTemplate();
-    },
-    resetEnvURL() {
-      this.environment.url = this.newEnvURL;
-      this.closeTemplate();
     },
     deleteEnv(envId) {
         if (envId != null && envId != '') {
