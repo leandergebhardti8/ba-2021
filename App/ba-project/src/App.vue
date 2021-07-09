@@ -1,19 +1,20 @@
 <template>
   <div id="app">
     <Header/>
-    <!-- <b-breadcrumb :items="items"></b-breadcrumb> -->
-    <!-- <hr> -->
+    <Breadcrumb/>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-import Header from './components/Header.vue'
+import Header from './components/navigation/Header.vue'
+import Breadcrumb from './components/navigation/Breadcrumb.vue'
 
 export default {
   name: 'App',
   components: {
-    Header
+    Header,
+    Breadcrumb,
   }, 
   data() {
     return{
@@ -25,10 +26,10 @@ export default {
                 repoOwner: 'leandergebhardti8', 
                 repoName: 'ba-2021', 
                 githubToken: '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', 
-                deployMethod: [
-                    'Heroku'
-                ], 
-                environments: [
+                deployMethods: [
+                  {
+                    name: 'Heroku',
+                    environments: [
                       {
                         name: 'Heroku', 
                         action: 'run-deploy', 
@@ -41,7 +42,9 @@ export default {
                         action: 'Dev Deploy', 
                         id: '2'
                       }
-                    ]
+                    ],
+                  }
+                ], 
                 },
                 { 
                   name: 'ExampleName', 
@@ -50,8 +53,12 @@ export default {
                   epoOwner: '', 
                   repoName: '', 
                   githubToken: '', 
-                  environments: [],
-                  deployMethod: [] 
+                  deployMethods: [
+                    {
+                      name: 'S3',
+                      environments: [],
+                    }
+                  ] 
                   },
       ],
       items: [

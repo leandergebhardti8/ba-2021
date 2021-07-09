@@ -1,9 +1,10 @@
 <template>
     <div class="project-wrapper">
+        <button @click="navigateHome" class="btn btn-primary close_btn"><b-icon-house></b-icon-house></button>
         <h1>Project Page</h1>
         <ul class="projects">
             <router-link 
-                :to="'/project/' + project.id" 
+                :to="'/deployjob/' + project.id" 
                 tag="li" 
                 v-for="project in this.projects" 
                 :key="project.id"
@@ -39,6 +40,8 @@
                 </b-form>
             </div>
         </div>
+
+        <!-- Modals -->
         <b-modal 
             id="modal-prevent-closing" 
             title="Adding new Project"
@@ -118,6 +121,9 @@ export default {
     //   projects,
   },
   methods: {
+      navigateHome() {
+          this.$router.push('/');
+      },
       addProject() {
         const intID = this.projects.length + 1;
         const projectID = intID.toString();
@@ -137,14 +143,6 @@ export default {
           this.$bvModal.hide('modal-prevent-closing')
         })
       },
-      showTemplate() {
-          this.showNewProjectTemplate = true;
-          this.addBtn = false;
-      },
-      hideTemplate() {
-          this.showNewProjectTemplate = false;
-          this.addBtn = true;
-      }
   },
   components: {
       Project: Project,
@@ -154,6 +152,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+    h1 {
+        text-align: center;
+    }
     .project-wrapper {
         text-align: left;
     }
@@ -173,12 +174,13 @@ export default {
     .project-item {
         cursor: pointer;
     }
-    .activeForm {
-        border: 1px solid white;
-        border-radius: 15px;
-        margin-left: 2rem;
-    }
     .close_btn {
         margin: 0.75rem;
     }
+    .close_btn {
+      left: 0;
+      float: left;
+      position: absolute;
+      margin: 1.75rem;
+  }
 </style>

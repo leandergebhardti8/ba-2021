@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { BBreadcrumb } from 'bootstrap-vue'
 import { routes } from './routes'
 
 // Import Bootstrap an BootstrapVue CSS files (order is important)
@@ -14,6 +15,7 @@ Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
 
 Vue.use(VueRouter)
+Vue.component('b-breadcrumb', BBreadcrumb)
 
 const router = new VueRouter({
   routes,

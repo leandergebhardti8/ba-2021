@@ -1,7 +1,7 @@
 <template>
     <div class="project">
-        <button @click="navigateToProjects" class="btn btn-primary close_btn"><b-icon-arrow-left></b-icon-arrow-left> Go back to Projects</button>
-        <h1>{{project.name}}</h1>
+        <button @click="navigateToDeployMethods" class="btn btn-primary close_btn"><b-icon-arrow-left></b-icon-arrow-left> Go back to Deploy Methods</button>
+        <h1>{{project.name}} ({{ deployMethod.name }})</h1>
         <div class="settings_button">
           <b-dropdown right>
             <b-dropdown-item v-b-modal.modal-rename-current-project>Rename</b-dropdown-item>
@@ -11,36 +11,16 @@
           </b-dropdown>
         </div>
 
-
-        <div class="deploy_method" v-if="!deployMethodDefined">
-          <b-button-group>
-            <b-dropdown right text="Select Deploy Method" variant="primary">
-              <b-dropdown-item @click="addDeployMethod('herkoku')">
-                Heroku
-              </b-dropdown-item>
-              <b-dropdown-item @click="addDeployMethod('s3')">
-                (S3)
-              </b-dropdown-item>
-              <b-dropdown-divider></b-dropdown-divider>
-              <b-dropdown-item>
-                Coming soon
-              </b-dropdown-item>
-            </b-dropdown>
-          </b-button-group>
-        </div>
-
-
-        <div class="control_bar" v-if="deployMethodDefined">
+        <div class="control_bar">
           <b-button-group>
             <b-button @click="fakeDeploy()">Test</b-button>
-            <b-button @click="deployMethodDefined = false">Add Another Deploying Method</b-button>
             <b-dropdown right text="Run Actions" v-if="this.workflows">
               <b-dropdown-item v-for="workflow in this.workflows" :key="workflow.id" @click="runAction(workflow.id)">
                 {{ workflow.name }}
               </b-dropdown-item>
             </b-dropdown>
-            <b-dropdown right text="Deploy in ... 🚀" v-if="this.project.environments">
-              <b-dropdown-item v-for="env in this.project.environments" :key="env.name" @click="startDeployment(env.name)">
+            <b-dropdown right text="Deploy in ... 🚀">
+              <b-dropdown-item v-for="env in this.deployMethod.environments" :key="env.name" @click="startDeployment(env.name)">
                 {{ env.name }} ({{ env.action }})
               </b-dropdown-item>
             </b-dropdown>
@@ -48,7 +28,7 @@
               <router-link 
                 tag="b-dropdown-item" 
                 :to="'/environment/' + env.id + '/' + project.id" 
-                v-for="env in this.project.environments" 
+                v-for="env in this.deployMethod.environments" 
                 :key="env.name"
               >
                 {{ env.name }}
@@ -65,7 +45,7 @@
           <b-icon-github></b-icon-github> <a :href="project.githubURL" target="_blank">{{ project.githubURL }}</a>
         </p>
         
-        <div v-if="deployMethodDefined" class="project_details">
+        <div class="project_details">
           
           <div class="build_history">
             <h3>Build History</h3>
@@ -191,6 +171,7 @@ export default {
   data() {
     return {
         project: null,
+        deployMethod: undefined,
         // deployMethodDefined: false,
         apiData: {},
         showGetErrorMessage: false,
@@ -209,13 +190,13 @@ export default {
     }
   },
   computed: {
-    deployMethodDefined() {
-      return this.project.deployMethod.length > 0;
-    }
+    // deployMethodDefined() {
+    //   return this.project.deployMethods.length > 0;
+    // }
   },
   methods: {
-    navigateToProjects() {
-      this.$router.push('/projects');
+    navigateToDeployMethods() {
+      this.$router.push('/deployjob/' + this.project.id);
     },
     creteTableWithAPIData(data) {
       const items = []
@@ -259,10 +240,6 @@ export default {
         }
         this.newEnv.id = envID.toString();
         this.project.environments.push(this.newEnv);
-    },
-    addDeployMethod(methodName) {
-      this.project.deployMethod.push(methodName);
-      // this.deployMethodDefined = true;
     },
     startDeployment(envName){
     // Trigger GitHub Action in Repo, which deploys the project
@@ -396,7 +373,10 @@ export default {
   },
   created() {
     const projectId = this.$route.params.projectId;
+    const deployName = this.$route.params.deployName;
+
     this.project = this.projects.find(project => project.id === projectId);
+    this.deployMethod = this.project.deployMethods.find(method => method.name === deployName);
     
       const owner = this.project.repoOwner;
       const repo = this.project.repoName;

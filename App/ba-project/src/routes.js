@@ -5,6 +5,7 @@ import ProjectView from './components/projects/ProjectView.vue'
 import Environemnt from './components/Environment.vue'
 import Login from './components/Login.vue'
 import Register from './components/Register.vue'
+import Deploys from './components/Deploys.vue'
 
 export const routes = [
   {
@@ -33,7 +34,11 @@ export const routes = [
     component: Register
   },
   {
-    path: '/project/:projectId',
+    path: '/project/:projectId/:deployName',
     component: ProjectView
-  }
+  },
+  {
+    path: '/deployjob/:projectId',
+    component: Deploys
+  },
 ]
