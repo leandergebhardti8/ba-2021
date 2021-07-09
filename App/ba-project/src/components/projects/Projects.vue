@@ -27,7 +27,7 @@
                     ></b-form-input>
 
                     <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-0" v-model="github">On GitHub</b-form-checkbox>
-                    <div v-if="github">
+                    <div>
                         <b-form-input
                             id="inline-form-input-name"
                             class="mb-2 mr-sm-2 mb-sm-0"
@@ -52,8 +52,7 @@
                         v-model="name"
                     ></b-form-input>
 
-                    <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-0" v-model="github">On GitHub</b-form-checkbox>
-                    <div v-if="github">
+                    <div>
                         <label class="sr-only" for="inline-form-input-id">Github URL</label>
                         <b-form-input
                             id="inline-form-input-name"
@@ -83,9 +82,7 @@
                             v-model="ghToken"
                         ></b-form-input>
                     </div>
-                    <!-- <b-button variant="primary" @click="addProject">Add Another</b-button> -->
                 </b-form>
-            <!-- <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button> -->
           </b-modal>
     </div>
 </template>
@@ -103,7 +100,6 @@ export default {
           showNewProjectTemplate: false,
           addBtn: true,
           name: '',
-          github: false, 
           githubURL: '',
           repoOwner: '',
           repoName: '',
@@ -127,15 +123,16 @@ export default {
         const projectID = intID.toString();
         this.projects.push({
             name: this.name, 
-            id: projectID, 
-            github: this.github, 
+            id: projectID,  
+            githubURL: this.githubURL,  
             repoOwner: this.repoOwner,
             repoName: this.repoName,
-            ghToken: this.ghToken,
+            githubToken: this.ghToken,
+            deployMethod: [],
+            environments: [],
         });
         this.name = '';
         this.id = '';
-        this.github = false;
         this.$nextTick(() => {
           this.$bvModal.hide('modal-prevent-closing')
         })

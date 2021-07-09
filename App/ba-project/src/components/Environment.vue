@@ -1,6 +1,6 @@
 <template>
     <div class="environments">
-      <button @click="navigateToProject" class="btn btn-primary close_btn"><b-icon-arrow-left></b-icon-arrow-left> Go back to Project</button>
+      <button @click="navigateToProject" class="btn btn-primary close_btn"><b-icon-arrow-left></b-icon-arrow-left> Go back to {{ project.name }}</button>
         <h1>{{ environment.name }}</h1>
         <div class="settings_button">  
           <b-dropdown right>

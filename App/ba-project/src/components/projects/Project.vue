@@ -1,6 +1,6 @@
 <template>
     <div class="project">
-        <p class="info">{{ project.name }} <b-icon-github v-if="project.github"></b-icon-github> <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/leandergebhardti8/ba-2021/node"></p>
+        <p class="info">{{ project.name }} <b-icon-github></b-icon-github> <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/leandergebhardti8/ba-2021/node"></p>
     </div>
 </template>
 
