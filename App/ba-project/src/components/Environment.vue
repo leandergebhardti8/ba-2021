@@ -123,23 +123,21 @@ export default {
         project: null,
         apiData: {},
         allEnvs: [],
-        templateOpen: false,
-        renameTemplate: false,
-        URLTemplate: false,
         newEnvName: '',
         newEnvURL: '',
         deployItems: [],
+        deployMethod: [],
         latestDeploy: null,
     }
   },
   methods: {
     navigateToProject() {
-      this.$router.push('/project/' + this.project.id);
+      this.$router.push('/project/' + this.project.id + '/' + this.deployMethod.name);
     },
     deleteEnv(envId) {
         if (envId != null && envId != '') {
-          const index = this.project.environments.indexOf(envId)
-          this.project.environments.splice(index, 1);
+          const index = this.project.deployMethods.environments.indexOf(envId)
+          this.project.deployMethods.environments.splice(index, 1);
         }
       this.$router.push('/projects');
     },
@@ -162,11 +160,14 @@ export default {
     //Get Environment ID From route
     const envId = this.$route.params.environmentId;
     const projectId = this.$route.params.projectId;
+    const methodName = this.$route.params.methodName;
     console.log(`envID ${envId}`)
+    console.log(`projectID ${projectId}`)
 
     // Get this Environment with Project ID & Environment ID
     this.project = this.projects.find(project => project.id === projectId);
-    this.environment = this.project.environments.find(env => env.id === envId);
+    this.deployMethod = this.project.deployMethods.find(method => method.name === methodName);
+    this.environment = this.deployMethod.environments.find(env => env.id === envId);
 
     if(this.environment.builds)
       this.createDeployTable(this.environment.builds);

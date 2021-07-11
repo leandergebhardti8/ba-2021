@@ -22,7 +22,7 @@ export const routes = [
     component: Projects
   },
   {
-    path: '/environment/:environmentId/:projectId',
+    path: '/environment/:environmentId/:methodName/:projectId',
     component: Environemnt
   },
   {

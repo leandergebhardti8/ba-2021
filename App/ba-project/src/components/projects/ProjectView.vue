@@ -27,7 +27,7 @@
             <b-dropdown right text="Environments">
               <router-link 
                 tag="b-dropdown-item" 
-                :to="'/environment/' + env.id + '/' + project.id" 
+                :to="'/environment/' + env.id + '/' + deployMethod.name + '/' + project.id" 
                 v-for="env in this.deployMethod.environments" 
                 :key="env.name"
               >
@@ -44,6 +44,21 @@
         <p class="github-url">
           <b-icon-github></b-icon-github> <a :href="project.githubURL" target="_blank">{{ project.githubURL }}</a>
         </p>
+
+        <div class="error_msg">
+          <b-alert show variant="danger" v-if="showGetErrorMessage">
+            <b-icon-exclamation font-scale="2"></b-icon-exclamation> The App has Trouble accessing GitHub with your given Information. Please Check if your <b>Repository Owner</b>, <b>Repository Name</b> and <b-icon-github></b-icon-github> <b>Token</b> are correct.
+          </b-alert>
+          <b-alert show variant="danger" v-if="showPostErrorMessage">
+            <b-icon-exclamation font-scale="2"></b-icon-exclamation> The App has Trouble accessing GitHub with your given Information. Please Check if your <b>Repository Owner</b>, <b>Repository Name</b> and <b-icon-github></b-icon-github> <b>Token</b> are correct. <b>Especially check if your action Name is correct.</b>
+            <router-link 
+              tag="a" 
+              :to="'/setupguide/' + project.id" 
+            >
+            Learn More here.
+            </router-link>
+          </b-alert> 
+        </div>
         
         <div class="project_details">
           
@@ -63,20 +78,6 @@
           </div>
         </div>
         <div>
-        <div class="error_msg">
-          <b-alert show variant="danger" v-if="showGetErrorMessage">
-            <b-icon-exclamation font-scale="2"></b-icon-exclamation> The App has Trouble accessing GitHub with your given Information. Please Check if your <b>Repository Owner</b>, <b>Repository Name</b> and <b-icon-github></b-icon-github> <b>Token</b> are correct.
-          </b-alert>
-          <b-alert show variant="danger" v-if="showPostErrorMessage">
-            <b-icon-exclamation font-scale="2"></b-icon-exclamation> The App has Trouble accessing GitHub with your given Information. Please Check if your <b>Repository Owner</b>, <b>Repository Name</b> and <b-icon-github></b-icon-github> <b>Token</b> are correct. <b>Especially check if your action Name is correct.</b>
-            <router-link 
-              tag="a" 
-              :to="'/setupguide/' + project.id" 
-            >
-            Learn More here.
-            </router-link>
-          </b-alert> 
-        </div>
 
           <!-- MODALS -->
           <b-modal 
@@ -363,7 +364,7 @@ export default {
     updateDeployHistoryInEnv(envName) {
       // Adding Deploy to Env Deploy History
       const currentTime = this.getCurrentTime();
-      const environment = this.project.environments.find(env => env.name === envName)
+      const environment = this.project.deployMethods.environments.find(env => env.name === envName)
       environment.builds.push(`${currentTime}`);
     },
   },

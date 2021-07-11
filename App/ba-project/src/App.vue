@@ -1,20 +1,20 @@
 <template>
   <div id="app">
     <Header/>
-    <Breadcrumb/>
+    <!-- <Breadcrumb/> -->
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 import Header from './components/navigation/Header.vue'
-import Breadcrumb from './components/navigation/Breadcrumb.vue'
+// import Breadcrumb from './components/navigation/Breadcrumb.vue'
 
 export default {
   name: 'App',
   components: {
     Header,
-    Breadcrumb,
+    // Breadcrumb,
   }, 
   data() {
     return{
