@@ -92,12 +92,13 @@
 
 <script>
  import Project from './Project.vue';
+ import projectService from '../../services/projectService';
 
 export default {
   name: 'Projects',
-  inject: [
-      'projects'
-  ],
+//   inject: [
+//       'projects'
+//   ],
   data() {
       return {
           showNewProjectTemplate: false,
@@ -107,13 +108,14 @@ export default {
           repoOwner: '',
           repoName: '',
           ghToken: '',
+          projects: [],
       }
   },
-  provide() {
-    return {
-      projects: this.projects,
-    }
-  },
+//   provide() {
+//     return {
+//       projects: this.projects,
+//     }
+//   },
   computed: {
 
   },
@@ -121,6 +123,14 @@ export default {
     //   projects,
   },
   methods: {
+      async getProjects() {
+          projectService.getProjects()
+          .then(
+              (projects => {
+                  this.$set(this, 'projects', projects)
+              }).bind(this)
+          );
+      },
       navigateHome() {
           this.$router.push('/');
       },
@@ -146,6 +156,9 @@ export default {
   },
   components: {
       Project: Project,
+  },
+  created() {
+      this.getProjects();
   }
 }
 </script>
