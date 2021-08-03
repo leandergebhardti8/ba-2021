@@ -34,14 +34,16 @@
 </template>
 
 <script>
+ import axios from 'axios';
 
 export default {
   name: 'Deploys',
-  inject: [
-      'projects'
-  ],
+//   inject: [
+//       'projects'
+//   ],
   data() {
       return {
+        projectId: 0,
         project: undefined,
         herokuIconURL: `../assets/icons/heroku-icon.svg`,
         deployMethod: {
@@ -78,13 +80,19 @@ export default {
     },
     },
     created() {
-        const projectId = this.$route.params.projectId;
-        this.project = this.projects.find(project => project.id === projectId);
+        this.projectId = this.$route.params.projectId;
+        // this.project = this.projects.find(project => project.id === projectId);
+        axios.get(`http://localhost:8080/api/project/${this.projectId}`)
+        .then(response => {
+            this.project = response.data;
+        })
+        .catch(err => {
+            console.log(err);
+        })
     }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
     h1 {
         text-align: center;

@@ -23,6 +23,6 @@ const mongoose = require('mongoose');
 
 	});
 
-	const project = mongoose.model('project', projectSchema);
+	const project = mongoose.model('projects', projectSchema);
 
-    module.exports.project = project;
+    module.exports = project;

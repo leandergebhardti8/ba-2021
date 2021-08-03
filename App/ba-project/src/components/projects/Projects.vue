@@ -92,13 +92,14 @@
 
 <script>
  import Project from './Project.vue';
- import projectService from '../../services/projectService';
+ import axios from 'axios';
+//  import projectService from '/app/services/projectService.js';
 
 export default {
   name: 'Projects',
 //   inject: [
-//       'projects'
-//   ],
+//     'projects'
+//   ], 
   data() {
       return {
           showNewProjectTemplate: false,
@@ -111,11 +112,11 @@ export default {
           projects: [],
       }
   },
-//   provide() {
-//     return {
-//       projects: this.projects,
-//     }
-//   },
+  provide() {
+    return {
+      projects: this.projects,
+    }
+  },
   computed: {
 
   },
@@ -123,13 +124,20 @@ export default {
     //   projects,
   },
   methods: {
-      async getProjects() {
-          projectService.getProjects()
-          .then(
-              (projects => {
-                  this.$set(this, 'projects', projects)
-              }).bind(this)
-          );
+      getProjects() {
+        //   projectService.getAllProjects()
+        //   .then(
+        //       (projects => {
+        //           this.$set(this, 'projects', projects)
+        //       }).bind(this)
+        //   );
+        axios.get("http://localhost:8080/api/projects")
+        .then(response => {
+            this.projects = response.data;
+        })
+        .catch(err => {
+            console.log(err);
+        })
       },
       navigateHome() {
           this.$router.push('/');
@@ -137,16 +145,25 @@ export default {
       addProject() {
         const intID = this.projects.length + 1;
         const projectID = intID.toString();
-        this.projects.push({
+        var newproject = {
             name: this.name, 
             id: projectID,  
             githubURL: this.githubURL,  
             repoOwner: this.repoOwner,
             repoName: this.repoName,
             githubToken: this.ghToken,
-            deployMethod: [],
+            deployMethods: [],
             environments: [],
-        });
+        };
+        axios.post('http://localhost:8080/api/projects', newproject)
+        .then(response => {
+            this.porject.id = response.data.id;
+            console.log(response.data)
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
         this.name = '';
         this.id = '';
         this.$nextTick(() => {
@@ -158,7 +175,10 @@ export default {
       Project: Project,
   },
   created() {
-      this.getProjects();
+      
+  },
+  mounted() {
+    this.getProjects();
   }
 }
 </script>
