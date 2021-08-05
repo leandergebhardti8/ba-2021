@@ -27,7 +27,7 @@
             <b-dropdown right text="Environments">
               <router-link 
                 tag="b-dropdown-item" 
-                :to="'/environment/' + env.id + '/' + deployMethod.name + '/' + project.id" 
+                :to="'/environment/' + env._id + '/' + deployMethod.name + '/' + project.id" 
                 v-for="env in this.deployMethod.environments" 
                 :key="env.name"
               >
@@ -63,7 +63,7 @@
         <div class="project_details">
           
           <div class="build_history">
-            <h3>Build History</h3>
+            <h3>Workflow History</h3>
             <p style="padding: 10px;">Total workflow runs: {{ apiData.total_count }}</p>
             <hr style="color:black;">
             <b-table hover :items="creteTableWithAPIData(apiData.workflow_runs)" v-if="apiData"></b-table>
@@ -117,42 +117,6 @@
                         v-model="newEnv.action"
                     ></b-form-input>
                 </b-form>
-            <!-- <b-button class="mt-3" block @click="$bvModal.hide('bv-modal-example')">Close Me</b-button> -->
-          </b-modal>
-
-          <b-modal 
-            id="modal-edit-current-project" 
-            title="Edit Porject">
-            <b-form inline>
-                    <label class="sr-only" for="inline-form-input-id">Porject Name</label>
-                    <b-form-input
-                        id="inline-form-input-name"
-                        class="mb-2 mr-sm-2 mb-sm-0"
-                        placeholder="Name"
-                        v-model="project.name"
-                    ></b-form-input>
-                    <label class="sr-only" for="inline-form-input-id">Project GitHub URL</label>
-                    <b-form-input
-                        id="inline-form-input-name"
-                        class="mb-2 mr-sm-2 mb-sm-0"
-                        placeholder="URL"
-                        v-model="project.githubURL"
-                    ></b-form-input>
-                </b-form>
-          </b-modal>
-
-          <b-modal 
-            id="modal-rename-current-project" 
-            title="Rename Porject">
-            <b-form inline>
-                    <label class="sr-only" for="inline-form-input-id">Porject Name</label>
-                    <b-form-input
-                        id="inline-form-input-name"
-                        class="mb-2 mr-sm-2 mb-sm-0"
-                        placeholder="Name"
-                        v-model="project.name"
-                    ></b-form-input>
-                </b-form>
           </b-modal>
         </div>
     </div>
@@ -163,14 +127,15 @@ import axios from 'axios';
 
 export default {
   name: 'ProjectView',
-  inject: [
-    'projects'
-  ], 
+  // inject: [
+  //   'project'
+  // ], 
   components: {
 
   },
   data() {
     return {
+        deployName: undefined,
         project: null,
         deployMethod: undefined,
         // deployMethodDefined: false,
@@ -241,6 +206,9 @@ export default {
         }
         this.newEnv.id = envID.toString();
         this.project.environments.push(this.newEnv);
+    },
+    deleteEnv(envId){
+        axios.delete(`http://localhost:8080/api/environment/${envId}`)
     },
     startDeployment(envName){
     // Trigger GitHub Action in Repo, which deploys the project
@@ -367,26 +335,7 @@ export default {
       const environment = this.project.deployMethods.environments.find(env => env.name === envName)
       environment.builds.push(`${currentTime}`);
     },
-  },
-  mounted () {
-
-    
-  },
-  created() {
-    const projectId = this.$route.params.projectId;
-    const deployName = this.$route.params.deployName;
-
-    this.project = this.projects.find(project => project.id === projectId);
-    this.deployMethod = this.project.deployMethods.find(method => method.name === deployName);
-    
-      const owner = this.project.repoOwner;
-      const repo = this.project.repoName;
-      const token = this.project.githubToken;
-    
-      if(!owner || !repo || !token || owner === '' || repo === '' || token === '') {
-        throw new Error('Owner, repo and token required');
-      }
-
+    getRunsFromGHApi(owner, repo, token) {
     // TODO check if API info is alread there
     // if( !this.apiData) {
       // Get Runs from API
@@ -399,7 +348,6 @@ export default {
         // handle the error
         return Promise.reject(error);
       })
-      
       axios
         .get(`https://api.github.com/repos/${owner}/${repo}/actions/runs`, { 
           auth: {
@@ -416,12 +364,10 @@ export default {
           console.error("There was an error GETTING RUNS from GitHub!", error);
           this.showGetErrorMessage = true;
       });
-    // }
-
-    // TODO check if API info is alread there
-    // if( !this.workflows ) {
-    // Get Workflows from API
-      axios.interceptors.request.use(config => {
+    },
+    getWorkflowsFromGHApi(owner, repo, token) {
+      // TODO check if API info is alread there
+        axios.interceptors.request.use(config => {
         // perform a task before the request is sent
         console.log('Requesting workflows from API');
 
@@ -446,7 +392,43 @@ export default {
             console.error("There was an error GETTING WORKFLOWS from GitHub!", error);
             this.showGetErrorMessage = true;
         });
-    // }
+    },
+    checkAuthData(owner, repo, token) {
+      if(!owner || !repo || !token || owner === '' || repo === '' || token === '') {
+        throw new Error('Owner, repo and token required');
+      }
+    }
+  },
+  mounted () {
+      const projectId = this.$route.params.projectId;
+      const methodName = this.$route.params.deployName;
+
+      // Getting project data
+      // axios.get(`http://${process.env.PORT}/api/project/${projectId}`)
+      axios.get(`http://localhost:8080/api/project/${projectId}`)
+      .then(response => {
+          this.project = response.data;
+
+          let owner = this.project.repoOwner;
+          let repo = this.project.repoName;
+          let token = this.project.githubToken;
+
+          this.deployMethod = this.project.deployMethods.find(method => method.name === methodName);
+
+          // Get Data from GH
+          this.checkAuthData(owner, repo, token)
+          this.getRunsFromGHApi(owner, repo, token);
+          this.getWorkflowsFromGHApi(owner, repo, token);
+      })
+      .catch(err => {
+          console.log(err);
+      })
+      // this.project = this.projects.find(project => project.id === projectId);
+      // this.deployMethod = this.project.deployMethods.find(method => method.name === this.deployName);
+    
+  },
+  created() {
+    
   }
 }
 </script>

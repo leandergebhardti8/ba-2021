@@ -8,10 +8,6 @@ const keys = require('./config/keys')
 app.use(bodyParser.json());
 app.use(cors());
 
-// Mongoose Models
-// const user = require('./config/models/user');
-// const project = require('./config/models/project');
-
 // app.use(express.static(__dirname + '/dist/'))
 // app.get(/.*/, function (req, res) {
 //   res.sendFile(__dirname + '/dist/index.html')
@@ -22,7 +18,6 @@ app.listen(port)
 console.log('Server started...')
 
 if (keys.mongoURI) {
-  // create a custom db access method
   console.log('Trying to connect to mongodb');
   try {
     // eslint-disable-next-line global-require
@@ -36,12 +31,5 @@ if (keys.mongoURI) {
   console.log('NO MONGO URI SPECIFIED!');
 }
 
+// Routes for Projects
 require('./app/routes/project.routes.js')(app);
-
-// app.post('/api/projects/create', async (req, res) => {
-//   projects = req.body
-//   console.log(projects)
-
-//   const response = await project.create(project)
-//   console.log(response)
-// })

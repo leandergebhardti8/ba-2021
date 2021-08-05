@@ -8,6 +8,7 @@
 
 <script>
 import Header from './components/navigation/Header.vue'
+// import axios from 'axios';
 // import Breadcrumb from './components/navigation/Breadcrumb.vue'
 
 export default {
@@ -18,44 +19,7 @@ export default {
   }, 
   data() {
     return{
-      // projects: [
-      //           { 
-      //           name: 'BA - Projekt', 
-      //           id: '1', 
-      //           githubURL: 'https://github.com/leandergebhardti8/ba-2021.git', 
-      //           repoOwner: 'leandergebhardti8', 
-      //           repoName: 'ba-2021', 
-      //           githubToken: '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', 
-      //           deployMethods: [
-      //             {
-      //               name: 'Heroku',
-      //               environments: [
-      //                 {
-      //                   name: 'Heroku', 
-      //                   action: 'run-deploy', 
-      //                   id: '1', 
-      //                   url: 'https://ba-2021.herokuapp.com/', 
-      //                   builds: ["07.03.2021 11:12:40"]
-      //                 }, 
-      //               ],
-      //             }
-      //           ], 
-      //           },
-      //           { 
-      //             name: 'ExampleName', 
-      //             id: '2', 
-      //             githubURL: 'test.test.test.git',
-      //             epoOwner: '', 
-      //             repoName: '', 
-      //             githubToken: '', 
-      //             deployMethods: [
-      //               {
-      //                 name: 'S3',
-      //                 environments: [],
-      //               }
-      //             ] 
-      //             },
-      // ],
+      projects: undefined,
       items: [
         {
           text: 'Home',
@@ -64,10 +28,30 @@ export default {
       ],
     }
   },
-  provide() {
-    return {
-      projects: this.projects,
-    }
+  // provide() {
+  //   const appData = {} 
+
+  //   Object.defineProperty(appData, "projects", {
+  //           enumerable: true,
+  //           get: () => this.projects,
+  //       })
+
+  //       return {
+  //           projects: this.projects,
+  //           appData
+  //       }
+  // },
+  created() {
+    
+  },
+  mounted() {
+    // axios.get('http://localhost:8080/api/projects')
+    // .then(response => {
+    //     this.projects = response.data;
+    // })
+    // .catch(err => {
+    //     console.log(err);
+    // })
   }
 }
 </script>

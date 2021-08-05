@@ -2,7 +2,7 @@ module.exports = function(app) {
     var projectService = require('../services/projectService.js');
     
     // Create a new project
-    app.post('/api/projects', projectService.create);
+    app.post('/api/project', projectService.create);
 
     // Get all projects
     app.get('/api/projects', projectService.getAll);

@@ -19,23 +19,25 @@
             </b-dropdown>
           </b-button-group>
         </div>
-
-        <ul class="deploys">
-            <router-link 
-                :to="'/project/' + project.id + '/' + deployMethod.name" 
-                tag="li"
-                v-for="deployMethod in this.project.deployMethods" 
-                :key="deployMethod.name"
-                class="deploy-item">
-                <img src="../assets/icons/heroku-icon.svg" alt="Heroku_Icon" v-if="deployMethod.name === 'Heroku'"> <img src="../assets/icons/s3-icon.png" alt="S3_Icon" class="s3-icon" v-if="deployMethod.name === 'S3'"> {{ deployMethod.name }}
-            </router-link>
-        </ul>
+        <div class="deploy-methods" v-if="deployMethodIsDefined">
+            <ul class="deploy-method-item">
+                <router-link 
+                    :to="'/project/' + project.id + '/' + deployMethod.name" 
+                    tag="li"
+                    v-for="deployMethod in this.project.deployMethods" 
+                    :key="deployMethod.name"
+                    class="method-button"
+                >
+                    <img src="../assets/icons/heroku-icon.svg" alt="Heroku_Icon" v-if="deployMethod.name === 'Heroku'"> <img src="../assets/icons/s3-icon.png" alt="S3_Icon" class="s3-icon" v-if="deployMethod.name === 'S3'"> {{ deployMethod.name }}
+                </router-link>
+                <span class="delete-button" @click="deleteDeployMethod(deployMethod.name)"><b-icon-x font-scale="2.5" variant="danger" v-b-tooltip.hover.left="'Delete Environment'"></b-icon-x></span>
+            </ul>
+        </div>
     </div>
 </template>
 
 <script>
- import axios from 'axios';
-
+import axios from 'axios'
 export default {
   name: 'Deploys',
 //   inject: [
@@ -43,9 +45,10 @@ export default {
 //   ],
   data() {
       return {
-        projectId: 0,
         project: undefined,
-        herokuIconURL: `../assets/icons/heroku-icon.svg`,
+        projects: undefined,
+        deployMethodIsDefined: false,
+        // herokuIconURL: `../assets/icons/heroku-icon.svg`,
         deployMethod: {
             name: '',
             environments: []
@@ -53,23 +56,7 @@ export default {
       }
   },
   computed: {
-    deployMethodDefined() {
-      return this.project.deployMethods.length > 0;
-    },
-    isHeroku() {
-        let heroku;
-        for (let index = 0; index < this.project.deployMethods.length; index++) {
-            heroku = this.project.deployMethods[index].name === 'Heroku';   
-        }
-        return heroku;
-    },
-    isS3() {
-       let s3;
-        for (let index = 0; index < this.project.deployMethods.length; index++) {
-            s3 = this.project.deployMethods[index].name === 'S3';   
-        }
-        return s3; 
-    },
+
   },
   methods: {
     navigateToProjects() {
@@ -78,13 +65,22 @@ export default {
     addDeployMethod(methodName) {
         this.project.deployMethods.push({name: methodName, environments: []});
     },
+    deleteDeployMethod(methodName) {
+        this.project.deployMethods.find(method => method.name === methodName);
+    },
+    deployMethodDefined() {
+      this.deployMethodIsDefined = this.project.deployMethods.length > 0;
+    },
     },
     created() {
-        this.projectId = this.$route.params.projectId;
         // this.project = this.projects.find(project => project.id === projectId);
-        axios.get(`http://localhost:8080/api/project/${this.projectId}`)
+    },
+    mounted() {
+        const projectId = this.$route.params.projectId;
+        axios.get(`http://localhost:8080/api/project/${projectId}`)
         .then(response => {
             this.project = response.data;
+            this.deployMethodDefined();
         })
         .catch(err => {
             console.log(err);
@@ -113,10 +109,8 @@ export default {
     label {
         margin: 0;
     }
-    .deploy-item {
-        cursor: pointer;
-    }
-    .deploy-item{
+
+    .deploy-method-item{
         background: white;
         border-radius: 5px;
         color: black;
@@ -125,6 +119,9 @@ export default {
         text-align: left;
         padding: 15px;
         font-weight: 500;
+        cursor: pointer;
+        display: flex;
+        flex-wrap: wrap;
     }
     .close_btn {
       left: 0;
@@ -142,5 +139,30 @@ export default {
     .s3-icon {
         width: 64px;
         height: 64px;
+    }
+
+    .delete-button {
+        flex: 1 1; /*  Stretching: */
+        flex: 0 1; /*  No stretching: */
+        margin-top: auto;
+        margin-bottom: auto;
+        margin-left: auto;
+        margin-right: 1rem;
+        &:hover {
+            transform: scale(1.5);
+        }
+    }
+
+    .deploy-methods {
+        margin: 0 2rem 0 2rem;
+    }
+
+    .deploy-method {
+        display: flex;
+        flex-wrap: wrap; 
+    }
+
+    .method-button {
+        width: 97%;
     }
 </style>

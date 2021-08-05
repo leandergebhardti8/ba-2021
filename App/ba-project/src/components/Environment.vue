@@ -13,6 +13,7 @@
         <p><b-icon-arrow-right></b-icon-arrow-right> Visit Here: <a :href="environment.url" target="_blank" class="env_url">{{ environment.url }}</a></p>
         <hr>
         <p>Environment Action Name <i>(needed to deploy Project in Environment)</i>: <strong>{{environment.action}}</strong></p>
+        
         <!-- MODALS -->
         <b-modal 
             id="modal-edit-env" 
@@ -111,11 +112,13 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Environment',
-  inject: [
-    'projects'
-  ], 
+  // inject: [
+  //   'projects'
+  // ], 
   data() {
     return {
         environment: null,
@@ -157,21 +160,28 @@ export default {
     },
   },
   created() {
+
+  },
+  mounted() {
     //Get Environment ID From route
     const envId = this.$route.params.environmentId;
     const projectId = this.$route.params.projectId;
     const methodName = this.$route.params.methodName;
-    console.log(`envID ${envId}`)
-    console.log(`projectID ${projectId}`)
 
     // Get this Environment with Project ID & Environment ID
-    this.project = this.projects.find(project => project.id === projectId);
-    this.deployMethod = this.project.deployMethods.find(method => method.name === methodName);
-    this.environment = this.deployMethod.environments.find(env => env.id === envId);
-
-    if(this.environment.builds)
-      this.createDeployTable(this.environment.builds);
-  },
+    axios.get(`http://localhost:8080/api/project/${projectId}`)
+      .then(response => {
+          this.project = response.data;
+          this.deployMethod = this.project.deployMethods.find(method => method.name === methodName);
+          this.environment = this.deployMethod.environments.find(env => env._id === envId);
+          if(this.environment.builds) {
+            this.createDeployTable(this.environment.builds);
+          }
+      })
+      .catch(err => {
+          console.log(err);
+      })
+  }
 }
 </script>
 

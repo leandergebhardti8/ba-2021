@@ -1,17 +1,89 @@
 <template>
     <div class="project">
         <p class="info">{{ project.name }} <b-icon-github></b-icon-github></p>
+        <!-- <span class="edit-button"><b-icon-three-dots-vertical></b-icon-three-dots-vertical></span> -->
+        <div class="settings_button">
+          <b-dropdown right>
+            <b-dropdown-item v-b-modal="`modal-rename-${project.id}`">Rename</b-dropdown-item>
+            <b-dropdown-item v-b-modal="`modal-edit-${project.id}`"><b-icon-pencil></b-icon-pencil> Edit</b-dropdown-item>
+            <b-dropdown-divider></b-dropdown-divider>
+            <b-dropdown-item @click="deleteProject(project.id)"><b-icon-exclamation-triangle variant="danger"></b-icon-exclamation-triangle> Delete</b-dropdown-item>
+          </b-dropdown>
+        </div>
+
+        <!-- Rename Project -->
+        <b-modal 
+            :id="`modal-rename-${modalName}`"
+            title="Rename Project"
+            @ok="renameProject(project.id)"
+        >
+            <b-form inline>
+              <label class="sr-only" for="inline-form-input-id">Project Name</label>
+              <b-form-input
+                  id="inline-form-input-name"
+                  class="mb-2 mr-sm-2 mb-sm-0"
+                  placeholder="Name"
+                  v-model="project.name"
+              ></b-form-input>
+            </b-form>
+        </b-modal>
+
+        <!-- Edit Project -->
+        <b-modal 
+            :id="`modal-edit-${modalName}`"
+            title="Edit Project"
+            @ok="editProject(project.id)"
+        >
+            <b-form inline>
+              <label class="sr-only" for="inline-form-input-id">Project Name</label>
+              <b-form-input
+                  id="inline-form-input-name"
+                  class="mb-2 mr-sm-2 mb-sm-0"
+                  placeholder="Name"
+                  v-model="project.name"
+              ></b-form-input>
+              <label class="sr-only" for="inline-form-input-id">Github URl</label>
+              <b-form-input
+                  id="inline-form-input-name"
+                  class="mb-2 mr-sm-2 mb-sm-0"
+                  placeholder="URL"
+                  v-model="project.githubURL"
+              ></b-form-input>
+              <label class="sr-only" for="inline-form-input-id">Github Repo</label>
+              <b-form-input
+                  id="inline-form-input-name"
+                  class="mb-2 mr-sm-2 mb-sm-0"
+                  placeholder="Repository Name"
+                  v-model="project.repoName"
+              ></b-form-input>
+              <label class="sr-only" for="inline-form-input-id">Github Owner</label>
+              <b-form-input
+                  id="inline-form-input-name"
+                  class="mb-2 mr-sm-2 mb-sm-0"
+                  placeholder="Owner"
+                  v-model="project.repoOwner"
+              ></b-form-input>
+              <label class="sr-only" for="inline-form-input-id">Github Token</label>
+              <b-form-input
+                  id="inline-form-input-name"
+                  class="mb-2 mr-sm-2 mb-sm-0"
+                  placeholder="GitHub Token"
+                  v-model="project.githubToken"
+              ></b-form-input>
+            </b-form>
+        </b-modal>
         <!-- <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/leandergebhardti8/ba-2021/node"> -->
     </div>
 </template>
 
 <script>
-// import axios from 'axios';
+import axios from 'axios';
 
 export default {
   name: 'Project',
   props: [
-    'project'
+    'project',
+    'modalName'
   ], 
   data() {
     return {
@@ -53,7 +125,36 @@ export default {
     // });
   },
   methods: {
-    
+    renameProject() {
+      axios.put(`http://localhost:8080/api/project/${this.project.id}`, this.project)
+      .then(response => {
+          this.project = response.data;
+          this.$emit('update');
+      })
+      .catch(err => {
+          console.log(err);
+      })
+    },
+    editProject() {
+      axios.put(`http://localhost:8080/api/project/${this.project.id}`, this.project)
+      .then(response => {
+          this.project = response.data;
+          this.$emit('update');
+      })
+      .catch(err => {
+          console.log(err);
+      })
+    },
+    deleteProject() {
+      axios.delete(`http://localhost:8080/api/project/${this.project._id}`)
+      .then(response => {
+          console.log(response.data);
+          this.$emit('update');
+      })
+      .catch(err => {
+          console.log(err);
+      })
+    }
   },
 }
 </script>
@@ -65,6 +166,8 @@ export default {
     border-radius: 5px;
     color: black;
     border-bottom: 1px solid black;
+    display: flex;
+    flex-wrap: wrap;
   }
   
   p {
@@ -80,5 +183,14 @@ export default {
     padding: 10px;
     margin-left: 5px;
     border-radius: 15px;
+  }
+
+  .settings_button {
+    flex: 1 1; /*  Stretching: */
+    flex: 0 1;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: 1rem;
   }
 </style>

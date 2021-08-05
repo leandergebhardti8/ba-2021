@@ -34,6 +34,9 @@ exports.create = (req, res) => {
         name: req.body.name,
         id: req.body.id,
         githubURL: req.body.githubURL,
+        githubToken: req.body.githubToken,
+        repoName: req.body.repoName,
+        repoOwner: req.body.repoOwner,
         deployMethods: req.body.deployMethods,
     });
 
@@ -51,17 +54,20 @@ exports.create = (req, res) => {
 
 // FIND ONE Project by Id
 exports.findOne = (req, res) => {
-    Project.findOne({ id: req.params.id }), (err, obj) => {
-        if(err) {
-            res.status(500).send({
-                message: err.message
+    Project.findOne({ id: req.params.id })
+    .then(project => {
+        if(!project) {
+            return res.status(500).send({
+                message: `Project not found with Id ${req.params.id}`
             })
         }
-        else {
-            console.log(`Sending project with id ${req.params.id}`)
-            res.send(obj)
-        }
-    }
+        console.log(`Sending project with Id: ${req.params.id}`)
+        res.send(project)
+    }).catch(err => {
+        return res.status(500).send({
+            message: `Error retrieving Project with ${req.params.id} ${err.message}`
+        })
+    })
 }
 
 // UPDATE a Project with Id
@@ -89,7 +95,7 @@ exports.update = (req, res) => {
 
 // DELETE a Project
 exports.delete =(req, res) => {
-    Project.findOne({ id: req.params.id})
+    Project.findByIdAndRemove(req.params.id)
     .then(project => {
         if(!project) {
             return res.status(404).send({

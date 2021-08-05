@@ -9,7 +9,7 @@ const keys = require('./keys');
 mongoose.pluralize(null);
 
 module.exports = () => {
-	mongoose.connect(keys.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
+	mongoose.connect(keys.mongoURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true});
 
 	mongoose.Promise = global.Promise;
 

@@ -9,37 +9,12 @@
                 v-for="project in this.projects" 
                 :key="project.id"
                 class="project-item">
-                <Project :project="project"/>
+                <Project :project="project" :modalName="project.id" @update="updateProjects"/>
             </router-link>
         </ul>
         <button v-if="addBtn" class="btn btn-primary" v-b-modal.modal-prevent-closing>
             Add new Project
         </button>
-        <div :class="showNewProjectTemplate ? 'activeForm' : 'form'">
-            <b-icon-x v-if="!addBtn" @click="hideTemplate" class="close_btn" font-scale="2"></b-icon-x>
-            <div class="template" v-if="showNewProjectTemplate">
-                <b-form inline>
-                    <label class="sr-only" for="inline-form-input-id">Project Name</label>
-                    <b-form-input
-                        id="inline-form-input-name"
-                        class="mb-2 mr-sm-2 mb-sm-0"
-                        placeholder="Name"
-                        v-model="name"
-                    ></b-form-input>
-
-                    <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-0" v-model="github">On GitHub</b-form-checkbox>
-                    <div>
-                        <b-form-input
-                            id="inline-form-input-name"
-                            class="mb-2 mr-sm-2 mb-sm-0"
-                            placeholder="GitHub HTTPS URL"
-                            v-model="githubURL"
-                        ></b-form-input>
-                    </div>
-                    <b-button variant="primary" @click="addProject">Save</b-button>
-                </b-form>
-            </div>
-        </div>
 
         <!-- Modals -->
         <b-modal 
@@ -47,46 +22,46 @@
             title="Adding new Project"
             @ok="addProject">
             <b-form inline>
-                    <label class="sr-only" for="inline-form-input-id">Project Name</label>
+                <label class="sr-only" for="inline-form-input-id">Project Name</label>
+                <b-form-input
+                    id="inline-form-input-name"
+                    class="mb-2 mr-sm-2 mb-sm-0"
+                    placeholder="Name"
+                    v-model="name"
+                ></b-form-input>
+
+                <div>
+                    <label class="sr-only" for="inline-form-input-id">Github URL</label>
                     <b-form-input
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"
-                        placeholder="Name"
-                        v-model="name"
+                        placeholder="GitHub HTTPS URL"
+                        v-model="githubURL"
                     ></b-form-input>
-
-                    <div>
-                        <label class="sr-only" for="inline-form-input-id">Github URL</label>
-                        <b-form-input
-                            id="inline-form-input-name"
-                            class="mb-2 mr-sm-2 mb-sm-0"
-                            placeholder="GitHub HTTPS URL"
-                            v-model="githubURL"
-                        ></b-form-input>
-                        <label class="sr-only" for="inline-form-input-id">Repositroy Owner</label>
-                        <b-form-input
-                            id="inline-form-input-name"
-                            class="mb-2 mr-sm-2 mb-sm-0"
-                            placeholder="Repo Owner"
-                            v-model="repoOwner"
-                        ></b-form-input>
-                        <label class="sr-only" for="inline-form-input-id">Repositroy Name</label>
-                        <b-form-input
-                            id="inline-form-input-name"
-                            class="mb-2 mr-sm-2 mb-sm-0"
-                            placeholder="Repo Name"
-                            v-model="repoName"
-                        ></b-form-input>
-                        <label class="sr-only" for="inline-form-input-id">GitHub Token</label>
-                        <b-form-input
-                            id="inline-form-input-name"
-                            class="mb-2 mr-sm-2 mb-sm-0"
-                            placeholder="GitHub Token"
-                            v-model="ghToken"
-                        ></b-form-input>
-                    </div>
-                </b-form>
-          </b-modal>
+                    <label class="sr-only" for="inline-form-input-id">Repositroy Owner</label>
+                    <b-form-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        placeholder="Repo Owner"
+                        v-model="repoOwner"
+                    ></b-form-input>
+                    <label class="sr-only" for="inline-form-input-id">Repositroy Name</label>
+                    <b-form-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        placeholder="Repo Name"
+                        v-model="repoName"
+                    ></b-form-input>
+                    <label class="sr-only" for="inline-form-input-id">GitHub Token</label>
+                    <b-form-input
+                        id="inline-form-input-name"
+                        class="mb-2 mr-sm-2 mb-sm-0"
+                        placeholder="GitHub Token"
+                        v-model="ghToken"
+                    ></b-form-input>
+                </div>
+            </b-form>
+        </b-modal>
     </div>
 </template>
 
@@ -102,7 +77,6 @@ export default {
 //   ], 
   data() {
       return {
-          showNewProjectTemplate: false,
           addBtn: true,
           name: '',
           githubURL: '',
@@ -112,17 +86,6 @@ export default {
           projects: [],
       }
   },
-  provide() {
-    return {
-      projects: this.projects,
-    }
-  },
-  computed: {
-
-  },
-  props: {
-    //   projects,
-  },
   methods: {
       getProjects() {
         //   projectService.getAllProjects()
@@ -131,7 +94,13 @@ export default {
         //           this.$set(this, 'projects', projects)
         //       }).bind(this)
         //   );
-        axios.get("http://localhost:8080/api/projects")
+        this.updateProjects();
+      },
+      navigateHome() {
+          this.$router.push('/');
+      },
+      updateProjects() {
+          axios.get("http://localhost:8080/api/projects")
         .then(response => {
             this.projects = response.data;
         })
@@ -139,26 +108,24 @@ export default {
             console.log(err);
         })
       },
-      navigateHome() {
-          this.$router.push('/');
-      },
       addProject() {
         const intID = this.projects.length + 1;
-        const projectID = intID.toString();
+        const projectID = String(intID);
         var newproject = {
             name: this.name, 
-            id: projectID,  
-            githubURL: this.githubURL,  
+            id: projectID,   
             repoOwner: this.repoOwner,
             repoName: this.repoName,
+            githubURL: this.githubURL, 
             githubToken: this.ghToken,
             deployMethods: [],
-            environments: [],
         };
-        axios.post('http://localhost:8080/api/projects', newproject)
+        console.log(newproject);
+        axios.post('http://localhost:8080/api/project', newproject)
         .then(response => {
-            this.porject.id = response.data.id;
-            console.log(response.data)
+            // this.project.id = response.data.id;
+            console.log(`Updating projects ${response.data}`)
+            this.updateProjects();
         })
         .catch(err => {
             console.log(err);
@@ -183,7 +150,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
     h1 {
         text-align: center;
@@ -193,6 +159,8 @@ export default {
     }
     ul {
         list-style-type:none;
+        margin: 0 2rem 0 2rem;
+        padding: 0;
     }
     .template {
         width: 45%;
