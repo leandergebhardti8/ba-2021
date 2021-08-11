@@ -20,24 +20,36 @@
           </b-button-group>
         </div>
         <div class="deploy-methods" v-if="deployMethodIsDefined">
-            <ul class="deploy-method-item">
+            <ul class="deploy-method-items">
                 <router-link 
                     :to="'/project/' + project.id + '/' + deployMethod.name" 
                     tag="li"
                     v-for="deployMethod in this.project.deployMethods" 
                     :key="deployMethod.name"
-                    class="method-button"
+                    class="method-item-button"
                 >
-                    <img src="../assets/icons/heroku-icon.svg" alt="Heroku_Icon" v-if="deployMethod.name === 'Heroku'"> <img src="../assets/icons/s3-icon.png" alt="S3_Icon" class="s3-icon" v-if="deployMethod.name === 'S3'"> {{ deployMethod.name }}
+                    <Deploy 
+                        v-if="deployMethodIsDefined" 
+                        :deployMethod="deployMethod" 
+                        @deleteDeploymentMethod="deleteDeployMethod"
+                    />
+                <span class="delete-button" @click="deleteDeployMethod(deployMethod.name)">
+                    <b-icon-x 
+                        font-scale="2.5" 
+                        variant="danger" 
+                        v-b-tooltip.hover.left="'Delete Deployment Method'">
+                    </b-icon-x>
+                </span>
                 </router-link>
-                <span class="delete-button" @click="deleteDeployMethod(deployMethod.name)"><b-icon-x font-scale="2.5" variant="danger" v-b-tooltip.hover.left="'Delete Environment'"></b-icon-x></span>
             </ul>
         </div>
     </div>
 </template>
 
 <script>
-import axios from 'axios'
+    import axios from 'axios'
+    import Deploy from './Deploy.vue'
+
 export default {
   name: 'Deploys',
 //   inject: [
@@ -56,8 +68,8 @@ export default {
         }
       }
   },
-  computed: {
-
+  components: {
+      Deploy: Deploy
   },
   methods: {
         navigateToProjects() {
@@ -93,7 +105,7 @@ export default {
             })
         },
         deployMethodDefined() {
-        this.deployMethodIsDefined = this.project.deployMethods.length > 0;
+            this.deployMethodIsDefined = this.project.deployMethods.length > 0;
         },
         updateProject() {
             axios.get(`http://localhost:8080/api/project/${this.projectId}`)
@@ -120,52 +132,30 @@ export default {
     h1 {
         text-align: center;
     }
-    .deploy-wrapper {
-        text-align: left;
-    }
-    ul {
-        list-style-type:none;
-    }
-    .template {
-        width: 45%;
-        margin: 0 2rem;
-    }
-    button {
-        margin: 15px 2rem;
-    }
-    label {
-        margin: 0;
-    }
 
-    .deploy-method-item{
-        background: white;
-        border-radius: 5px;
-        color: black;
-        border-bottom: 1px solid black;
-        margin: 0px !important;
-        text-align: left;
-        padding: 15px;
-        font-weight: 500;
-        cursor: pointer;
-        display: flex;
-        flex-wrap: wrap;
-    }
     .close_btn {
       left: 0;
       float: left;
       position: absolute;
       margin: 1.75rem;
     }
+
     .select_deploy_method {
         position: relative;
-        // -ms-transform: translateX(50%);
-        // transform: translateX(50%);
         margin: 0 0 2rem;
         text-align: center;
     }
-    .s3-icon {
-        width: 64px;
-        height: 64px;
+
+    .method-item-button {
+        background: white;
+        border-radius: 5px;
+        color: black;
+        border-bottom: 1px solid black;
+        padding: 15px;
+        width: 97%;
+        display: flex;
+        flex-wrap: wrap;
+        cursor: pointer;
     }
 
     .delete-button {
@@ -178,18 +168,5 @@ export default {
         &:hover {
             transform: scale(1.5);
         }
-    }
-
-    .deploy-methods {
-        margin: 0 2rem 0 2rem;
-    }
-
-    .deploy-method {
-        display: flex;
-        flex-wrap: wrap; 
-    }
-
-    .method-button {
-        width: 97%;
     }
 </style>

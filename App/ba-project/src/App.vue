@@ -2,13 +2,12 @@
   <div id="app">
     <Header/>
     <!-- <Breadcrumb/> -->
-    <router-view></router-view>
+    <router-view/>
   </div>
 </template>
 
 <script>
 import Header from './components/navigation/Header.vue'
-// import axios from 'axios';
 // import Breadcrumb from './components/navigation/Breadcrumb.vue'
 
 export default {
@@ -19,7 +18,6 @@ export default {
   }, 
   data() {
     return{
-      projects: undefined,
       items: [
         {
           text: 'Home',
@@ -28,31 +26,6 @@ export default {
       ],
     }
   },
-  // provide() {
-  //   const appData = {} 
-
-  //   Object.defineProperty(appData, "projects", {
-  //           enumerable: true,
-  //           get: () => this.projects,
-  //       })
-
-  //       return {
-  //           projects: this.projects,
-  //           appData
-  //       }
-  // },
-  created() {
-    
-  },
-  mounted() {
-    // axios.get('http://localhost:8080/api/projects')
-    // .then(response => {
-    //     this.projects = response.data;
-    // })
-    // .catch(err => {
-    //     console.log(err);
-    // })
-  }
 }
 </script>
 

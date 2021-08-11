@@ -1,18 +1,18 @@
 module.exports = function(app) {
-    var projectService = require('../services/projectService.js');
+    var projectController = require('../services/projectController.js');
     
     // Create a new project
-    app.post('/api/project', projectService.create);
+    app.post('/api/project', projectController.create);
 
     // Get all projects
-    app.get('/api/projects', projectService.getAll);
+    app.get('/api/projects', projectController.getAll);
 
     // Get one project by Id
-    app.get('/api/project/:id', projectService.findOne);
+    app.get('/api/project/:id', projectController.findOne);
 
     // Update a Project with Id
-    app.put('/api/project/:id', projectService.update);
+    app.put('/api/project/:id', projectController.update);
 
     // Delete a Project with Id
-    app.delete('/api/project/:id', projectService.delete);
+    app.delete('/api/project/:id', projectController.delete);
 }

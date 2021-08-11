@@ -1,33 +1,49 @@
 <template>
     <div class="login">
       <div class="left-half">
-        <h2>Login to continue</h2>
+        <h2>Register to continue</h2>
       </div>
       <div class="right-half">
         <h1>Welcome!</h1>
-        <p>Please login with your personal data.</p>
+        <p>Please register with your personal data.</p>
             <div>
               <label class="sr-only" for="inline-form-input-username">Username</label>
               <b-form inline>
                   <b-form-input
                     id="inline-form-input-name"
                     class="mb-2 mr-sm-2 mb-sm-0"
-                    placeholder="Max Muster"
-                    v-model="username"
-                  ></b-form-input>
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    v-model="form.username"
+                  >
+                  </b-form-input>
                   <b-form-invalid-feedback :state="usernameValidation">
                     <b-icon icon="exclamation-triangle"></b-icon> Your username must be 5-12 characters long.
                   </b-form-invalid-feedback>
                   <b-form-valid-feedback :state="usernameValidation">
                     <b-icon-check></b-icon-check>Looks Good.
                   </b-form-valid-feedback>
-                  <label class="sr-only" for="inline-form-input-username">Password</label>
+                  <label class="sr-only" for="inline-form-input-full-name">Full Name</label>
+                  <b-form-input 
+                    type="text" 
+                    id="inline-form-input-full-name" 
+                    name="full_name"
+                    v-model="form.full_name"
+                  >
+                  </b-form-input>
+                  <label class="sr-only" for="inline-form-input-password">Password</label>
                   <div @click="togglePassword" class="eye-icon">
                     <b-icon-eye-fill v-if="showPassword"></b-icon-eye-fill>
                     <b-icon-eye-slash-fill v-if="!showPassword"></b-icon-eye-slash-fill>
                   </div>
-                  
-                  <b-form-input :type="this.type" id="inline-form-input-password" v-model="password"></b-form-input>
+                  <b-form-input 
+                    :type="this.type" 
+                    id="inline-form-input-password" 
+                    name="password"
+                    v-model="form.password"
+                  >
+                  </b-form-input>
                   <b-form-invalid-feedback :state="passwordValidation">
                     <b-icon icon="exclamation-triangle"></b-icon>Your password must be 5-12 characters long.
                   </b-form-invalid-feedback>
@@ -50,29 +66,46 @@
                   </b-form-valid-feedback>
                   <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-1">Remember me</b-form-checkbox>
 
-                  <button type="submit" variant="success" class="login-button">Login</button>
+                  <button type="submit" variant="success" class="login-button">Register</button>
               </b-form>
-              <p v-if="showError">Username already exists</p>
             </div>
+            <b-alert v-if="showError" show variant="danger">
+              <p class="error">Username already exists</p>
+            </b-alert>
       </div>
     </div>
 </template>
 
 <script>
+  import { mapActions } from 'vuex';
+
 export default {
-  name: 'Login',
+  name: 'Register',
   props: {
   }, 
   data() {
     return {
-      username: '',
-      password: '',
+      form: {
+        username: '',
+        full_name: '',
+        password: '',
+      },
       type: 'password',
       showError: false,
       showPassword: false
     }
   },
   methods: {
+    ...mapActions(["Register"]),
+    async submit() {
+      try {
+        await this.Register(this.form);
+        this.$router.push("/projects");
+        this.showError = false
+      } catch (error) {
+        this.showError = true
+      }
+    },
     togglePassword() {
       console.log('triggered!')
       if(this.showPassword) this.showPassword = false;
@@ -80,26 +113,27 @@ export default {
 
       if(this.type === 'password') this.type = 'text';
       else if(this.type === 'text') this.type = 'password';
-    }
+    },
+
   }, 
   computed: {
     usernameValidation() {
-      return this.username.length > 4 && this.username.length < 13
+      return this.form.username.length > 4 && this.form.username.length < 13
     },
     passwordValidation() {
-      return this.password.length > 4
+      return this.form.password.length > 4
     },
     passwordValidationNumbers() {
-      return /\d/.test(this.password);
+      return /\d/.test(this.form.password);
     },
     passwordSpecial() {
-      return /[!@#$%^&*)(+=._-]/.test(this.password);
+      return /[!@#$%^&*)(+=._-]/.test(this.form.password);
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped lang="scss">
   .navbar {
     background: black;
@@ -153,6 +187,10 @@ export default {
     margin-left: 15px;
     display: inline-block;
     cursor: pointer;
+  }
+
+  .error {
+    margin: 0 !important;
   }
 
   label {

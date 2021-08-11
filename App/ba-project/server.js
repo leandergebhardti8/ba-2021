@@ -6,7 +6,7 @@ const app = express()
 const keys = require('./config/keys')
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors({credentials: true, origin: 'http://localhost:8081'}));
 
 // app.use(express.static(__dirname + '/dist/'))
 // app.get(/.*/, function (req, res) {
@@ -33,3 +33,5 @@ if (keys.mongoURI) {
 
 // Routes for Projects
 require('./app/routes/project.routes.js')(app);
+// Routes for Users
+require('./app/routes/user.routes.js')(app);

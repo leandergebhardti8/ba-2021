@@ -27,7 +27,7 @@
                     id="inline-form-input-name"
                     class="mb-2 mr-sm-2 mb-sm-0"
                     placeholder="Name"
-                    v-model="name"
+                    v-model="newProject.name"
                 ></b-form-input>
 
                 <div>
@@ -36,28 +36,28 @@
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"
                         placeholder="GitHub HTTPS URL"
-                        v-model="githubURL"
+                        v-model="newProject.githubURL"
                     ></b-form-input>
                     <label class="sr-only" for="inline-form-input-id">Repositroy Owner</label>
                     <b-form-input
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"
                         placeholder="Repo Owner"
-                        v-model="repoOwner"
+                        v-model="newProject.repoOwner"
                     ></b-form-input>
                     <label class="sr-only" for="inline-form-input-id">Repositroy Name</label>
                     <b-form-input
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"
                         placeholder="Repo Name"
-                        v-model="repoName"
+                        v-model="newProject.repoName"
                     ></b-form-input>
                     <label class="sr-only" for="inline-form-input-id">GitHub Token</label>
                     <b-form-input
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"
                         placeholder="GitHub Token"
-                        v-model="ghToken"
+                        v-model="newProject.githubToken"
                     ></b-form-input>
                 </div>
             </b-form>
@@ -68,32 +68,39 @@
 <script>
  import Project from './Project.vue';
  import axios from 'axios';
-//  import projectService from '/app/services/projectService.js';
+//  import { mapState ,mapActions } from 'vuex'   
 
 export default {
   name: 'Projects',
-//   inject: [
-//     'projects'
-//   ], 
   data() {
       return {
           addBtn: true,
-          name: '',
-          githubURL: '',
-          repoOwner: '',
-          repoName: '',
-          ghToken: '',
+          newProject: {
+            name: '',
+            id: this.newProjectId,
+            githubURL: '',
+            repoOwner: '',
+            repoName: '',
+            githubToken: '',
+          },
           projects: [],
       }
   },
+  created: function () {
+    //   this.GetProjects()
+  },
+  computed: {
+    // ...mapState({ 
+    //     projects: state => state.projects,
+    // }),
+    // newProjectId(){
+    //     const intID = this.projects.length + 1;
+    //     return String(intID);
+    // }
+  },
   methods: {
+    //   ...mapActions(['CreateProject', 'GetProjects']),
       getProjects() {
-        //   projectService.getAllProjects()
-        //   .then(
-        //       (projects => {
-        //           this.$set(this, 'projects', projects)
-        //       }).bind(this)
-        //   );
         this.updateProjects();
       },
       navigateHome() {
@@ -116,6 +123,13 @@ export default {
           }
       },
       addProject() {
+        //   try {
+        //       await this.CreateProject(this.newProject);
+        //       console.log(`Updating projects`)
+        //   } catch (error) {
+        //       console.log('Something went wrong while trying to create a new Project!')
+        //       throw new Error
+        //   }
         const intID = this.projects.length + 1;
         const projectID = String(intID);
         var newproject = {
@@ -127,7 +141,6 @@ export default {
             githubToken: this.ghToken,
             deployMethods: [],
         };
-        console.log(newproject);
         axios.post('http://localhost:8080/api/project', newproject)
         .then(response => {
             // this.project.id = response.data.id;
@@ -147,9 +160,6 @@ export default {
   },
   components: {
       Project: Project,
-  },
-  created() {
-      
   },
   mounted() {
     this.getProjects();

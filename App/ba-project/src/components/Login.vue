@@ -8,12 +8,13 @@
         <p>Please login with your personal data.</p>
             <div>
               <label class="sr-only" for="inline-form-input-username">Username</label>
-              <b-form inline>
+              <b-form inline @submit.prevent="submit">
                   <b-form-input
-                    id="inline-form-input-name"
+                    id="inline-form-input-username"
                     class="mb-2 mr-sm-2 mb-sm-0"
                     placeholder="Max Muster"
-                    v-model="username"
+                    name="username"
+                    v-model="form.username"
                   ></b-form-input>
                   <b-form-invalid-feedback :state="usernameValidation">
                     <b-icon icon="exclamation-triangle"></b-icon> Your username must be 5-12 characters long.
@@ -27,7 +28,13 @@
                     <b-icon-eye-slash v-if="showPassword"></b-icon-eye-slash>
                   </div>
                   
-                  <b-form-input :type="this.type" id="inline-form-input-password" v-model="password"></b-form-input>
+                  <b-form-input 
+                    :type="this.type" 
+                    id="inline-form-input-password"
+                    name="password"
+                    v-model="form.password"
+                  >
+                  </b-form-input>
                   <b-form-invalid-feedback :state="passwordValidation">
                     <b-icon icon="exclamation-triangle"></b-icon>Your password must be at least 6 characters long.
                   </b-form-invalid-feedback>
@@ -52,27 +59,46 @@
 
                   <button type="submit" variant="success" class="login-button">Login</button>
               </b-form>
-              <p v-if="showError">Username already exists</p>
             </div>
+          <b-alert v-if="showError" show variant="danger">
+              <p class="error">Username already exists</p>
+          </b-alert>
       </div>
     </div>
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
+
 export default {
   name: 'Login',
   props: {
   }, 
   data() {
     return {
-      username: '',
-      password: '',
+      form: {
+        username: '',
+        password: '',
+      },
       type: 'password',
       showError: false,
       showPassword: false
     }
   },
   methods: {
+    ...mapActions(['LogIn']),
+    async submit() {
+      const User = new FormData();
+      User.append('username', this.form.username);
+      User.append('password', this.form.password);
+      try {
+        await this.LogIng(User);
+        this.$router.push('/projects')
+        this.showError = false
+      } catch (error) {
+        this.showError = true
+      }
+    },
     togglePassword() {
       console.log('triggered!')
       if(this.showPassword) this.showPassword = false;
@@ -84,22 +110,22 @@ export default {
   }, 
   computed: {
     usernameValidation() {
-      return this.username.length > 4 && this.username.length < 13
+      return this.form.username.length > 4 && this.form.username.length < 13
     },
     passwordValidation() {
-      return this.password.length > 6
+      return this.form.password.length > 6
     },
     passwordValidationNumbers() {
-      return /\d/.test(this.password);
+      return /\d/.test(this.form.password);
     },
     passwordSpecial() {
-      return /[!@#$%^&*)(+=._-]/.test(this.password);
+      return /[!@#$%^&*)(+=._-]/.test(this.form.password);
     }
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
+
 <style scoped lang="scss">
   .navbar {
     background: black;
@@ -153,6 +179,10 @@ export default {
     margin-left: 15px;
     display: inline-block;
     cursor: pointer;
+  }
+
+  .error {
+    margin: 0 !important;
   }
 
   label {

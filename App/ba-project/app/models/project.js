@@ -28,8 +28,6 @@ const mongoose = require('mongoose');
 		repoOwner: String,
 		githubToken: String,
 		deployMethods: [deployMethod],
-		
-
 	});
 
 	const project = mongoose.model('projects', projectSchema);
