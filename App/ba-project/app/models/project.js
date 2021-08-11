@@ -1,6 +1,20 @@
 const mongoose = require('mongoose');
 // const Schema = mongoose.Schema;
 
+	/* Environment */
+	const environmentSchema = new mongoose.Schema({
+		name: String,
+		action: String,
+		url: String,
+		builds: [String],
+	});
+
+	/* deployMethod */
+	const deployMethod = new mongoose.Schema({
+		name: String,
+		environments: [environmentSchema],
+	});
+
 	/* Project */
 	const projectSchema = new mongoose.Schema({
 		projectId: {
@@ -10,15 +24,10 @@ const mongoose = require('mongoose');
 		id: String,
 		name: String,
 		githubURL: String,
-		deployMethods: [{
-			name: String,
-			environments: [{
-				name: String,
-				action: String,
-				url: String,
-				builds: [String],
-			}],
-		}],
+		repoName: String,
+		repoOwner: String,
+		githubToken: String,
+		deployMethods: [deployMethod],
 		
 
 	});

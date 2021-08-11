@@ -7,7 +7,7 @@
             <b-dropdown-item v-b-modal.modal-rename>Rename</b-dropdown-item>
             <b-dropdown-item v-b-modal.modal-edit-env><b-icon-pencil></b-icon-pencil> Edit</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
-            <b-dropdown-item @click="deleteEnv(environment.id)"><b-icon-exclamation-triangle variant="danger"></b-icon-exclamation-triangle> Delete</b-dropdown-item>
+            <b-dropdown-item @click="deleteEnv(environment._id)"><b-icon-exclamation-triangle variant="danger"></b-icon-exclamation-triangle> Delete</b-dropdown-item>
           </b-dropdown>
         </div>
         <p><b-icon-arrow-right></b-icon-arrow-right> Visit Here: <a :href="environment.url" target="_blank" class="env_url">{{ environment.url }}</a></p>
@@ -56,51 +56,6 @@
                     ></b-form-input>
                 </b-form>
           </b-modal>
-        <!-- <div class="detail_area">
-          <div class="template" v-if="renameTemplate && templateOpen">
-              <b-form inline>
-                  <strong>Rename Environment</strong>
-                  <b-form-input
-                      id="inline-form-input-name"
-                      class="mb-2 mr-sm-2 mb-sm-0"
-                      v-model="environment.name"
-                      readonly
-                  ></b-form-input>
-                  <div>
-                      <b-form-input
-                          id="inline-form-input-name"
-                          class="mb-2 mr-sm-2 mb-sm-0"
-                          placeholder="New Name"
-                          v-model="newEnvName"
-                      ></b-form-input>
-                  </div>
-                  <b-button variant="primary" @click="renameEnv">Save</b-button>
-                  <b-button variant="primary" @click="closeTemplate">Cancel</b-button>
-              </b-form>
-          </div>
-
-          <div class="template" v-if="URLTemplate && templateOpen">
-              <b-form inline>
-                  <strong>Reset Environment URL</strong>
-                  <b-form-input
-                      id="inline-form-input-name"
-                      class="mb-2 mr-sm-2 mb-sm-0"
-                      v-model="environment.url"
-                      readonly
-                  ></b-form-input>
-                  <div>
-                      <b-form-input
-                          id="inline-form-input-name"
-                          class="mb-2 mr-sm-2 mb-sm-0"
-                          placeholder="New Environment URL"
-                          v-model="newEnvURL"
-                      ></b-form-input>
-                  </div>
-                  <b-button variant="primary" @click="resetEnvURL">Save</b-button>
-                  <b-button variant="primary" @click="closeTemplate">Cancel</b-button>
-              </b-form>
-          </div>
-        </div> -->
 
         <div class="deploy_history">
             <h3>Deploy History</h3>
@@ -138,11 +93,27 @@ export default {
       this.$router.push('/project/' + this.project.id + '/' + this.deployMethod.name);
     },
     deleteEnv(envId) {
-        if (envId != null && envId != '') {
-          const index = this.project.deployMethods.environments.indexOf(envId)
-          this.project.deployMethods.environments.splice(index, 1);
+        // if (envId != null && envId != '') {
+        //   const index = this.project.deployMethods.environments.indexOf(envId)
+        //   this.project.deployMethods.environments.splice(index, 1);
+        // }
+        for(let i=0; i < this.project.deployMethods.length; i++){
+          if(this.project.deployMethods[i].name === this.deployMethod.name){
+            const index = this.project.deployMethods[i].environments.indexOf(env => env._id === envId);
+            this.project.deployMethods[i].environments.splice(index, 1);
+          }
         }
-      this.$router.push('/projects');
+        axios.put(`http://localhost:8080/api/project/${this.project._id}`, this.project)
+        .then(response => {
+            this.project.id = response.data.id;
+            console.log(`Updating project ${response.data}`)
+        })
+        .catch(err => {
+            console.log(err);
+        })
+
+        // Go back to project
+        this.$router.push(`/project/${this.project.id}/${this.deployMethod.name}`);
     },
     getLatestBuildDate(builds) {
       new Date(Math.max(...builds.map(build => this.latestDeploy = new Date(build))));

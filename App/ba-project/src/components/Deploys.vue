@@ -45,6 +45,7 @@ export default {
 //   ],
   data() {
       return {
+        projectId : null,
         project: undefined,
         projects: undefined,
         deployMethodIsDefined: false,
@@ -59,32 +60,58 @@ export default {
 
   },
   methods: {
-    navigateToProjects() {
-        this.$router.push('/projects');
-    },
-    addDeployMethod(methodName) {
-        this.project.deployMethods.push({name: methodName, environments: []});
-    },
-    deleteDeployMethod(methodName) {
-        this.project.deployMethods.find(method => method.name === methodName);
-    },
-    deployMethodDefined() {
-      this.deployMethodIsDefined = this.project.deployMethods.length > 0;
-    },
+        navigateToProjects() {
+            this.$router.push('/projects');
+        },
+        addDeployMethod(methodName) {
+            let newDeploymentMethod = {
+                name: methodName,
+                environments: [],
+            }
+
+            this.project.deployMethods.push(newDeploymentMethod);
+            axios.put(`http://localhost:8080/api/project/${this.project._id}`, this.project)
+            .then(response => {
+                this.project.id = response.data.id;
+                console.log(`Updating project ${response.data}`)
+                this.updateProject();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        },
+        deleteDeployMethod(methodName) {
+            this.project.deployMethods.pop(method => method.name === methodName);
+            axios.put(`http://localhost:8080/api/project/${this.project._id}`, this.project)
+            .then(response => {
+                this.project.id = response.data.id;
+                console.log(`Updating projects ${response.data}`)
+                this.updateProject();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        },
+        deployMethodDefined() {
+        this.deployMethodIsDefined = this.project.deployMethods.length > 0;
+        },
+        updateProject() {
+            axios.get(`http://localhost:8080/api/project/${this.projectId}`)
+            .then(response => {
+                this.project = response.data;
+                this.deployMethodDefined();
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        }
     },
     created() {
         // this.project = this.projects.find(project => project.id === projectId);
     },
     mounted() {
-        const projectId = this.$route.params.projectId;
-        axios.get(`http://localhost:8080/api/project/${projectId}`)
-        .then(response => {
-            this.project = response.data;
-            this.deployMethodDefined();
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        this.projectId = this.$route.params.projectId;
+        this.updateProject()
     }
 }
 </script>

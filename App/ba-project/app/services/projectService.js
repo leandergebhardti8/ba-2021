@@ -72,12 +72,15 @@ exports.findOne = (req, res) => {
 
 // UPDATE a Project with Id
 exports.update = (req, res) => {
-    // FInd project and update it
-    Project.findOne({ id: req.params.id}, {
+    // Find project and update it
+    Project.updateOne({_id: req.params.id}, {
         name: req.body.name,
         id: req.body.id,
         githubURL: req.body.githubURL,
-        deployMethods: req.body.deployMethods
+        repoName: req.body.repoName,
+        repoOwner: req.body.repoOwner,
+        githubToken: req.body.githubToken,
+        deployMethods: req.body.deployMethods,
     }, {new: true})
     .then(project => {
         if(!project) {

@@ -15,7 +15,7 @@
         <b-modal 
             :id="`modal-rename-${modalName}`"
             title="Rename Project"
-            @ok="renameProject(project.id)"
+            @ok="renameProject(projectCopy.id)"
         >
             <b-form inline>
               <label class="sr-only" for="inline-form-input-id">Project Name</label>
@@ -23,7 +23,7 @@
                   id="inline-form-input-name"
                   class="mb-2 mr-sm-2 mb-sm-0"
                   placeholder="Name"
-                  v-model="project.name"
+                  v-model="projectCopy.name"
               ></b-form-input>
             </b-form>
         </b-modal>
@@ -32,43 +32,43 @@
         <b-modal 
             :id="`modal-edit-${modalName}`"
             title="Edit Project"
-            @ok="editProject(project.id)"
+            @ok="editProject(projectCopy.id)"
         >
             <b-form inline>
-              <label class="sr-only" for="inline-form-input-id">Project Name</label>
+              <label class="sr-only" for="inline-form-input-id"><strong>Project Name</strong></label>
               <b-form-input
                   id="inline-form-input-name"
                   class="mb-2 mr-sm-2 mb-sm-0"
                   placeholder="Name"
-                  v-model="project.name"
+                  v-model="projectCopy.name"
               ></b-form-input>
-              <label class="sr-only" for="inline-form-input-id">Github URl</label>
+              <label class="sr-only" for="inline-form-input-id"><strong>Github URl</strong></label>
               <b-form-input
                   id="inline-form-input-name"
                   class="mb-2 mr-sm-2 mb-sm-0"
                   placeholder="URL"
-                  v-model="project.githubURL"
+                  v-model="projectCopy.githubURL"
               ></b-form-input>
-              <label class="sr-only" for="inline-form-input-id">Github Repo</label>
+              <label class="sr-only" for="inline-form-input-id"><strong>Github Repo</strong></label>
               <b-form-input
                   id="inline-form-input-name"
                   class="mb-2 mr-sm-2 mb-sm-0"
                   placeholder="Repository Name"
-                  v-model="project.repoName"
+                  v-model="projectCopy.repoName"
               ></b-form-input>
-              <label class="sr-only" for="inline-form-input-id">Github Owner</label>
+              <label class="sr-only" for="inline-form-input-id"><strong>Github Owner</strong></label>
               <b-form-input
                   id="inline-form-input-name"
                   class="mb-2 mr-sm-2 mb-sm-0"
                   placeholder="Owner"
-                  v-model="project.repoOwner"
+                  v-model="projectCopy.repoOwner"
               ></b-form-input>
-              <label class="sr-only" for="inline-form-input-id">Github Token</label>
+              <label class="sr-only" for="inline-form-input-id"><strong>Github Token</strong></label>
               <b-form-input
                   id="inline-form-input-name"
                   class="mb-2 mr-sm-2 mb-sm-0"
                   placeholder="GitHub Token"
-                  v-model="project.githubToken"
+                  v-model="projectCopy.githubToken"
               ></b-form-input>
             </b-form>
         </b-modal>
@@ -88,6 +88,17 @@ export default {
   data() {
     return {
       info: null,
+    }
+  },
+  computed: {
+    projectCopy: {
+      get: function() {
+        return this.project;
+      },
+
+      set: function(project) {
+        this.$emit("updateData", project)
+      }
     }
   },
   created () {
@@ -126,20 +137,17 @@ export default {
   },
   methods: {
     renameProject() {
-      axios.put(`http://localhost:8080/api/project/${this.project.id}`, this.project)
-      .then(response => {
-          this.project = response.data;
-          this.$emit('update');
-      })
-      .catch(err => {
-          console.log(err);
-      })
+     this.updateProject();
     },
     editProject() {
-      axios.put(`http://localhost:8080/api/project/${this.project.id}`, this.project)
+      this.updateProject();
+    },
+    updateProject() {
+      axios.put(`http://localhost:8080/api/project/${this.project._id}`, this.projectCopy)
       .then(response => {
-          this.project = response.data;
+          this.projectCopy = response.data;
           this.$emit('update');
+          console.log('project updated!')
       })
       .catch(err => {
           console.log(err);
@@ -159,7 +167,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
   .project{
     background: white;

@@ -135,7 +135,8 @@ export default {
   },
   data() {
     return {
-        deployName: undefined,
+        methodName: undefined,
+        projectId: undefined,
         project: null,
         deployMethod: undefined,
         // deployMethodDefined: false,
@@ -151,7 +152,7 @@ export default {
           name: '', 
           action: '', 
           url: '', 
-          id: null,
+          builds: [],
         }
     }
   },
@@ -200,16 +201,32 @@ export default {
       return items;
     },
     addNewEnv() {
-        let envID = 0;
-        if(this.project.environments) { 
-          envID = this.project.environments.length + 1;
+        for(let i=0; i < this.project.deployMethods.length; i++){
+          if(this.project.deployMethods[i].name === this.methodName){
+            this.project.deployMethods[i].environments.push(this.newEnv);
+          }
         }
-        this.newEnv.id = envID.toString();
-        this.project.environments.push(this.newEnv);
+
+        axios.put(`http://localhost:8080/api/project/${this.project._id}`, this.project)
+        .then(response => {
+            this.project.id = response.data.id;
+            console.log(`Updating project ${response.data}`)
+            this.softUpdateProject();
+        })
+        .catch(err => {
+            console.log(err);
+        })
     },
-    deleteEnv(envId){
-        axios.delete(`http://localhost:8080/api/environment/${envId}`)
+    getEnvironments() {
+      for(let i=0; i < this.project.deployMethods.length; i++){
+        if(this.project.deployMethods[i].name === this.methodName){
+          return this.project.deployMethods[i].environments;
+        }
+      }
     },
+    // deleteEnv(envId){
+        
+    // },
     startDeployment(envName){
     // Trigger GitHub Action in Repo, which deploys the project
 
@@ -272,9 +289,7 @@ export default {
       //   GITHUB_TOKEN: token,
       // } = process.env;
 
-      if(!owner || !repo || !token || owner === '' || repo === '' || token === '') {
-        throw new Error('Owner, repo and token required!');
-      }
+      this.checkAuthData(owner, repo, token);
 
       const dispatchUrl = `https://api.github.com/repos/${owner}/${repo}/dispatches`;
       const payload = { "event_type": "run-deploy" };
@@ -397,15 +412,9 @@ export default {
       if(!owner || !repo || !token || owner === '' || repo === '' || token === '') {
         throw new Error('Owner, repo and token required');
       }
-    }
-  },
-  mounted () {
-      const projectId = this.$route.params.projectId;
-      const methodName = this.$route.params.deployName;
-
-      // Getting project data
-      // axios.get(`http://${process.env.PORT}/api/project/${projectId}`)
-      axios.get(`http://localhost:8080/api/project/${projectId}`)
+    },
+    updateProject() {
+      axios.get(`http://localhost:8080/api/project/${this.projectId}`)
       .then(response => {
           this.project = response.data;
 
@@ -413,7 +422,7 @@ export default {
           let repo = this.project.repoName;
           let token = this.project.githubToken;
 
-          this.deployMethod = this.project.deployMethods.find(method => method.name === methodName);
+          this.deployMethod = this.project.deployMethods.find(method => method.name === this.methodName);
 
           // Get Data from GH
           this.checkAuthData(owner, repo, token)
@@ -423,9 +432,23 @@ export default {
       .catch(err => {
           console.log(err);
       })
-      // this.project = this.projects.find(project => project.id === projectId);
-      // this.deployMethod = this.project.deployMethods.find(method => method.name === this.deployName);
-    
+    },
+    softUpdateProject() {
+      axios.get(`http://localhost:8080/api/project/${this.projectId}`)
+      .then(response => {
+          this.project = response.data;
+          this.deployMethod = this.project.deployMethods.find(method => method.name === this.methodName);
+      })
+      .catch(err => {
+          console.log(err);
+      })
+    }
+  },
+  mounted () {
+      this.projectId = this.$route.params.projectId;
+      this.methodName = this.$route.params.deployName;
+
+      this.updateProject();    
   },
   created() {
     
@@ -433,7 +456,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
     h1 {
       display: inline-block;

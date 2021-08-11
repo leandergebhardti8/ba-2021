@@ -9,7 +9,7 @@
                 v-for="project in this.projects" 
                 :key="project.id"
                 class="project-item">
-                <Project :project="project" :modalName="project.id" @update="updateProjects"/>
+                <Project :project="project" :modalName="project.id" @update="updateProjects" @updateData="updateProject"/>
             </router-link>
         </ul>
         <button v-if="addBtn" class="btn btn-primary" v-b-modal.modal-prevent-closing>
@@ -107,6 +107,13 @@ export default {
         .catch(err => {
             console.log(err);
         })
+      },
+      updateProject(project){
+          for(let i=0;i < this.projects.length; i++) {
+            if(this.projects.id === project.id){
+                this.projects[i] = project;
+            }
+          }
       },
       addProject() {
         const intID = this.projects.length + 1;
