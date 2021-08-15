@@ -5,7 +5,7 @@ module.exports = function(app) {
     app.post('/api/login', userController.findOne);
 
     // Get all projects
-    app.get('/api/register', userController.create);
+    app.post('/api/register', userController.create);
 
     // Get one project by Id
     app.get('/api/user/:id', userController.findOne);

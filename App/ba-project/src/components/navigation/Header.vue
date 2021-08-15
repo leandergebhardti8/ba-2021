@@ -1,14 +1,14 @@
 <template>
 <div class="navbar">
   <b-nav pills>
-    <router-link to="/" tag="b-navbar-brand" active-class="active"><a>CI / CD Tool ⚙️</a></router-link>
+    <router-link to="/" tag="b-navbar-brand" active-class="active"><a>Usus ⚙️</a></router-link>
     <router-link to="/projects" tag="b-nav-item" active-class="active"><a>Projects</a></router-link>
     <!-- <router-link to="/environments" tag="b-nav-item" active-class="active"><a>Environments</a></router-link> -->
-    <router-link to="/user/a124iudfaspdf" tag="b-nav-item" active-class="active"><a>Profile</a></router-link> 
+    <router-link :to="/user/+user" tag="b-nav-item" active-class="active"><a>Profile</a></router-link> 
     <span v-if="isLoggedIn">
-      <a @click="logout">Logout</a>
+      <b-nav-item><a @click="logout">Logout</a></b-nav-item>
     </span>
-    <span>
+    <span v-else>
       <router-link to="/register" tag="b-nav-item" active-class="active"><a>Register</a></router-link> 
       <router-link to="/login" tag="b-nav-item" active-class="active"><a>Login</a></router-link>
     </span>
@@ -27,10 +27,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex' 
+
 export default {
   name: 'Header',
   computed: {
-    isLoggedIn: function(){ return this.$store.getters.isAuthenticated}
+    isLoggedIn: function(){ return this.$store.getters.isAuthenticated},
+    ...mapGetters({user: "StateUser"}),
   },
   methods: {
     async logout() {

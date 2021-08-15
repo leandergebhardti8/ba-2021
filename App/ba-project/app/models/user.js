@@ -20,7 +20,7 @@ const mongoose = require('mongoose');
 			type: Object,
 			default: {}
 		}
-	}, { collection: 'test' });
+	}, { collection: 'user' });
 
 	const user = mongoose.model('user', userSchema);
 

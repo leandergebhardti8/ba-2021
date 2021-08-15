@@ -67,11 +67,13 @@
 
 <script>
  import Project from './Project.vue';
- import axios from 'axios';
-//  import { mapState ,mapActions } from 'vuex'   
+ import { mapGetters ,mapActions } from 'vuex'   
 
 export default {
   name: 'Projects',
+  components: {
+      Project: Project,
+  },
   data() {
       return {
           addBtn: true,
@@ -83,74 +85,44 @@ export default {
             repoName: '',
             githubToken: '',
           },
-          projects: [],
       }
   },
   created: function () {
-    //   this.GetProjects()
+      this.GetProjects();
   },
   computed: {
-    // ...mapState({ 
-    //     projects: state => state.projects,
-    // }),
-    // newProjectId(){
-    //     const intID = this.projects.length + 1;
-    //     return String(intID);
-    // }
+    ...mapGetters({projects: "StateProjects"}),
+    newProjectId(){
+        const intID = this.projects.length + 1;
+        return String(intID);
+    }
   },
   methods: {
-    //   ...mapActions(['CreateProject', 'GetProjects']),
-      getProjects() {
-        this.updateProjects();
-      },
+      ...mapActions(['CreateProject', 'GetProjects']),
       navigateHome() {
           this.$router.push('/');
       },
-      updateProjects() {
-          axios.get("http://localhost:8080/api/projects")
-        .then(response => {
-            this.projects = response.data;
-        })
-        .catch(err => {
-            console.log(err);
-        })
-      },
-      updateProject(project){
-          for(let i=0;i < this.projects.length; i++) {
-            if(this.projects.id === project.id){
-                this.projects[i] = project;
+      async updateProject(project){
+          try {
+                await this.UpdateProject(project);
+                console.log(`Updating project`)
+            } catch (error) {
+                console.log('Something went wrong while trying to update a Project!')
+                throw new Error
             }
-          }
       },
-      addProject() {
-        //   try {
-        //       await this.CreateProject(this.newProject);
-        //       console.log(`Updating projects`)
-        //   } catch (error) {
-        //       console.log('Something went wrong while trying to create a new Project!')
-        //       throw new Error
-        //   }
+      async addProject() {
         const intID = this.projects.length + 1;
         const projectID = String(intID);
-        var newproject = {
-            name: this.name, 
-            id: projectID,   
-            repoOwner: this.repoOwner,
-            repoName: this.repoName,
-            githubURL: this.githubURL, 
-            githubToken: this.ghToken,
-            deployMethods: [],
-        };
-        axios.post('http://localhost:8080/api/project', newproject)
-        .then(response => {
-            // this.project.id = response.data.id;
-            console.log(`Updating projects ${response.data}`)
-            this.updateProjects();
-        })
-        .catch(err => {
-            console.log(err);
-        })
-
+        this.newProject.id = projectID;
+        try {
+            await this.CreateProject(this.newProject);
+            console.log(`Updating projects`)
+        } catch (error) {
+            console.log('Something went wrong while trying to create a new Project!')
+            throw new Error
+        }
+        
         this.name = '';
         this.id = '';
         this.$nextTick(() => {
@@ -158,11 +130,8 @@ export default {
         })
       },
   },
-  components: {
-      Project: Project,
-  },
   mounted() {
-    this.getProjects();
+    // this.getProjects();
   }
 }
 </script>
@@ -175,7 +144,7 @@ export default {
         text-align: left;
     }
     ul {
-        list-style-type:none;
+        list-style-type: none;
         margin: 0 2rem 0 2rem;
         padding: 0;
     }

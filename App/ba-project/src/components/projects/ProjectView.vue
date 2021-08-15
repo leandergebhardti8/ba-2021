@@ -124,12 +124,10 @@
 
 <script>
 import axios from 'axios';
+import { mapGetters ,mapActions } from 'vuex';
 
 export default {
   name: 'ProjectView',
-  // inject: [
-  //   'project'
-  // ], 
   components: {
 
   },
@@ -157,11 +155,10 @@ export default {
     }
   },
   computed: {
-    // deployMethodDefined() {
-    //   return this.project.deployMethods.length > 0;
-    // }
+    ...mapGetters({project: "StateProject"}),
   },
   methods: {
+    ...mapActions(['UpdateProject', 'GetProject']),
     navigateToDeployMethods() {
       this.$router.push('/deployjob/' + this.project.id);
     },

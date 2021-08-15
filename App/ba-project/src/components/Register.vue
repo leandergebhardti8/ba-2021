@@ -8,7 +8,7 @@
         <p>Please register with your personal data.</p>
             <div>
               <label class="sr-only" for="inline-form-input-username">Username</label>
-              <b-form inline>
+              <b-form inline @submit.prevent="submit">
                   <b-form-input
                     id="inline-form-input-name"
                     class="mb-2 mr-sm-2 mb-sm-0"
@@ -64,7 +64,6 @@
                   <b-form-valid-feedback :state="passwordSpecial">
                   <b-icon-check></b-icon-check> Your password contains Special Characters.
                   </b-form-valid-feedback>
-                  <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-1">Remember me</b-form-checkbox>
 
                   <button type="submit" variant="success" class="login-button">Register</button>
               </b-form>
@@ -100,7 +99,7 @@ export default {
     async submit() {
       try {
         await this.Register(this.form);
-        this.$router.push("/projects");
+        this.$router.push("/");
         this.showError = false
       } catch (error) {
         this.showError = true

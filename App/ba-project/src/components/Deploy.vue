@@ -12,7 +12,16 @@
                     class="s3-icon" 
                     v-if="deployMethod.name === 'S3'"
                 > 
-            {{ deployMethod.name }}
+            <p class="deployment-name">
+                {{ deployMethod.name }}
+            </p>
+            <span class="delete-button" @click="deleteDeployMethod(deployMethod.name)">
+                <b-icon-x 
+                    font-scale="2.5" 
+                    variant="danger" 
+                    v-b-tooltip.hover.left="'Delete Deployment Method'">
+                </b-icon-x>
+            </span>
         </div>
     </div>
 </template>
@@ -23,12 +32,22 @@ export default {
   props: [
       'deployMethod'
   ],
+  methods: {
+      deleteDeployMethod(methodName){
+          this.$emit('deleteDeployMethod', methodName);
+      }
+  },
 }
 </script>
 
 <style scoped lang="scss">
     .deploy-wrapper {
         text-align: left;
+        background: white;
+        border-radius: 5px;
+        color: black;
+        border-bottom: 1px solid black;
+        padding: 15px;
     }
 
     .s3-icon {
@@ -48,14 +67,14 @@ export default {
         }
     }
 
-    .method-item-button {
-        background: white;
-        border-radius: 5px;
-        color: black;
-        border-bottom: 1px solid black;
-        padding: 15px;
-        width: 97%;
+    .deploy-method {
         display: flex;
         flex-wrap: wrap;
+        cursor: pointer;
+        color: black;
+    }
+
+    .deployment-name {
+        margin: auto auto auto 10px;
     }
 </style>
