@@ -31,6 +31,10 @@ if (keys.mongoURI) {
   console.log('NO MONGO URI SPECIFIED!');
 }
 
+app.get('/', (req, res) => {
+  res.send('Hello from Usus Backend!')
+});
+
 // Routes for Users
 require('./app/routes/user.routes.js')(app);
 // Routes for Projects
