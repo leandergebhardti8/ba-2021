@@ -11,7 +11,7 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 // axios.defaults.withCredentials = true
-axios.defaults.baseURL = 'http://localhost:8080/api/';
+axios.defaults.baseURL = 'https://ba-2021.herokuapp.com/api/';
 
 // Handle expired Token
 axios.interceptors.response.use(undefined, function(error) {

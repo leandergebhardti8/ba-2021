@@ -6,7 +6,7 @@ const app = express()
 const keys = require('./config/keys')
 
 app.use(bodyParser.json());
-app.use(cors({credentials: true, origin: 'https://ba-2021.herokuapp.com'}));
+app.use(cors());
 
 // app.use(express.static(__dirname + '/dist/'))
 // app.get(/.*/, function (req, res) {
