@@ -6,7 +6,7 @@ const app = express()
 const keys = require('./config/keys')
 
 app.use(bodyParser.json());
-app.use(cors({credentials: true, origin: 'https://ba-2021.herokuapp.com'}));
+app.use(cors());
 
 // app.use(express.static(__dirname + '/dist/'))
 // app.get(/.*/, function (req, res) {
@@ -32,7 +32,7 @@ if (keys.mongoURI) {
 }
 
 app.get('/', (req, res) => {
-  res.send('Hello from Usus Backend!')
+  res.send('Hello from Usus Backend')
 });
 
 // Routes for Users
