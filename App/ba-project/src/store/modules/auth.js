@@ -16,18 +16,18 @@ const getters = {
 const actions = {
     async Register({dispatch}, form) {
         await axios.post('register', form)
-        let UserForm = new FormData()
-        UserForm.append('username', form.username)
-        UserForm.append('password', form.password)
-        await dispatch('LogIn', UserForm)
+        // let UserForm = new FormData()
+        // UserForm.append('username', form.username)
+        // UserForm.append('password', form.password)
+        await dispatch('LogIn', form)
     },
     async LogIn({commit}, user) {
         await axios.post('login', user)
-        await commit('setUser', user.get('username'))
+        await commit('setUser', user.username)
     },
     async LogOut({commit}) {
         let user = null
-        commit('logout', user)
+        commit('logOut', user)
     },
     async GetProjects({commit}) {
         let response = await axios.get('projects');
@@ -36,6 +36,10 @@ const actions = {
     async GetProject({commit}, id) {
         let response = await axios.get(`project/${id}`);
         commit('setProject', response.data);
+    },
+    async GetUser({commit}, username) {
+        let response = await axios.get(`user/${username}`);
+        commit('setUser', response.data);
     },
     async CreateProject({dispatch}, project) {
         await axios.post('project', project)
@@ -51,7 +55,7 @@ const mutations = {
     setUser(state, username) {
         state.user = username
     },
-    LogOut(state) {
+    logOut(state) {
         state.user = null
         state.projects = null
     },

@@ -106,7 +106,6 @@ export default {
       }
     },
     togglePassword() {
-      console.log('triggered!')
       if(this.showPassword) this.showPassword = false;
       else this.showPassword = true;
 

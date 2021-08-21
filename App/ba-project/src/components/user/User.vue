@@ -2,28 +2,33 @@
     <div class="user">
         <h1>Userpage</h1>
         <hr>
-        <p>User ID: {{ id }}</p>
+        <p>Full name: {{ user.full_name }}</p>
+        <p>Username: {{ user.username }}</p>
         <button @click="navigateToHome" class="btn btn-primary">Go to Home</button>
     </div>
 </template>
 
 <script>
+ import { mapActions ,mapGetters } from 'vuex'  
+
 export default {
   name: 'User',
   data() {
       return {
-          id: this.$route.params.id
+
       }
   },
-  watch: {
-      '$route'(to){
-          this.id = to.params.id;
-      }
+  created(){
+    this.GetUser();
+  },
+  computed: {
+    ...mapGetters({user: "StateUser"}),
   },
   props: {
 
   },
   methods: {
+    ...mapActions(['GetUser']),
       navigateToHome() {
           this.$router.push('/');
       }

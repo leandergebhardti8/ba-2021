@@ -15,7 +15,7 @@ app.use(cors({credentials: true, origin: 'http://localhost:8081'}));
 
 app.listen(port)
 
-console.log('Server started...')
+console.log(`Server listening at PORT: ${port} ...`)
 
 if (keys.mongoURI) {
   console.log('Trying to connect to mongodb');
@@ -31,7 +31,7 @@ if (keys.mongoURI) {
   console.log('NO MONGO URI SPECIFIED!');
 }
 
-// Routes for Projects
-require('./app/routes/project.routes.js')(app);
 // Routes for Users
 require('./app/routes/user.routes.js')(app);
+// Routes for Projects
+require('./app/routes/project.routes.js')(app);

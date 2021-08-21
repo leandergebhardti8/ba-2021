@@ -1,18 +1,18 @@
 module.exports = function(app) {
-    var userController = require('../services/projectController.js');
+    var userController = require('../services/userController.js');
     
-    // Create a new user
-    app.post('/api/login', userController.findOne);
-
-    // Get all projects
+    // Create new User
     app.post('/api/register', userController.create);
 
-    // Get one project by Id
-    app.get('/api/user/:id', userController.findOne);
+    // find User and check if provided LoginInfo is correct
+    app.post('/api/login', userController.logIn);
 
-    // Update a Project with Id
-    app.put('/api/user/:id', userController.update);
+    // Get one User by username
+    app.get('/api/user/:username', userController.findOne);
 
-    // Delete a Project with Id
-    app.delete('/api/user/:id', userController.delete);
+    // Update a User with Id
+    app.put('/api/user/:username:password', userController.update);
+
+    // Delete a User with Username and Password
+    app.delete('/api/user/:username:password', userController.delete);
 }

@@ -31,7 +31,7 @@ export const routes = [
     meta: { guest: true },
   },
   {
-    path: '/user/:id',
+    path: '/user',
     component: User,
     meta: { requiresAuth: true },
   },

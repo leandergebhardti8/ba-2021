@@ -88,19 +88,19 @@ export default {
   methods: {
     ...mapActions(['LogIn']),
     async submit() {
-      const User = new FormData();
-      User.append('username', this.form.username);
-      User.append('password', this.form.password);
+      // const User = new FormData();
+      // User.append('username', this.form.username);
+      // User.append('password', this.form.password);
       try {
-        await this.LogIng(User);
-        this.$router.push('/projects')
+        await this.LogIn(this.form);
+        this.$router.push('/')
         this.showError = false
       } catch (error) {
+        console.log(error.message)
         this.showError = true
       }
     },
     togglePassword() {
-      console.log('triggered!')
       if(this.showPassword) this.showPassword = false;
       else this.showPassword = true;
 
