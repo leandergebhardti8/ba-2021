@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+  import { mapActions } from 'vuex'
 
 export default {
   name: 'Project',
@@ -136,32 +136,30 @@ export default {
     // });
   },
   methods: {
+    ...mapActions(['UpdateProject', 'GetProject', 'RemoveProject']),
     renameProject() {
      this.updateProject();
     },
     editProject() {
       this.updateProject();
     },
-    updateProject() {
-      axios.put(`http://localhost:8080/api/project/${this.project._id}`, this.projectCopy)
-      .then(response => {
-          this.projectCopy = response.data;
-          this.$emit('update');
-          console.log('project updated!')
-      })
-      .catch(err => {
-          console.log(err);
-      })
+    async updateProject() {
+      try {
+        await this.UpdateProject(this.projectCopy);
+        console.log(`Updating project`)
+      } catch (error) {
+          console.log('Something went wrong while trying to update a Project!')
+          throw new Error
+      }
     },
-    deleteProject() {
-      axios.delete(`http://localhost:8080/api/project/${this.project._id}`)
-      .then(response => {
-          console.log(response.data);
-          this.$emit('update');
-      })
-      .catch(err => {
-          console.log(err);
-      })
+    async deleteProject() {
+      try {
+        await this.RemoveProject(this.projectCopy._id);
+        console.log(`Removing project`)
+      } catch (error) {
+          console.log('Something went wrong while trying to remove a Project!')
+          throw new Error
+      }
     }
   },
 }

@@ -67,18 +67,13 @@
 </template>
 
 <script>
-import axios from 'axios'
+import { mapGetters ,mapActions } from 'vuex'   
 
 export default {
   name: 'Environment',
-  // inject: [
-  //   'projects'
-  // ], 
   data() {
     return {
         environment: null,
-        projectId: '',
-        project: null,
         apiData: {},
         allEnvs: [],
         newEnvName: '',
@@ -88,11 +83,15 @@ export default {
         latestDeploy: null,
     }
   },
+  computed: {
+    ...mapGetters({project: "StateProject"}),
+  },
   methods: {
+    ...mapActions(['UpdateProject', 'GetProject']),
     navigateToProject() {
       this.$router.push('/project/' + this.project.id + '/' + this.deployMethod.name);
     },
-    deleteEnv(envId) {
+    async deleteEnv(envId) {
         // if (envId != null && envId != '') {
         //   const index = this.project.deployMethods.environments.indexOf(envId)
         //   this.project.deployMethods.environments.splice(index, 1);
@@ -103,14 +102,13 @@ export default {
             this.project.deployMethods[i].environments.splice(index, 1);
           }
         }
-        axios.put(`http://localhost:8080/api/project/${this.project._id}`, this.project)
-        .then(response => {
-            this.project.id = response.data.id;
-            console.log(`Updating project ${response.data}`)
-        })
-        .catch(err => {
-            console.log(err);
-        })
+
+        try {
+            await this.UpdateProject(this.project);
+            console.log(`Updating project`)
+        } catch (error) {
+            console.error('Something went wrong while trying to update a Project!' + error)
+        }
 
         // Go back to project
         this.$router.push(`/project/${this.project.id}/${this.deployMethod.name}`);
@@ -131,27 +129,20 @@ export default {
     },
   },
   created() {
+    //Get Environment ID From route
+    let envId = this.$route.params.environmentId;
+    let projectId = this.$route.params.projectId;
+    let methodName = this.$route.params.methodName;
 
+    this.GetProject(projectId);
+    this.deployMethod = this.project.deployMethods.find(method => method.name === methodName);
+    this.environment = this.deployMethod.environments.find(env => env._id === envId);
+    if(this.environment.builds) {
+      this.createDeployTable(this.environment.builds);
+    }
   },
   mounted() {
-    //Get Environment ID From route
-    const envId = this.$route.params.environmentId;
-    const projectId = this.$route.params.projectId;
-    const methodName = this.$route.params.methodName;
 
-    // Get this Environment with Project ID & Environment ID
-    axios.get(`http://localhost:8080/api/project/${projectId}`)
-      .then(response => {
-          this.project = response.data;
-          this.deployMethod = this.project.deployMethods.find(method => method.name === methodName);
-          this.environment = this.deployMethod.environments.find(env => env._id === envId);
-          if(this.environment.builds) {
-            this.createDeployTable(this.environment.builds);
-          }
-      })
-      .catch(err => {
-          console.log(err);
-      })
   }
 }
 </script>

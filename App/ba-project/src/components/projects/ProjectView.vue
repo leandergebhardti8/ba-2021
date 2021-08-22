@@ -53,7 +53,7 @@
             <b-icon-exclamation font-scale="2"></b-icon-exclamation> The App has Trouble accessing GitHub with your given Information. Please Check if your <b>Repository Owner</b>, <b>Repository Name</b> and <b-icon-github></b-icon-github> <b>Token</b> are correct. <b>Especially check if your action Name is correct.</b>
             <router-link 
               tag="a" 
-              :to="'/setupguide/' + project.id" 
+              to="/setupguide" 
             >
             Learn More here.
             </router-link>
@@ -105,7 +105,7 @@
                       For the Deployment to work you have to setup a GitHub Action in your project <b>(in GitHub)</b>. After you have done that provide the Action name here.<br>
                       <router-link 
                         tag="a" 
-                        :to="'/setupguide/' + project.id" 
+                        to="/setupguide" 
                       >
                         Learn More here.
                       </router-link>
@@ -135,7 +135,7 @@ export default {
     return {
         methodName: undefined,
         projectId: undefined,
-        project: null,
+        // project: null,
         deployMethod: undefined,
         // deployMethodDefined: false,
         apiData: {},
@@ -197,22 +197,20 @@ export default {
 
       return items;
     },
-    addNewEnv() {
-        for(let i=0; i < this.project.deployMethods.length; i++){
-          if(this.project.deployMethods[i].name === this.methodName){
-            this.project.deployMethods[i].environments.push(this.newEnv);
+    async addNewEnv() {
+      try {
+        let projectCopy = this.project;
+        for(let i=0; i < projectCopy.deployMethods.length; i++){
+          if(projectCopy.deployMethods[i].name === this.methodName){
+            projectCopy.deployMethods[i].environments.push(this.newEnv);
           }
         }
-
-        axios.put(`http://localhost:8080/api/project/${this.project._id}`, this.project)
-        .then(response => {
-            this.project.id = response.data.id;
-            console.log(`Updating project ${response.data}`)
-            this.softUpdateProject();
-        })
-        .catch(err => {
-            console.log(err);
-        })
+        await this.UpdateProject(projectCopy);
+        this.deployMethod = this.project.deployMethods.find(method => method.name === this.methodName);
+        console.log(`Updating project`)
+      } catch (error) {
+        console.error('Something went wrong while trying to update a Project!')
+      }
     },
     getEnvironments() {
       for(let i=0; i < this.project.deployMethods.length; i++){
@@ -288,8 +286,15 @@ export default {
 
       this.checkAuthData(owner, repo, token);
 
+      // Getting Event Type from Environment
+      let event_type = null;
+      for(let i = 0; i < this.deployMethod.environments.length; i ++) {
+        if(this.deployMethod.environments[i].name === envName)
+          event_type = this.deployMethod.environments[i].action;
+      }
+
       const dispatchUrl = `https://api.github.com/repos/${owner}/${repo}/dispatches`;
-      const payload = { "event_type": "run-deploy" };
+      const payload = { "event_type": event_type };
 
       axios
         .post(dispatchUrl, payload, {
@@ -410,45 +415,38 @@ export default {
         throw new Error('Owner, repo and token required');
       }
     },
-    updateProject() {
-      axios.get(`http://localhost:8080/api/project/${this.projectId}`)
-      .then(response => {
-          this.project = response.data;
+    async updateProject() {
+      try {
+        await this.GetProject(this.projectId);
+        console.log(`Updating project`)
 
-          let owner = this.project.repoOwner;
-          let repo = this.project.repoName;
-          let token = this.project.githubToken;
+        let owner = this.project.repoOwner;
+        let repo = this.project.repoName;
+        let token = this.project.githubToken;
 
-          this.deployMethod = this.project.deployMethods.find(method => method.name === this.methodName);
+        this.deployMethod = this.project.deployMethods.find(method => method.name === this.methodName);
 
-          // Get Data from GH
-          this.checkAuthData(owner, repo, token)
+        // Get Data from GH
+        this.checkAuthData(owner, repo, token);
+        if(!this.showGetErrorMessage && !this.showPostErrorMessage) {
           this.getRunsFromGHApi(owner, repo, token);
           this.getWorkflowsFromGHApi(owner, repo, token);
-      })
-      .catch(err => {
-          console.log(err);
-      })
+        }
+      } catch (error) {
+        console.log('Something went wrong while trying to update a Project!')
+        throw new Error
+      }
     },
-    softUpdateProject() {
-      axios.get(`http://localhost:8080/api/project/${this.projectId}`)
-      .then(response => {
-          this.project = response.data;
-          this.deployMethod = this.project.deployMethods.find(method => method.name === this.methodName);
-      })
-      .catch(err => {
-          console.log(err);
-      })
-    }
   },
   mounted () {
-      this.projectId = this.$route.params.projectId;
-      this.methodName = this.$route.params.deployName;
-
-      this.updateProject();    
+    // this.updateProject();    
   },
   created() {
-    
+    this.projectId = this.$route.params.projectId;
+    this.methodName = this.$route.params.deployName;
+
+    this.GetProject(this.projectId);
+    this.updateProject();
   }
 }
 </script>
