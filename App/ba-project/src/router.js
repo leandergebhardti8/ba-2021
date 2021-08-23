@@ -33,7 +33,7 @@ export const routes = [
   {
     path: '/user',
     component: User,
-    meta: { requiresAuth: true },
+    // meta: { requiresAuth: true },
   },
   {
     path: '/projects',
