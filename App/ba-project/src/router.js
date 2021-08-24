@@ -11,6 +11,7 @@ import Environemnt from './components/Environment.vue'
 import Login from './components/Login.vue'
 import Register from './components/Register.vue'
 import Deploys from './components/Deploys.vue'
+import SetupGuide from './components/SetupGuide.vue'
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,11 @@ export const routes = [
   {
     path: '/user',
     component: User,
+    // meta: { requiresAuth: true },
+  },
+  {
+    path: '/setupguide',
+    component: SetupGuide,
     // meta: { requiresAuth: true },
   },
   {

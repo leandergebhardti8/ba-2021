@@ -1,5 +1,11 @@
 import axios from 'axios'
 
+axios.interceptors.response.use(function (response) {
+    return response;
+}, function (error) {
+    return Promise.reject(error)
+})
+
 const state = {
     user: null,
     projects: null,
@@ -47,8 +53,12 @@ const actions = {
     },
     async UpdateProject({dispatch}, project) {
         await axios.put(`project/${project._id}`, project)
-        await dispatch('GetProject')
-    }
+        await dispatch('GetProject', project.id)
+    },
+    async RemoveProject({dispatch}, _id) {
+        await axios.delete(`project/${_id}`)
+        await dispatch('GetProjects')
+    },
 };
 
 const mutations = {
@@ -66,6 +76,7 @@ const mutations = {
         state.project = project
     },
 };
+
 export default {
     state,
     getters,
