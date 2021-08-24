@@ -1,18 +1,4 @@
-// import axios from "axios";
 const Project = require ('../models/project');
-// import vm from 'v-response';
-
-// export default {
-//     async getProjects() {
-//         let res = await axios.get("http://localhost:8080/projects");
-//         return res.data;
-//     },
-    
-//     async getProjectSingle(projectId) {
-//         let res = await axios.get("http://localhost:8080/project/" + projectId);
-//         return res.data;
-//     },
-// }
 
 // FETCH All Projects
 exports.getAll = (req, res) => {

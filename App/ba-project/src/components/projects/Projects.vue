@@ -9,7 +9,7 @@
                 v-for="project in this.projects" 
                 :key="project.id"
                 class="project-item">
-                <Project :project="project" :modalName="project.id" @update="updateProjects" @updateData="updateProject"/>
+                <Project :project="project" :modalName="project.id" @update="updateProject"/>
             </router-link>
         </ul>
         <button v-if="addBtn" class="btn btn-primary" v-b-modal.modal-prevent-closing>
@@ -103,13 +103,13 @@ export default {
           this.$router.push('/');
       },
       async updateProject(project){
-          try {
-                await this.UpdateProject(project);
-                console.log(`Updating project`)
-            } catch (error) {
-                console.log('Something went wrong while trying to update a Project!')
-                throw new Error
-            }
+        try {
+            await this.UpdateProject(project);
+            console.log(`Updating project`)
+        } catch (error) {
+            console.log('Something went wrong while trying to update a Project!')
+            throw new Error
+        }
       },
       async addProject() {
         const intID = this.projects.length + 1;

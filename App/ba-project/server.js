@@ -32,7 +32,7 @@ if (keys.mongoURI) {
 }
 
 app.get('/', (req, res) => {
-  res.send('Hello from Usus Backend!')
+  res.send('Hello from Usus Backend')
 });
 
 // Routes for Users

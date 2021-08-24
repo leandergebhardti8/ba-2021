@@ -40,7 +40,6 @@
 </template>
 
 <script>
-    import axios from 'axios'
     import Deploy from './Deploy.vue'
     import { mapGetters ,mapActions } from 'vuex'
 
@@ -85,17 +84,6 @@ export default {
                 console.log('Something went wrong while trying to update a Project!')
                 throw new Error
             }
-
-            
-            // axios.put(`http://localhost:8080/api/project/${this.project._id}`, this.project)
-            // .then(response => {
-            //     this.project.id = response.data.id;
-            //     console.log(`Updating project ${response.data}`)
-            //     this.updateProject();
-            // })
-            // .catch(err => {
-            //     console.log(err);
-            // })
         },
         async deleteDeployMethod(methodName) {
             try {
@@ -106,38 +94,16 @@ export default {
                 console.log('Something went wrong while trying to update a Project!')
                 throw new Error
             }
-
-            // axios.put(`http://localhost:8080/api/project/${this.project._id}`, this.project)
-            // .then(response => {
-            //     this.project.id = response.data.id;
-            //     console.log(`Updating projects ${response.data}`)
-            //     this.updateProject();
-            // })
-            // .catch(err => {
-            //     console.log(err);
-            // })
         },
         deployMethodDefined() {
             this.deployMethodIsDefined = this.project.deployMethods.length > 0;
         },
-        updateProject() {
-            axios.get(`http://localhost:8080/api/project/${this.projectId}`)
-            .then(response => {
-                this.project = response.data;
-                this.deployMethodDefined();
-            })
-            .catch(err => {
-                console.log(err);
-            })
-        }
     },
     created() {
         this.projectId = this.$route.params.projectId;
         this.GetProject(this.projectId);
     },
     mounted() {
-        // this.projectId = this.$route.params.projectId;
-        // this.updateProject()
     }
 }
 </script>
