@@ -321,9 +321,10 @@ export default {
       // this.deployStatus.push({title: 'Deploying Porject in Environment ...'});
       // TODO Get Verification action is finished
       // this.deployStatus.push({title: 'Done!'});
-      setTimeout(() => { 
-        this.deploying = false 
-      }, 3000);
+
+      // setTimeout(() => { 
+      //   this.deploying = false 
+      // }, 3000);
       this.updateDeployHistoryInEnv(envName);
     },
     fakeDeploy() {
@@ -349,8 +350,20 @@ export default {
     updateDeployHistoryInEnv(envName) {
       // Adding Deploy to Env Deploy History
       const currentTime = this.getCurrentTime();
-      const environment = this.project.deployMethods.environments.find(env => env.name === envName)
-      environment.builds.push(`${currentTime}`);
+      // let environments = this.getEnvironments()
+      // const environment = environments.find(env => env.name === envName)
+      // environment.builds.push(`${currentTime}`);
+
+      let projectCopy = this.project;
+      for(let i = 0; i < projectCopy.deployMethods.length; i++) {
+        if(projectCopy.deployMethods[i].name === this.methodName){
+          projectCopy.deployMethods[i].environments
+            .find(env => env.name === envName)
+              .builds.push(`${currentTime}`)
+        }
+      }
+
+      this.updateProjectData(projectCopy)
     },
     getRunsFromGHApi(owner, repo, token) {
     // TODO check if API info is alread there
@@ -415,6 +428,14 @@ export default {
         throw new Error('Owner, repo and token required');
       }
     },
+    async updateProjectData(project){
+      try {
+        await this.UpdateProject(project);
+        console.log(`Updating project`)
+      } catch (error) {
+        console.error('Something went wrong while trying to update a Project!')
+      }
+    },
     async updateProject() {
       try {
         await this.GetProject(this.projectId);
@@ -433,8 +454,7 @@ export default {
           this.getWorkflowsFromGHApi(owner, repo, token);
         }
       } catch (error) {
-        console.log('Something went wrong while trying to update a Project!')
-        throw new Error
+        console.error('Something went wrong while trying to update a Project!')
       }
     },
   },

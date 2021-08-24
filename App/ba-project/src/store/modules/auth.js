@@ -57,7 +57,7 @@ const actions = {
     },
     async RemoveProject({dispatch}, _id) {
         await axios.delete(`project/${_id}`)
-        await dispatch('GetProject')
+        await dispatch('GetProjects')
     },
 };
 

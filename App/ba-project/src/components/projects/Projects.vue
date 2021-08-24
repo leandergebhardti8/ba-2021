@@ -9,7 +9,7 @@
                 v-for="project in this.projects" 
                 :key="project.id"
                 class="project-item">
-                <Project :project="project" :modalName="project.id"/>
+                <Project :project="project" :modalName="project.id" @update="updateProject"/>
             </router-link>
         </ul>
         <button v-if="addBtn" class="btn btn-primary" v-b-modal.modal-prevent-closing>

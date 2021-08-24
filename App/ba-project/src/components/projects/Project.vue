@@ -156,6 +156,7 @@ export default {
       try {
         await this.RemoveProject(this.projectCopy._id);
         console.log(`Removing project`)
+        this.$emit('update')
       } catch (error) {
           console.log('Something went wrong while trying to remove a Project!')
           throw new Error
