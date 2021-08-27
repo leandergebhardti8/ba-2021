@@ -16,9 +16,10 @@ jobs:
           rm -rf dist
           rm -rf node_modules
 
-      - name: Run Super-Linter
+      - name: Lint Code Base
         uses: github/super-linter@v3
         env:
           DEFAULT_BRANCH: main
+          VALIDATE_ALL_CODEBASE: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
