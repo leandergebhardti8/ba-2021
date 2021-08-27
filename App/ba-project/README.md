@@ -24,5 +24,30 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Deploying
+### Backend Deploy
+If not already logged in
+```bash
+heroku login
+```
+Add the git remote
+```bash
+heroku git:remote -a ba-2021
+```
+from root directory
+```bash
+git subtree push --prefix App/ba-project heroku main
+```
+### Frontend Deploy
+If not already logged in
+```bash
+heroku login
+```
+Add the git remote
+```bash
+heroku git:remote -a ba-2021-frontend
+```
+from root directory
+```bash
+git subtree push --prefix App/ba-project heroku main
+```
