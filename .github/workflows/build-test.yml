@@ -9,10 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2     # checkout the repo
-      - name: install dependencies
-      - working-directory: ./App/ba-project        # switch to app
-      - run: npm ci                   # install packages
-      - run: npm test                 # run tests (configured to use jest-junit reporter)
+      - name: Build & Test
+        working-directory: ./App/ba-project        # switch to app
+        run: |
+            npm ci                   # install packages
+            npm test                 # run tests (configured to use jest-junit reporter)
 
       - name: Test Report
         uses: dorny/test-reporter@v1
