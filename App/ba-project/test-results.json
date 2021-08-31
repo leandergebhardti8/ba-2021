@@ -1,33 +1,172 @@
 {
   "stats": {
-    "suites": 2,
-    "tests": 1,
-    "passes": 1,
+    "suites": 11,
+    "tests": 8,
+    "passes": 7,
     "pending": 0,
-    "failures": 0,
-    "start": "2021-06-08T09:36:44.958Z",
-    "end": "2021-06-08T09:36:44.963Z",
-    "duration": 5
+    "failures": 1,
+    "start": "2021-08-31T15:16:39.782Z",
+    "end": "2021-08-31T15:16:41.895Z",
+    "duration": 2113
   },
   "tests": [
+    {
+      "title": "returns all projects",
+      "fullTitle": "API Tests GET projects returns all projects",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/api.test.js",
+      "duration": 320,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "returns project with id 1",
+      "fullTitle": "API Tests GET project returns project with id 1",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/api.test.js",
+      "duration": 218,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "returns user with username leander",
+      "fullTitle": "API Tests GET user returns user with username leander",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/api.test.js",
+      "duration": 220,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "able to create a new project",
+      "fullTitle": "API Tests POST project able to create a new project",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/api.test.js",
+      "duration": 218,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "able to update a project",
+      "fullTitle": "API Tests UPDATE project able to update a project",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/api.test.js",
+      "duration": 519,
+      "currentRetry": 0,
+      "err": {
+        "message": "expected 500 to deeply equal 200",
+        "showDiff": true,
+        "actual": "500",
+        "expected": "200",
+        "operator": "strictEqual",
+        "stack": "AssertionError: expected 500 to deeply equal 200\n    at Context.<anonymous> (test/api.test.js:54:40)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+      }
+    },
+    {
+      "title": "Connection to DB sucessfull",
+      "fullTitle": "Database Tests Connection to DB with mongoURI Connection to DB sucessfull",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/db.test.js",
+      "duration": 605,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "Connection to DB should fail",
+      "fullTitle": "Database Tests Connection to DB with wrong mongoURI Connection to DB should fail",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/db.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
     {
       "title": "should return -1 when the value is not present",
       "fullTitle": "Array #indexOf() should return -1 when the value is not present",
       "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/test.js",
-      "duration": 1,
+      "duration": 0,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}
     }
   ],
   "pending": [],
-  "failures": [],
+  "failures": [
+    {
+      "title": "able to update a project",
+      "fullTitle": "API Tests UPDATE project able to update a project",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/api.test.js",
+      "duration": 519,
+      "currentRetry": 0,
+      "err": {
+        "message": "expected 500 to deeply equal 200",
+        "showDiff": true,
+        "actual": "500",
+        "expected": "200",
+        "operator": "strictEqual",
+        "stack": "AssertionError: expected 500 to deeply equal 200\n    at Context.<anonymous> (test/api.test.js:54:40)\n    at processTicksAndRejections (internal/process/task_queues.js:97:5)"
+      }
+    }
+  ],
   "passes": [
+    {
+      "title": "returns all projects",
+      "fullTitle": "API Tests GET projects returns all projects",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/api.test.js",
+      "duration": 320,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "returns project with id 1",
+      "fullTitle": "API Tests GET project returns project with id 1",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/api.test.js",
+      "duration": 218,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "returns user with username leander",
+      "fullTitle": "API Tests GET user returns user with username leander",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/api.test.js",
+      "duration": 220,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "able to create a new project",
+      "fullTitle": "API Tests POST project able to create a new project",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/api.test.js",
+      "duration": 218,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "Connection to DB sucessfull",
+      "fullTitle": "Database Tests Connection to DB with mongoURI Connection to DB sucessfull",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/db.test.js",
+      "duration": 605,
+      "currentRetry": 0,
+      "speed": "slow",
+      "err": {}
+    },
+    {
+      "title": "Connection to DB should fail",
+      "fullTitle": "Database Tests Connection to DB with wrong mongoURI Connection to DB should fail",
+      "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/db.test.js",
+      "duration": 1,
+      "currentRetry": 0,
+      "speed": "fast",
+      "err": {}
+    },
     {
       "title": "should return -1 when the value is not present",
       "fullTitle": "Array #indexOf() should return -1 when the value is not present",
       "file": "/Users/leonardoschuster/Documents/ba-workspace/ba-2021/App/ba-project/test/test.js",
-      "duration": 1,
+      "duration": 0,
       "currentRetry": 0,
       "speed": "fast",
       "err": {}

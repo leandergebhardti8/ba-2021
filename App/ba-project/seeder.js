@@ -1,6 +1,7 @@
 const seeder = require('mongoose-seed')
+const keys = require('./keys');
 
-const db = 'mongodb+srv://leander:HEO21BFfWfo6ncHc@cluster0.ywpxp.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+const db = keys.mongoURI;
 
 seeder.connect(db,{ useNewUrlParser: true, useUnifiedTopology: true }, function () {
     seeder.loadModels([
