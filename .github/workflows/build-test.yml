@@ -12,7 +12,6 @@ jobs:
       - name: install dependencies
       - working-directory: ./App/ba-project        # switch to app
       - run: npm ci                   # install packages
-      - name: run tests
       - run: npm test                 # run tests (configured to use jest-junit reporter)
 
       - name: Test Report
