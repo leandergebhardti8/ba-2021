@@ -9,8 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2     # checkout the repo
-      - run: cd App/ba-project        # switch to app
+      - name: install dependencies
+      - working-directory: ./App/ba-project        # switch to app
       - run: npm ci                   # install packages
+      - name: run tests
       - run: npm test                 # run tests (configured to use jest-junit reporter)
 
       - name: Test Report
@@ -18,5 +20,6 @@ jobs:
         if: success() || failure()    # run this step even if previous step failed
         with:
           name: Mocha Tests           # Name of the check run which will be created
-          path: '/test-results.json'   # Path to test results
+          working-directory: ./App/ba-project
+          path: './test-results.json'   # Path to test results
           reporter: mocha-json        # Format of test results
