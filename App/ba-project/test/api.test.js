@@ -1,46 +1,53 @@
+/* eslint-disable no-undef */
 const request = require("supertest")("https://ba-2021.herokuapp.com/api/");
 const expect = require("chai").expect;
+
+
 describe("API Tests", function() {
     describe("GET projects", function () {
-        it("returns all projects", async function () {
+        it("returns all projects", async function (done) {
             const response = await request.get("projects")
 
             expect(response.status).to.eql(200)
             expect(response).to.not.be.empty;
-        })
+            done()
+        });
     })
 
     describe("GET project", function () {
-        it("returns project with id 1", async function () {
+        it("returns project with id 1", async function (done) {
             const response = await request.get("project/1")
 
             expect(response.status).to.eql(200)
             expect(response).to.not.be.empty;
+            done()
         })
     })
 
     describe("GET user", function () {
-        it("returns user with username leander", async function () {
+        it("returns user with username leander", async function (done) {
             const response = await request.get("user/leander")
 
             expect(response.status).to.eql(200)
             expect(response).to.not.be.empty;
+            done()
         })
     })
 
     describe("POST project", function () {
-        it("able to create a new project", async function () {
+        it("able to create a new project", async function (done) {
             const response = await request
                 .post("project")
                 .send({name: "Projekt for automated testing"})
 
             expect(response.status).to.eql(200)
             expect(response).to.not.be.empty;
+            done()
         })
     })
 
     describe("UPDATE project", function () {
-        it("able to update a project", async function () {
+        it("able to update a project", async function (done) {
             const savedProjects = await request.get("projects")
             let projectToUpdate = {}
             for(let i=0; i < savedProjects.length; i++) {
@@ -52,6 +59,7 @@ describe("API Tests", function() {
                 .send({name: "Changed Projekt for automated testing"})
 
             expect(response.status).to.eql(200)
+            done()
         })
     })
 })

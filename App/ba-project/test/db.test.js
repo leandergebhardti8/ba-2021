@@ -1,5 +1,8 @@
+/* eslint-disable no-undef */
 const mongoose = require('mongoose');
 const keys = require('../config/keys');
+
+
 describe("Database Tests", function() {
     describe('Connection to DB with mongoURI', function(){
         it('Connection to DB sucessfull', function(done){
