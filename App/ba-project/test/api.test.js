@@ -10,7 +10,6 @@ describe("API Tests", function() {
 
             expect(response.status).to.eql(200)
             expect(response).to.not.be.empty;
-            done()
         });
     })
 
@@ -20,7 +19,6 @@ describe("API Tests", function() {
 
             expect(response.status).to.eql(200)
             expect(response).to.not.be.empty;
-            done()
         })
     })
 
@@ -30,7 +28,6 @@ describe("API Tests", function() {
 
             expect(response.status).to.eql(200)
             expect(response).to.not.be.empty;
-            done()
         })
     })
 
@@ -42,7 +39,6 @@ describe("API Tests", function() {
 
             expect(response.status).to.eql(200)
             expect(response).to.not.be.empty;
-            done()
         })
     })
 
