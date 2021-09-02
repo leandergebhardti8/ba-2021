@@ -19,7 +19,8 @@ export const routes = [
   {
     name: 'home',
     path: '',
-    component: Home
+    component: Home,
+    meta: { requiresAuth: true },
   },
   {
     path: '/login',
@@ -34,32 +35,32 @@ export const routes = [
   {
     path: '/user',
     component: User,
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: '/setupguide',
     component: SetupGuide,
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: '/projects',
     component: Projects,
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: '/environment/:environmentId/:methodName/:projectId',
     component: Environemnt,
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: '/project/:projectId/:deployName',
     component: ProjectView,
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
   {
     path: '/deployjob/:projectId',
     component: Deploys,
-    // meta: { requiresAuth: true },
+    meta: { requiresAuth: true },
   },
 ];
 
