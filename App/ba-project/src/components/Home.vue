@@ -75,7 +75,7 @@ export default {
           }
           // There are more then one build entries in the same environment of a project. Make multiple entries in the table for this project & environment.
           else {
-            for(let buildIndex = 0; buildIndex < this.allBuilds[index].length; buildIndex++) {
+            for(let buildIndex = 0; buildIndex < this.allBuilds[index].builds.length; buildIndex++) {
               let buildElement = {}
               buildElement = {Project: this.allBuilds[index].project, DeployMethod: this.allBuilds[index].deployMethod, Environment: this.allBuilds[index].environment, 'Build Time': this.allBuilds[index].builds[buildIndex]};
               items.push(buildElement)
