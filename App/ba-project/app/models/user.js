@@ -55,9 +55,9 @@ const bcrypt = require('bcrypt');
 		projects: [projectSchema]
 	});
 
-	userSchema.methods.comparepassword=function(password, cb){
-		bcrypt.compare(password, this.password, function(err, isMatch){
-			// if(err) return cb(next);
+	userSchema.methods.comparepassword=function(password, hash, cb){
+		bcrypt.compare(password, hash, function(err, isMatch){
+			if(err) return cb(false);
 			cb(null, isMatch);
 		})
 	}
