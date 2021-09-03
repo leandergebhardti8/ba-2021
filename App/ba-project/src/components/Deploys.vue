@@ -63,7 +63,10 @@ export default {
   computed: {
       ...mapGetters({project: "StateProject"}),
       deployMethodIsDefined() {
-          return this.project.deployMethods.length > 0
+          if(this.project.deployMethods){
+            return this.project.deployMethods.length > 0
+          }
+          return null
       },
   },
   methods: {

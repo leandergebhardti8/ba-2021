@@ -62,7 +62,7 @@ exports.logIn = (req, res) => {
         }
         else {
             user.comparepassword(req.body.password, user.password, (err, isMatch)=> {
-                console.log(isMatch);
+                console.log('Wrong password: ' + isMatch);
                 if(!isMatch) {
                     res.status(404).send({
                         message: 'Password doesn`t match!'
