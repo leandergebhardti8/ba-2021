@@ -55,20 +55,20 @@
                   <b-form-valid-feedback :state="passwordSpecial">
                   <b-icon-check></b-icon-check> Your password contains Special Characters.
                   </b-form-valid-feedback>
-                  <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-1">Remember me</b-form-checkbox>
+                  <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-1" v-model="remember">Remember me</b-form-checkbox>
 
                   <button type="submit" variant="success" class="login-button">Login</button>
               </b-form>
             </div>
           <b-alert v-if="showError" show variant="danger">
-              <p class="error">Username or Password is incorrect!</p>
+              <p class="error">Username or Password incorrect!</p>
           </b-alert>
       </div>
     </div>
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
+  import { mapActions, mapMutations, mapGetters } from 'vuex'
 
 export default {
   name: 'Login',
@@ -77,9 +77,10 @@ export default {
   data() {
     return {
       form: {
-        username: '',
+        username: this.rememberedUser ? this.rememberedUser : '',
         password: '',
       },
+      remember: false,
       type: 'password',
       showError: false,
       showPassword: false
@@ -87,17 +88,18 @@ export default {
   },
   methods: {
     ...mapActions(['LogIn']),
+    ...mapMutations(['setRememberedUser']),
     async submit() {
-      // const User = new FormData();
-      // User.append('username', this.form.username);
-      // User.append('password', this.form.password);
       try {
         await this.LogIn(this.form);
         this.$router.push('/')
         this.showError = false
       } catch (error) {
-        console.log(error.message)
+        console.log("Error while logging in" + error.message)
         this.showError = true
+      }
+      if(this.remember === true){
+        this.setRememberedUser(this.form.username)
       }
     },
     togglePassword() {
@@ -106,7 +108,7 @@ export default {
 
       if(this.type === 'password') this.type = 'text';
       else if(this.type === 'text') this.type = 'password';
-    }
+    },
   }, 
   computed: {
     usernameValidation() {
@@ -120,7 +122,8 @@ export default {
     },
     passwordSpecial() {
       return /[!@#$%^&*)(+=._-]/.test(this.form.password);
-    }
+    },
+    ...mapGetters({rememberedUser: "StateRememberedUser"}),
   }
 }
 </script>

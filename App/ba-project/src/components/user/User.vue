@@ -33,7 +33,7 @@ export default {
       }
   },
   created(){
-    this.GetUser();
+    this.GetUser(this.user);
   },
   computed: {
     ...mapGetters({user: "StateUser"}),
