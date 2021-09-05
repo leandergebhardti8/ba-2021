@@ -61,7 +61,7 @@
               </b-form>
             </div>
           <b-alert v-if="showError" show variant="danger">
-              <p class="error">Username already exists</p>
+              <p class="error">Username or Password is incorrect!</p>
           </b-alert>
       </div>
     </div>

@@ -28,7 +28,9 @@ const actions = {
         await dispatch('LogIn', form)
     },
     async LogIn({commit}, user) {
-        await axios.post('login', user)
+        let res =await axios.post('login', user)
+        if(res.status === 404)
+            throw Error
         await commit('setUser', user.username)
     },
     async LogOut({commit}) {
