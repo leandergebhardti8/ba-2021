@@ -2,8 +2,22 @@
     <div class="user">
         <h1>Userpage</h1>
         <hr>
-        <p>Full name: {{ user.full_name }}</p>
-        <p>Username: {{ user.username }}</p>
+        <div class="userinfo">
+          <b-form-group
+            id="full-name"
+            label="Full name: "
+            label-for="full-name"
+          >
+            <b-form-input id="full-name" v-model="user.full_name" placeholder="Full Name"></b-form-input>
+          </b-form-group>
+          <b-form-group
+            id="username"
+            label="Username: "
+            label-for="username"
+          >
+            <b-form-input id="username" v-model="user.username" placeholder="Username"></b-form-input>
+          </b-form-group>
+        </div>
         <button @click="navigateToHome" class="btn btn-primary">Go to Home</button>
     </div>
 </template>
@@ -51,5 +65,16 @@ export default {
     &:hover {
       color: white;
     }
+  }
+
+  .userinfo {
+    padding: 15px;
+    // background: white;
+    border-radius: 15px;
+    text-align: left;
+    margin-left: 40vw;
+    width: 20vw;
+    color: white;
+    align-content: center;
   }
 </style>
