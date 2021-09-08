@@ -150,8 +150,7 @@ export default {
   .login {
       display: flex;
       place-items: center;
-      grid-template-columns: 50% 50%;
-      margin: 10% 25% 10% 25%;
+      margin: 5% 25% 10% 25%;
       padding: 5%;
       border-radius: 25px;
       border: 4px solid white;
@@ -171,7 +170,6 @@ export default {
   .right-half {
     width: minmax(350px ,50%);
     text-align: left;
-    // border-left: 1px solid black;
   }
   b-input-group {
     margin-top: 15px;

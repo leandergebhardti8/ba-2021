@@ -2,11 +2,13 @@
     <div class="project-wrapper">
         <button @click="navigateHome" class="btn btn-primary close_btn"><b-icon-house></b-icon-house></button>
         <h1>Project Page</h1>
+        <label for="searchbar" class="search-bar-label">Search Projects</label>
+        <b-form-input id="searchbar" type="search" class="search-bar" v-model="search"></b-form-input>
         <ul class="projects">
             <router-link 
                 :to="'/deployjob/' + project.id" 
                 tag="li" 
-                v-for="project in this.projects" 
+                v-for="project in filteredProjects" 
                 :key="project.id"
                 class="project-item">
                 <Project :project="project" :modalName="project.id" @update="updateProject"/>
@@ -77,6 +79,7 @@ export default {
   data() {
       return {
           addBtn: true,
+          search: '',
           newProject: {
             name: '',
             id: this.newProjectId,
@@ -95,6 +98,16 @@ export default {
     newProjectId(){
         const intID = this.projects.length + 1;
         return String(intID);
+    },
+    filteredProjects() {
+        let projects = this.projects
+
+        if(!this.search) return projects
+
+        let searchValue = this.search.toLowerCase()
+        let filter = project => project.name.toLowerCase().includes(searchValue)
+
+        return projects.filter(filter)
     }
   },
   methods: {
@@ -169,5 +182,15 @@ export default {
       float: left;
       position: absolute;
       margin: 1.75rem;
-  }
+    }
+
+    .search-bar {
+        width: 25%;
+        margin: 0 2rem 2rem 2rem;
+    }
+
+    .search-bar-label {
+        margin: 0 2rem 0 2rem;
+        font-weight: 600;
+    }
 </style>
