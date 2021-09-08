@@ -3,10 +3,11 @@
         <h1>Userpage</h1>
         <hr>
         <div class="userinfo">
+          <label class="sr-only" for="inline-form-input-username">Full name: </label>
           <b-form-group
             id="full-name"
-            label="Full name: "
             label-for="full-name"
+            class="info-field"
           >
             <b-form-input id="full-name" v-model="user.full_name" placeholder="Full Name"></b-form-input>
           </b-form-group>
@@ -76,5 +77,9 @@ export default {
     width: 20vw;
     color: white;
     align-content: center;
+  }
+
+  .info-field {
+    margin-bottom: 1rem;
   }
 </style>
