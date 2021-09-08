@@ -3,6 +3,7 @@
 ![superlinter](https://github.com/leandergebhardti8/ba-2021/actions/workflows/superlinter.yml/badge.svg)
 ![node](https://github.com/leandergebhardti8/ba-2021/actions/workflows/node.yml/badge.svg)
 [![Heroku-Action](https://github.com/leandergebhardti8/ba-2021/actions/workflows/heroku_deploy.yml/badge.svg)](https://github.com/leandergebhardti8/ba-2021/actions/workflows/heroku_deploy.yml)
+[![Build & Test Project](https://github.com/leandergebhardti8/ba-2021/actions/workflows/build-test.yml/badge.svg)](https://github.com/leandergebhardti8/ba-2021/actions/workflows/build-test.yml)
 
 ## Project setup
 ```bash
