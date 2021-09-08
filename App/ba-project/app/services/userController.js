@@ -1,20 +1,8 @@
 const User = require ('../models/user');
+// import {User, Project} from '../models/user.js';
 const bcrypt = require('bcrypt');
 
 
-// FETCH All Users
-exports.getAll = (req, res) => {
-    User.find()
-        .exec()
-        .then(users => {
-            console.log('Sending users')
-            res.send(users)
-        })
-        .catch((error) => {
-            console.log(error.message);
-            return[];
-        })
-}
 
 // CREATE a new User
 exports.create = (req, res) => {
@@ -69,7 +57,7 @@ exports.logIn = (req, res) => {
                     })
                 } else {
                     res.status(200).send({
-                        message: `Successfully logged in ${req.body.username}`
+                        message: `Successfully logged in ${req.body.username}`,
                     })
                 }
             })
@@ -93,6 +81,7 @@ exports.findOne = (req, res) => {
         let foundUser = {
             username: user.username,
             full_name: user.full_name,
+            id: user._id,
         }
         res.send(foundUser)
     }).catch(err => {
@@ -102,34 +91,75 @@ exports.findOne = (req, res) => {
     })
 }
 
-// UPDATE a Project with Id
+// UPDATE a User with Username
 exports.update = (req, res) => {
-    // Find project and update it
-    User.updateOne({_id: req.params.id}, {
-        username: req.body.username,
-        password: req.body.password,
-        full_name: req.body.full_name,
-        projects: [],
-    }, {new: true})
-    .then(project => {
-        if(!project) {
-            return res.status(404).send({
-                message: `User not found with Id  ${req.params.id}`
-            });
-        }
-        res.send(project);
-    }).catch(err => {
+    // Find User and check if password is correct
+    User.findOne({username: req.params.username})
+    .then(user => {
+        user.comparepassword(req.body.password, user.password, (err, isMatch)=> {
+            console.log('Password correct: ' + isMatch);
+            if(!isMatch) {
+                res.status(404).send({
+                    message: 'Password doesn`t match!'
+                })
+            } else {
+                res.status(200).send({
+                    message: `Successfully logged in ${req.body.username}`,
+                    user: user,
+                })
+            }
+        })
+    })
+    .catch(err => {
         return res.status(500).send({
-            message: `Error updating User with Id ${req.params.id} ${err.message}`
+            message: `Error retrieving User with Username while updating: ${req.params.username} ${err.message}`
+        })
+    })
+    // Find User and update it
+    let password = null 
+    console.log('Generating new Password for: '+ req.params.username)
+        const saltRounds = 7
+        // password is being hashed
+        bcrypt
+            .hash(req.body.newpassword, saltRounds)
+            .then(hash => {
+                password = hash
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message: 'Error while hashing Password' + err
+                })
+            })
+        
+        // Find and update existing User
+        User.updateOne({username: req.params.username}, {
+            username: req.body.user.username,
+            full_name: req.body.full_name,
+            password: password,
+        }, {new: true})
+        .then(user => {
+            if(!user) {
+                return res.status(404).send({
+                    message: `User not found with username: ${req.params.usernmae}`
+                });
+            }
+            let updatedUser = {
+                full_name: user.full_name,
+                username: user.username,
+            }
+            res.send(updatedUser);
+        }).catch(err => {
+            return res.status(500).send({
+                message: `Error updating User with username: ${req.params.username} ${err.message}`
+            });
         });
-    });
 }
 
 // DELETE a Project
 exports.delete =(req, res) => {
     User.findByIdAndRemove(req.params.id)
-    .then(project => {
-        if(!project) {
+    .then(user => {
+        if(!user) {
             return res.status(404).send({
                 message: `User not found with Id ${req.params.id}`
             });

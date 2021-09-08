@@ -102,38 +102,7 @@ export default {
     }
   },
   created () {
-    // axios.interceptors.request.use(config => {
-    //   // perform a task before the request is sent
-    //   console.log('Requesting workflow badge from API');
-
-    //   return config;
-    // }, error => {
-    //   // handle the error
-    //   return Promise.reject(error);
-    // })
-
-    // sent a GET request
-    // TODO Get API request working
-    // const headers = { "Content-Type": "application/json" };
-    // var username = 'leandergebhardti8';
-    // var password = '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';
-    // const authorization = {'Authorization': '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'};
-    // var credentials = btoa(username + ':' + password);
-    // var basicAuth = 'Basic' + credentials;
-    // axios
-    //   .get('https://api.github.com/repos/leandergebhardti8/ba-2021/actions/workflows', { 
-    //     auth: {
-    //       username: username,
-    //       password: password
-    //     }
-    //    })
-    //   .then(response => (
-    //     this.info = response
-    //   ))
-    //   .catch(error => {
-    //   this.errorMessage = error.message;
-    //   console.error("There was an error!", error);
-    // });
+    
   },
   methods: {
     ...mapActions(['UpdateProject', 'GetProject', 'RemoveProject']),

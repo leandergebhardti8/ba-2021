@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
-// const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-// const confiq = require('./config/config')
     
 	/* Environment */
 	const environmentSchema = new mongoose.Schema({

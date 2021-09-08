@@ -11,8 +11,8 @@ module.exports = function(app) {
     app.get('/api/user/:username', userController.findOne);
 
     // Update a User with Id
-    app.put('/api/user/:username:password', userController.update);
+    app.put('/api/user/:username', userController.update);
 
-    // Delete a User with Username and Password
-    app.delete('/api/user/:username:password', userController.delete);
+    // Delete a User with Username
+    app.delete('/api/user/:username', userController.delete);
 }

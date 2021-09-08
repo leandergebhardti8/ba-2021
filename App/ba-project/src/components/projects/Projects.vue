@@ -82,6 +82,7 @@ export default {
           search: '',
           newProject: {
             name: '',
+            user: null,
             id: this.newProjectId,
             githubURL: '',
             repoOwner: '',
@@ -91,10 +92,12 @@ export default {
       }
   },
   created: function () {
+      this.GetUser(this.user);
       this.GetProjects();
   },
   computed: {
     ...mapGetters({projects: "StateProjects"}),
+    ...mapGetters({user: "StateUser"}),
     newProjectId(){
         const intID = this.projects.length + 1;
         return String(intID);
@@ -111,7 +114,13 @@ export default {
     }
   },
   methods: {
-      ...mapActions(['CreateProject', 'GetProjects']),
+      ...mapActions([
+        'CreateProject', 
+        'GetProjects', 
+        'GetUserProjects',
+        'CreateProject', 
+        'GetUser'
+        ]),
       navigateHome() {
           this.$router.push('/');
       },
@@ -128,7 +137,16 @@ export default {
         const intID = this.projects.length + 1;
         const projectID = String(intID);
         this.newProject.id = projectID;
+        this.newProject.userId = this.user.id;
+        // try {
+        //     await this.CreateProject(this.newProject);
+        //     console.log(`Updating projects`)
+        // } catch (error) {
+        //     console.log('Something went wrong while trying to create a new Project!')
+        //     throw new Error
+        // }
         try {
+            console.log(this.newProject.name)
             await this.CreateProject(this.newProject);
             console.log(`Updating projects`)
         } catch (error) {
@@ -136,15 +154,14 @@ export default {
             throw new Error
         }
         
-        this.name = '';
-        this.id = '';
+        this.newProject.name = '';
+        this.newProject.id = '';
         this.$nextTick(() => {
           this.$bvModal.hide('modal-prevent-closing')
         })
       },
   },
   mounted() {
-    // this.getProjects();
   }
 }
 </script>

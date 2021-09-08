@@ -59,6 +59,10 @@ const actions = {
         await axios.put(`project/${project._id}`, project)
         await dispatch('GetProject', project.id)
     },
+    async UpdateUser({dispatch}, user) {
+        let response = await axios.put(`user/${user.username}`, user)
+        await dispatch('setUser', response.data)
+    },
     async RemoveProject({dispatch}, _id) {
         await axios.delete(`project/${_id}`)
         await dispatch('GetProjects')

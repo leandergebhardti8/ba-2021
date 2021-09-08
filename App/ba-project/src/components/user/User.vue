@@ -41,7 +41,7 @@
             label-for="newpassword"
             class="info-field"
           >
-            <b-form-input id="newpassword" v-model="userUpdate.newpassword" placeholder="enter a new password"></b-form-input>
+            <b-form-input id="newpassword" v-model="userUpdate.newpassword" type="password" placeholder="enter a new password"></b-form-input>
           </b-form-group>
           <b-form-group
             id="confirmpassword"
@@ -49,9 +49,13 @@
             label-for="confirmpassword"
             class="info-field"
           >
-            <b-form-input id="confirmpassword" v-model="userUpdate.newpassword" placeholder="enter the password again"></b-form-input>
+            <b-form-input id="confirmpassword" v-model="passwordRepeat" type="password" placeholder="enter the password again"></b-form-input>
           </b-form-group>
-          <button @click="navigateToHome" class="btn btn-secondary"><strong>Update Password</strong></button>
+          <b-alert v-if="showError" show variant="danger">
+              <p class="error">Passwords do not match!</p>
+          </b-alert>
+
+          <button @click="updateUser()" class="btn btn-secondary"><strong>Update Password</strong></button>
         </div>
           <hr>
           <h3>Remove Account</h3>
@@ -72,6 +76,8 @@ export default {
   data() {
       return {
         onChange: false,
+        showError: false,
+        passwordRepeat: '',
         userUpdate: {
           password: '',
           newpassword: '',
@@ -84,8 +90,13 @@ export default {
     this.GetUser(this.user);
   },
   watch: {
-    user: function (){
-      return this.onChange = true;
+    passwordRepeat: function (val){
+      if(val != this.userUpdate.newpassword) {
+        this.showError = true;
+      }
+      else {
+        this.showError = false;
+      }
     },
   },
   computed: {
@@ -100,11 +111,24 @@ export default {
           this.$router.push('/');
       },
       async updateUser() {
+        if(this.checkRepeat(this.userUpdate.newpassword)) {
         try {
-        await this.UpdateUser(this.userUpdate);
-      } catch (error) {
-        console.log('Error accured while updating User info' + error)
-      }
+          if(this.userUpdate.username === '' || this.userUpdate.full_name === '') {
+            this.userUpdate.username = this.user.username;
+            this.userUpdate.full_name = this.user.full_name;
+          }
+          await this.UpdateUser(this.userUpdate);
+          this.$router.push("/login");
+        } catch (error) {
+          console.log('Error accured while updating User info ' + error)
+        }
+        }
+        else {
+          this.showError = true;
+        }
+      },
+      checkRepeat(newpassword) {
+        return newpassword === this.passwordRepeat;
       }
   }
 }

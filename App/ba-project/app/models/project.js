@@ -21,6 +21,10 @@ const mongoose = require('mongoose');
 			type: String,
 			index: true
 		},
+		user: {
+			type: String,
+			unique: true,
+		},
 		id: String,
 		name: String,
 		githubURL: String,

@@ -14,11 +14,26 @@ exports.getAll = (req, res) => {
         })
 }
 
+// FETCH All Projects from User
+exports.getAllUserProjects = (req, res) => {
+    Project.find({user: req.params.id})
+        .exec()
+        .then(projects => {
+            console.log('Sending projects')
+            res.send(projects)
+        })
+        .catch((error) => {
+            console.log(error.message);
+            return[];
+        })
+}
+
 // CREATE a new Project
 exports.create = (req, res) => {
     const project = new Project({
         name: req.body.name,
         id: req.body.id,
+        user: req.body.userId,
         githubURL: req.body.githubURL,
         githubToken: req.body.githubToken,
         repoName: req.body.repoName,
