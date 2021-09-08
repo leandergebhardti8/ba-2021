@@ -8,6 +8,7 @@ axios.interceptors.response.use(function (response) {
 
 const state = {
     user: null,
+    rememberedUser: null,
     projects: null,
     project: null,
 };
@@ -17,6 +18,7 @@ const getters = {
     StateUser: (state) => state.user,
     StateProjects: (state) => state.projects,
     StateProject: (state) => state.project,
+    StateRememberedUser: (state) => state.rememberedUser,
 };
 
 const actions = {
@@ -28,7 +30,7 @@ const actions = {
         await dispatch('LogIn', form)
     },
     async LogIn({commit}, user) {
-        let res =await axios.post('login', user)
+        let res = await axios.post('login', user)
         if(res.status === 404)
             throw Error
         await commit('setUser', user.username)
@@ -76,6 +78,9 @@ const mutations = {
     },
     setProject(state, project) {
         state.project = project
+    },
+    setRememberedUser(state, username) {
+        state.rememberedUser = username
     },
 };
 

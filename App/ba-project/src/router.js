@@ -19,7 +19,8 @@ export const routes = [
   {
     name: 'home',
     path: '',
-    component: Home
+    component: Home,
+    meta: { requiresAuth: true },
   },
   {
     path: '/login',

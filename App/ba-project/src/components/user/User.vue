@@ -70,7 +70,6 @@ export default {
 
   .userinfo {
     padding: 15px;
-    // background: white;
     border-radius: 15px;
     text-align: left;
     margin-left: 40vw;

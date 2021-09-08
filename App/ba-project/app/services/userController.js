@@ -1,4 +1,5 @@
 const User = require ('../models/user');
+const bcrypt = require('bcrypt');
 
 
 // FETCH All Users
@@ -17,49 +18,64 @@ exports.getAll = (req, res) => {
 
 // CREATE a new User
 exports.create = (req, res) => {
-    const user = new User({
-        full_name: req.body.full_name,
-        username: req.body.username,
-        password: req.body.password,
-        attributes: req.body.attributes,
-        projects: [],
-    });
-
-    // Save User in MongoDB
-    user.save()
-    .then(data => {
-        res.send(data);
-        console.log("New User Saved!")
-    })
-    .catch(err => {
-        res.status(500).send({
-            message: err.message
+    const saltRounds = 7
+    // password is being hashed
+    bcrypt
+        .hash(req.body.password, saltRounds)
+        .then(hash => {
+            // console.log('Hash: ' + hash)
+            const user = new User({
+                full_name: req.body.full_name,
+                username: req.body.username,
+                password: hash,
+                attributes: req.body.attributes,
+                projects: [],
+            });
+            // Save User in MongoDB
+            user.save()
+            .then(data => {
+                res.send(data);
+                console.log("New User Saved!")
+            })
+            .catch(err => {
+                res.status(500).send({
+                    message: 'Error while saving User' + err.message
+                })
+            })
         })
-    })
+        .catch(err => {
+            res.status(500).send({
+                message: 'Error while hashing Password' + err
+            })
+        })
+    
 }
 
 // FIND ONE User with Username and compare password
 exports.logIn = (req, res) => {
-    User.findOne({ username: req.body.username }, function(err, user){
-        user.comparepassword(req.body.password, (err, isMatch)=> {
-            if(!isMatch) {
-                return res.status(404).send({
-                    message: 'Password doesn`t match!'
-                })
-            }   
-        })
-    })
+    User.findOne({ username: req.body.username })
     .then(user => {
         if(!user) {
-            return res.status(500).send({
+            res.status(500).send({
                 message: `User not found ${req.body.username}`
             })
         }
-        res.status(200).send({
-            message: `Successfully logged in ${req.body.username}`
-        })
+        else {
+            user.comparepassword(req.body.password, user.password, (err, isMatch)=> {
+                console.log('Password correct: ' + isMatch);
+                if(!isMatch) {
+                    res.status(404).send({
+                        message: 'Password doesn`t match!'
+                    })
+                } else {
+                    res.status(200).send({
+                        message: `Successfully logged in ${req.body.username}`
+                    })
+                }
+            })
+        }
     }).catch(err => {
-        return res.status(500).send({
+        res.status(500).send({
             message: `Error retrieving User with Username: ${req.body.username} ${err.message}`
         })
     })
