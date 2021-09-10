@@ -58,6 +58,7 @@ exports.logIn = (req, res) => {
                 } else {
                     res.status(200).send({
                         message: `Successfully logged in ${req.body.username}`,
+                        user: user,
                     })
                 }
             })
@@ -97,43 +98,17 @@ exports.update = (req, res) => {
     User.findOne({username: req.params.username})
     .then(user => {
         user.comparepassword(req.body.password, user.password, (err, isMatch)=> {
-            console.log('Password correct: ' + isMatch);
+            console.log('Password correct when updateding user: ' + isMatch);
             if(!isMatch) {
                 res.status(404).send({
                     message: 'Password doesn`t match!'
                 })
             } else {
-                res.status(200).send({
-                    message: `Successfully logged in ${req.body.username}`,
-                    user: user,
-                })
-            }
-        })
-    })
-    .catch(err => {
-        return res.status(500).send({
-            message: `Error retrieving User with Username while updating: ${req.params.username} ${err.message}`
-        })
-    })
-    // Find User and update it
-    let password = null 
-    console.log('Generating new Password for: '+ req.params.username)
-        const saltRounds = 7
-        // password is being hashed
-        bcrypt
-            .hash(req.body.newpassword, saltRounds)
-            .then(hash => {
-                password = hash
-            })
-            .catch(err => {
-                res.status(500).send({
-                    message: 'Error while hashing Password' + err
-                })
-            })
+                let password = generateHash(req.params.username, req.body.newpassword) 
         
         // Find and update existing User
         User.updateOne({username: req.params.username}, {
-            username: req.body.user.username,
+            username: req.body.username,
             full_name: req.body.full_name,
             password: password,
         }, {new: true})
@@ -153,6 +128,15 @@ exports.update = (req, res) => {
                 message: `Error updating User with username: ${req.params.username} ${err.message}`
             });
         });
+            }
+        })
+    })
+    .catch(err => {
+        return res.status(500).send({
+            message: `Error retrieving User with Username while updating: ${req.params.username} ${err.message}`
+        })
+    })
+
 }
 
 // DELETE a Project
@@ -170,4 +154,20 @@ exports.delete =(req, res) => {
             message: `Error delete User with Id ${req.params.id} ${err.message}`
         });
     })
+}
+
+// Local Functions
+function generateHash(username, password) {
+    const saltRounds = 7
+    // password is being hashed
+    bcrypt
+        .hash(password, saltRounds)
+        .then(hash => {
+            const generatedPassword = hash
+            console.log('Generated password for: ' + username)
+            return generatedPassword
+        })
+        .catch(err => {
+            console.log('Error accured durcing generating new Hash ' + err)
+        })
 }

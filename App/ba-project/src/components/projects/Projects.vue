@@ -6,12 +6,12 @@
         <b-form-input id="searchbar" type="search" class="search-bar" v-model="search"></b-form-input>
         <ul class="projects">
             <router-link 
-                :to="'/deployjob/' + project.id" 
+                :to="'/deployjob/' + project._id" 
                 tag="li" 
                 v-for="project in filteredProjects" 
-                :key="project.id"
+                :key="project._id"
                 class="project-item">
-                <Project :project="project" :modalName="project.id" @update="updateProject"/>
+                <Project :project="project" :modalName="project._id" @update="updateProject"/>
             </router-link>
         </ul>
         <button v-if="addBtn" class="btn btn-primary" v-b-modal.modal-prevent-closing>
@@ -82,8 +82,7 @@ export default {
           search: '',
           newProject: {
             name: '',
-            user: null,
-            id: this.newProjectId,
+            userId: null,
             githubURL: '',
             repoOwner: '',
             repoName: '',
@@ -92,16 +91,12 @@ export default {
       }
   },
   created: function () {
-      this.GetUser(this.user);
+    //   this.GetUser(this.user);
       this.GetProjects();
   },
   computed: {
     ...mapGetters({projects: "StateProjects"}),
     ...mapGetters({user: "StateUser"}),
-    newProjectId(){
-        const intID = this.projects.length + 1;
-        return String(intID);
-    },
     filteredProjects() {
         let projects = this.projects
 
@@ -134,10 +129,10 @@ export default {
         }
       },
       async addProject() {
-        const intID = this.projects.length + 1;
-        const projectID = String(intID);
-        this.newProject.id = projectID;
-        this.newProject.userId = this.user.id;
+        // const intID = this.projects.length + 1;
+        // const projectID = String(intID);
+        // this.newProject.id = projectID;
+        // this.newProject.userId = this.user.id;
         // try {
         //     await this.CreateProject(this.newProject);
         //     console.log(`Updating projects`)
@@ -146,19 +141,18 @@ export default {
         //     throw new Error
         // }
         try {
+            this.newProject.username = this.user;
             console.log(this.newProject.name)
             await this.CreateProject(this.newProject);
+            this.newProject.name = '';
+            this.$nextTick(() => {
+            this.$bvModal.hide('modal-prevent-closing')
+        })
             console.log(`Updating projects`)
         } catch (error) {
             console.log('Something went wrong while trying to create a new Project!')
             throw new Error
         }
-        
-        this.newProject.name = '';
-        this.newProject.id = '';
-        this.$nextTick(() => {
-          this.$bvModal.hide('modal-prevent-closing')
-        })
       },
   },
   mounted() {

@@ -4,10 +4,10 @@
         <!-- <span class="edit-button"><b-icon-three-dots-vertical></b-icon-three-dots-vertical></span> -->
         <div class="settings_button">
           <b-dropdown right>
-            <b-dropdown-item v-b-modal="`modal-rename-${project.id}`">Rename</b-dropdown-item>
-            <b-dropdown-item v-b-modal="`modal-edit-${project.id}`"><b-icon-pencil></b-icon-pencil> Edit</b-dropdown-item>
+            <b-dropdown-item v-b-modal="`modal-rename-${project._id}`">Rename</b-dropdown-item>
+            <b-dropdown-item v-b-modal="`modal-edit-${project._id}`"><b-icon-pencil></b-icon-pencil> Edit</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
-            <b-dropdown-item @click="deleteProject(project.id)"><b-icon-exclamation-triangle variant="danger"></b-icon-exclamation-triangle> Delete</b-dropdown-item>
+            <b-dropdown-item @click="deleteProject(project._id)"><b-icon-exclamation-triangle variant="danger"></b-icon-exclamation-triangle> Delete</b-dropdown-item>
           </b-dropdown>
         </div>
 
@@ -15,7 +15,7 @@
         <b-modal 
             :id="`modal-rename-${modalName}`"
             title="Rename Project"
-            @ok="renameProject(projectCopy.id)"
+            @ok="renameProject(projectCopy._id)"
         >
             <b-form inline>
               <label class="sr-only" for="inline-form-input-id">Project Name</label>
@@ -32,7 +32,7 @@
         <b-modal 
             :id="`modal-edit-${modalName}`"
             title="Edit Project"
-            @ok="editProject(projectCopy.id)"
+            @ok="editProject(projectCopy._id)"
         >
             <b-form inline>
               <label class="sr-only" for="inline-form-input-id"><strong>Project Name</strong></label>

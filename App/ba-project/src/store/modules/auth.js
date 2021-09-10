@@ -40,7 +40,9 @@ const actions = {
         commit('logOut', user)
     },
     async GetProjects({commit}) {
-        let response = await axios.get('projects');
+        // console.log('Getting projects for user: ' + user.username)
+        // let response = await axios.get(`projects/${user.id}`);
+        let response = await axios.get(`projects`);
         commit('setProjects', response.data);
     },
     async GetProject({commit}, id) {
@@ -60,8 +62,15 @@ const actions = {
         await dispatch('GetProject', project.id)
     },
     async UpdateUser({dispatch}, user) {
-        let response = await axios.put(`user/${user.username}`, user)
-        await dispatch('setUser', response.data)
+        let res = await axios.put(`user/${user.username}`, user)
+        if(res.status === 404)
+            throw Error
+        await dispatch('setUser', res.data)
+    },
+    async DeleteUser({commit}, userid) {
+        console.log(userid)
+        await axios.delete(`user/${userid}`)
+        await commit('logOut', null)
     },
     async RemoveProject({dispatch}, _id) {
         await axios.delete(`project/${_id}`)

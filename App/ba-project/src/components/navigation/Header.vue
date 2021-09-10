@@ -32,7 +32,9 @@
 export default {
   name: 'Header',
   computed: {
-    isLoggedIn: function(){ return this.$store.getters.isAuthenticated},
+    isLoggedIn: function(){ 
+      return this.$store.getters.isAuthenticated
+    },
   },
   methods: {
     async logout() {

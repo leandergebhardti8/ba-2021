@@ -22,7 +22,7 @@
         <div class="deploy-methods" v-if="deployMethodIsDefined">
             <ul class="deploy-method-list">
                 <router-link 
-                    :to="'/project/' + project.id + '/' + deployMethod.name" 
+                    :to="'/project/' + project._id + '/' + deployMethod.name" 
                     tag="li"
                     v-for="deployMethod in this.project.deployMethods" 
                     :key="deployMethod.name"

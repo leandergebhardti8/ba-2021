@@ -16,7 +16,7 @@ exports.getAll = (req, res) => {
 
 // FETCH All Projects from User
 exports.getAllUserProjects = (req, res) => {
-    Project.find({user: req.params.id})
+    Project.find({user: req.params.username})
         .exec()
         .then(projects => {
             console.log('Sending projects')
@@ -24,7 +24,7 @@ exports.getAllUserProjects = (req, res) => {
         })
         .catch((error) => {
             console.log(error.message);
-            return[];
+            return['Error finding project'];
         })
 }
 
@@ -32,8 +32,7 @@ exports.getAllUserProjects = (req, res) => {
 exports.create = (req, res) => {
     const project = new Project({
         name: req.body.name,
-        id: req.body.id,
-        user: req.body.userId,
+        user: req.body.username,
         githubURL: req.body.githubURL,
         githubToken: req.body.githubToken,
         repoName: req.body.repoName,
@@ -55,7 +54,7 @@ exports.create = (req, res) => {
 
 // FIND ONE Project by Id
 exports.findOne = (req, res) => {
-    Project.findOne({ id: req.params.id })
+    Project.findOne({ _id: req.params.id })
     .then(project => {
         if(!project) {
             return res.status(500).send({

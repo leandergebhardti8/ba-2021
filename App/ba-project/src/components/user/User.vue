@@ -60,7 +60,7 @@
           <hr>
           <h3>Remove Account</h3>
           <div class="profile">
-            <button @click="navigateToHome" class="btn btn-danger"> <b-icon-exclamation-octagon></b-icon-exclamation-octagon> <strong>Delete Account</strong></button>
+            <button @click="deleteUser" class="btn btn-danger"> <b-icon-exclamation-octagon></b-icon-exclamation-octagon> <strong>Delete Account</strong></button>
             <p class="button-text">Deleting your account is irreversible!</p>
           </div>
           <hr>
@@ -106,7 +106,7 @@ export default {
 
   },
   methods: {
-    ...mapActions(['GetUser', 'UpdateUser']),
+    ...mapActions(['GetUser', 'UpdateUser', 'DeleteUser']),
       navigateToHome() {
           this.$router.push('/');
       },
@@ -129,6 +129,15 @@ export default {
       },
       checkRepeat(newpassword) {
         return newpassword === this.passwordRepeat;
+      },
+      async deleteUser() {
+        try {
+          let userId = this.user.id
+          await this.DeleteUser(userId);
+          this.$router.push('/login')
+        } catch (error) {
+          console.log('Error accured while deleting User ' + error)
+        }
       }
   }
 }
