@@ -70,14 +70,14 @@ export default {
         for(let index = 0; index < this.allBuilds.length; index++) {
           // There is one build entry
           if(this.allBuilds[index].builds.length <= 1){
-            element = {Project: this.allBuilds[index].project, DeployMethod: this.allBuilds[index].deployMethod, Environment: this.allBuilds[index].environment, 'Build Time': this.allBuilds[index].builds[0]};
+            element = {Project: this.allBuilds[index].project, DeployMethod: this.allBuilds[index].deployMethod, Environment: this.allBuilds[index].environment, 'Build Timestamp': this.allBuilds[index].builds[0]};
             items.push(element)
           }
           // There are more then one build entries in the same environment of a project. Make multiple entries in the table for this project & environment.
           else {
             for(let buildIndex = 0; buildIndex < this.allBuilds[index].builds.length; buildIndex++) {
               let buildElement = {}
-              buildElement = {Project: this.allBuilds[index].project, DeployMethod: this.allBuilds[index].deployMethod, Environment: this.allBuilds[index].environment, 'Build Time': this.allBuilds[index].builds[buildIndex]};
+              buildElement = {Project: this.allBuilds[index].project, DeployMethod: this.allBuilds[index].deployMethod, Environment: this.allBuilds[index].environment, 'Build Timestamp': this.allBuilds[index].builds[buildIndex]};
               items.push(buildElement)
             }
           }

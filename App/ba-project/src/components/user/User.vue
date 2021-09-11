@@ -12,14 +12,11 @@
             >
               <b-form-input id="full-name" v-model="user.full_name" placeholder="Full Name"></b-form-input>
             </b-form-group>
-            <div>
-              <button v-if="onChange" @click="navigateToHome" class="btn btn-primary">Save</button>
-              <button v-if="onChange" @click="navigateToHome" class="btn btn-primary">Cancel</button>
-            </div>
-            <b-form-group
-              id="username"
-              label="Username: "
+            <b-form-group 
+              id="full-name"
+              label="Username:"
               label-for="username"
+              class="info-field"
             >
               <b-form-input id="username" v-model="user.username" placeholder="Username"></b-form-input>
             </b-form-group>
@@ -75,7 +72,8 @@ export default {
   name: 'User',
   data() {
       return {
-        onChange: false,
+        onChangeUsername: false,
+        onChangeFullName: false,
         showError: false,
         passwordRepeat: '',
         userUpdate: {
@@ -102,14 +100,12 @@ export default {
   computed: {
     ...mapGetters({user: "StateUser"}),
   },
-  props: {
-
-  },
   methods: {
     ...mapActions(['GetUser', 'UpdateUser', 'DeleteUser']),
       navigateToHome() {
           this.$router.push('/');
       },
+
       async updateUser() {
         if(this.checkRepeat(this.userUpdate.newpassword)) {
         try {
@@ -127,9 +123,11 @@ export default {
           this.showError = true;
         }
       },
+
       checkRepeat(newpassword) {
         return newpassword === this.passwordRepeat;
       },
+
       async deleteUser() {
         try {
           let userId = this.user.id
@@ -138,6 +136,14 @@ export default {
         } catch (error) {
           console.log('Error accured while deleting User ' + error)
         }
+      },
+
+      saveUser() {
+
+      },
+
+      cancel() {
+
       }
   }
 }

@@ -8,7 +8,6 @@ axios.interceptors.response.use(function (response) {
 
 const state = {
     user: null,
-    rememberedUser: null,
     projects: null,
     project: null,
 };
@@ -18,7 +17,6 @@ const getters = {
     StateUser: (state) => state.user,
     StateProjects: (state) => state.projects,
     StateProject: (state) => state.project,
-    StateRememberedUser: (state) => state.rememberedUser,
 };
 
 const actions = {
@@ -54,18 +52,20 @@ const actions = {
         commit('setUser', response.data);
     },
     async CreateProject({dispatch}, project) {
-        await axios.post('project', project)
+        let res = await axios.post('project', project)
+        console.log(res.data._id)
         await dispatch('GetProjects')
     },
     async UpdateProject({dispatch}, project) {
         await axios.put(`project/${project._id}`, project)
         await dispatch('GetProject', project.id)
     },
-    async UpdateUser({dispatch}, user) {
+    async UpdateUser({commit}, user) {
+        console.log(user.newpassword)
         let res = await axios.put(`user/${user.username}`, user)
         if(res.status === 404)
             throw Error
-        await dispatch('setUser', res.data)
+        await commit('setUser', res.data)
     },
     async DeleteUser({commit}, userid) {
         console.log(userid)
@@ -91,9 +91,6 @@ const mutations = {
     },
     setProject(state, project) {
         state.project = project
-    },
-    setRememberedUser(state, username) {
-        state.rememberedUser = username
     },
 };
 

@@ -12,7 +12,7 @@
                   <b-form-input
                     id="inline-form-input-username"
                     class="mb-2 mr-sm-2 mb-sm-0"
-                    placeholder="Max Muster"
+                    placeholder="Username"
                     name="username"
                     v-model="form.username"
                   ></b-form-input>
@@ -32,6 +32,7 @@
                     :type="this.type" 
                     id="inline-form-input-password"
                     name="password"
+                    placeholder="Password"
                     v-model="form.password"
                   >
                   </b-form-input>
@@ -55,7 +56,6 @@
                   <b-form-valid-feedback :state="passwordSpecial">
                   <b-icon-check></b-icon-check> Your password contains Special Characters.
                   </b-form-valid-feedback>
-                  <b-form-checkbox class="mb-2 mr-sm-2 mb-sm-1" v-model="remember">Remember me</b-form-checkbox>
 
                   <button type="submit" variant="success" class="login-button">Login</button>
               </b-form>
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-  import { mapActions, mapMutations, mapGetters } from 'vuex'
+  import { mapActions, mapMutations } from 'vuex'
 
 export default {
   name: 'Login',
@@ -80,7 +80,6 @@ export default {
         username: this.rememberedUser ? this.rememberedUser : '',
         password: '',
       },
-      remember: false,
       type: 'password',
       showError: false,
       showPassword: false
@@ -97,9 +96,6 @@ export default {
       } catch (error) {
         console.log("Error while logging in" + error.message)
         this.showError = true
-      }
-      if(this.remember === true){
-        this.setRememberedUser(this.form.username)
       }
     },
     togglePassword() {
@@ -123,7 +119,6 @@ export default {
     passwordSpecial() {
       return /[!@#$%^&*)(+=._-]/.test(this.form.password);
     },
-    ...mapGetters({rememberedUser: "StateRememberedUser"}),
   }
 }
 </script>

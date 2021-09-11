@@ -104,36 +104,44 @@ exports.update = (req, res) => {
                     message: 'Password doesn`t match!'
                 })
             } else {
-                let password = generateHash(req.params.username, req.body.newpassword) 
-        
+               const saltRounds = 7
+                // new password is being hashed
+                bcrypt
+                    .hash(req.body.newpassword, saltRounds)
+                    .then(hash => {
+                        // Update User with newly hashed password
+                        User.updateOne({username: req.params.username}, {
+                            username: req.body.username,
+                            full_name: req.body.full_name,
+                            password: hash,
+                        }, {new: true})
+                        .then(user => {
+                            if(!user) {
+                                return res.status(404).send({
+                                    message: `User not found with username: ${req.params.usernmae}`
+                                });
+                            }
+                            let updatedUser = {
+                                full_name: user.full_name,
+                                username: user.username,
+                            }
+                            res.send(updatedUser);
+                        }).catch(err => {
+                            return res.status(500).send({
+                                message: `Error updating User with username: ${req.params.username} ${err.message}`
+                            });
+                        });
+                    })
+                    .catch(err => {
+                        console.log('Error accured during generating new Hash ' + err)
+                    })
         // Find and update existing User
-        User.updateOne({username: req.params.username}, {
-            username: req.body.username,
-            full_name: req.body.full_name,
-            password: password,
-        }, {new: true})
-        .then(user => {
-            if(!user) {
-                return res.status(404).send({
-                    message: `User not found with username: ${req.params.usernmae}`
-                });
-            }
-            let updatedUser = {
-                full_name: user.full_name,
-                username: user.username,
-            }
-            res.send(updatedUser);
-        }).catch(err => {
-            return res.status(500).send({
-                message: `Error updating User with username: ${req.params.username} ${err.message}`
-            });
-        });
             }
         })
     })
     .catch(err => {
         return res.status(500).send({
-            message: `Error retrieving User with Username while updating: ${req.params.username} ${err.message}`
+            message: `Error retrieving User with Username (while updating): ${req.params.username} ${err.message}`
         })
     })
 
@@ -157,17 +165,17 @@ exports.delete =(req, res) => {
 }
 
 // Local Functions
-function generateHash(username, password) {
-    const saltRounds = 7
-    // password is being hashed
-    bcrypt
-        .hash(password, saltRounds)
-        .then(hash => {
-            const generatedPassword = hash
-            console.log('Generated password for: ' + username)
-            return generatedPassword
-        })
-        .catch(err => {
-            console.log('Error accured durcing generating new Hash ' + err)
-        })
-}
+// function generateHash(username, password) {
+//     const saltRounds = 7
+//     // password is being hashed
+//     bcrypt
+//         .hash(password, saltRounds)
+//         .then(hash => {
+//             const generatedPassword = hash
+//             console.log('Generated password for: ' + username + generatedPassword)
+//             return generatedPassword
+//         })
+//         .catch(err => {
+//             console.log('Error accured during generating new Hash ' + err)
+//         })
+// }

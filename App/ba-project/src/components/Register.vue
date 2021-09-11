@@ -29,7 +29,9 @@
                     type="text" 
                     id="inline-form-input-full-name" 
                     name="full_name"
+                    placeholder="Full name"
                     v-model="form.full_name"
+                    class="space-bottom-m"
                   >
                   </b-form-input>
                   <label class="sr-only" for="inline-form-input-password">Password</label>
@@ -41,6 +43,7 @@
                     :type="this.type" 
                     id="inline-form-input-password" 
                     name="password"
+                    placeholder="create a new password"
                     v-model="form.password"
                   >
                   </b-form-input>
@@ -54,16 +57,25 @@
                   <b-form-invalid-feedback :state="passwordValidationNumbers">
                     <b-icon icon="exclamation-triangle"></b-icon> Your password must contain numbers.
                   </b-form-invalid-feedback>
-                  <b-form-valid-feedback :state="passwordValidationNumbers">
-                  <b-icon-check></b-icon-check> Your password contains numbers.
-                  </b-form-valid-feedback>
 
                   <b-form-invalid-feedback :state="passwordSpecial">
                     <b-icon icon="exclamation-triangle"></b-icon>Your password must contain Special Characters.
                   </b-form-invalid-feedback>
-                  <b-form-valid-feedback :state="passwordSpecial">
-                  <b-icon-check></b-icon-check> Your password contains Special Characters.
-                  </b-form-valid-feedback>
+
+                  <label class="sr-only" for="inline-form-repeat-password">Repeat password</label>
+                  <b-form-input 
+                    type="password" 
+                    id="inline-form-repeat-password" 
+                    name="password"
+                    placeholder="repeat your password"
+                    v-model="repeatPassword"
+                  >
+                  </b-form-input>
+                  
+
+                  <b-form-invalid-feedback :state="repeatCorrect">
+                    <b-icon icon="exclamation-triangle"></b-icon>Passwords must match.
+                  </b-form-invalid-feedback>
 
                   <button type="submit" variant="success" class="login-button">Register</button>
               </b-form>
@@ -90,8 +102,10 @@ export default {
         password: '',
       },
       type: 'password',
+      repeatPassword: '',
       showError: false,
-      showPassword: false
+      showPassword: false,
+      repeatCorrect: false
     }
   },
   methods: {
@@ -126,7 +140,16 @@ export default {
     },
     passwordSpecial() {
       return /[!@#$%^&*)(+=._-]/.test(this.form.password);
-    }
+    },
+  },
+  watch: {
+    repeatPassword(val) {
+      if(val === this.form.password){
+        return this.repeatCorrect = true;
+      } else {
+        return this.repeatCorrect = false;
+      }
+    },
   }
 }
 </script>
@@ -213,5 +236,9 @@ export default {
       filter: brightness(75%);
       // border: 1px solid white;
     }
+  }
+
+  .space-bottom-m {
+    margin-bottom: 2rem;
   }
 </style>

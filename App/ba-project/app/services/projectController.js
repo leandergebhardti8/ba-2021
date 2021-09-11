@@ -42,8 +42,8 @@ exports.create = (req, res) => {
 
     // Save Project in MongoDB
     project.save()
-    .then(data => {
-        res.send(data);
+    .then(project => {
+        res.send(project);
     })
     .catch(err => {
         res.status(500).send({
