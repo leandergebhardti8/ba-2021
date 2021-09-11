@@ -33,13 +33,13 @@
                 ></b-form-input>
 
                 <div>
-                    <label class="sr-only" for="inline-form-input-id">Github URL</label>
+                    <!-- <label class="sr-only" for="inline-form-input-id">Github URL</label>
                     <b-form-input
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"
                         placeholder="GitHub HTTPS URL"
                         v-model="newProject.githubURL"
-                    ></b-form-input>
+                    ></b-form-input> -->
                     <label class="sr-only" for="inline-form-input-id">Repositroy Owner</label>
                     <b-form-input
                         id="inline-form-input-name"
@@ -106,6 +106,9 @@ export default {
         let filter = project => project.name.toLowerCase().includes(searchValue)
 
         return projects.filter(filter)
+    },
+    generatedGHURL() {
+        return `https://github.com/${this.newProject.repoOwner}/${this.newProject.repoName}.git`
     }
   },
   methods: {
@@ -129,17 +132,7 @@ export default {
         }
       },
       async addProject() {
-        // const intID = this.projects.length + 1;
-        // const projectID = String(intID);
-        // this.newProject.id = projectID;
-        // this.newProject.userId = this.user.id;
-        // try {
-        //     await this.CreateProject(this.newProject);
-        //     console.log(`Updating projects`)
-        // } catch (error) {
-        //     console.log('Something went wrong while trying to create a new Project!')
-        //     throw new Error
-        // }
+        this.newProject.githubURL = this.generatedGHURL;
         try {
             this.newProject.username = this.user;
             console.log(this.newProject.name)

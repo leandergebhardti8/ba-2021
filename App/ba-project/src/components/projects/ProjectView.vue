@@ -71,6 +71,7 @@
 
           <div class="stage_view">
             <h3>Stage View</h3>
+            <Pipelines :workfows="workflows" />
             <div v-if="deploying">
               <b-table striped hover :items="creteTableForStageView(deployStatus)"></b-table>
               <b-spinner style="width: 3rem; height: 3rem;" class="ml-auto"></b-spinner>
@@ -126,18 +127,18 @@
 import axios from 'axios';
 import { mapGetters ,mapActions } from 'vuex';
 
+import Pipelines from '../pipeline/Pipelines.vue'
+
 export default {
   name: 'ProjectView',
   components: {
-
+    Pipelines: Pipelines,
   },
   data() {
     return {
         methodName: undefined,
         projectId: undefined,
-        // project: null,
         deployMethod: undefined,
-        // deployMethodDefined: false,
         apiData: {},
         showGetErrorMessage: false,
         showPostErrorMessage: false,
@@ -219,17 +220,11 @@ export default {
         }
       }
     },
-    // deleteEnv(envId){
-        
-    // },
     startDeployment(envName){
     // Trigger GitHub Action in Repo, which deploys the project
 
       this.deploying = true;
       this.deployStatus.push({title: 'Fetching Repo'});
-
-      // const username = 'leandergebhardti8';
-      // const password = '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';
       
     // Fetching workflow ID
       // let workflows = []
@@ -273,16 +268,10 @@ export default {
       //   return Promise.reject(error);
       // })
 
-      // TODO Fetch info from env
+
       const owner = this.project.repoOwner;
       const repo = this.project.repoName;
       const token = this.project.githubToken;
-      
-      // const {
-      //   REPO_OWNER: owner,
-      //   REPO_NAME: repo,
-      //   GITHUB_TOKEN: token,
-      // } = process.env;
 
       this.checkAuthData(owner, repo, token);
 
@@ -438,7 +427,7 @@ export default {
     },
     async updateProject() {
       try {
-        await this.GetProject(this.projectId);
+        await this.GetProject(this.project._id);
         console.log(`Updating project`)
 
         let owner = this.project.repoOwner;
