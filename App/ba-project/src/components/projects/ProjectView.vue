@@ -2,18 +2,9 @@
     <div class="project">
         <button @click="navigateToDeployMethods" class="btn btn-primary close_btn"><b-icon-arrow-left></b-icon-arrow-left> Go back to Deploy Methods</button>
         <h1>{{project.name}} ({{ deployMethod.name }})</h1>
-        <div class="settings_button">
-          <b-dropdown right>
-            <b-dropdown-item v-b-modal.modal-rename-current-project>Rename</b-dropdown-item>
-            <b-dropdown-item v-b-modal.modal-edit-current-project><b-icon-pencil></b-icon-pencil> Edit</b-dropdown-item>
-            <b-dropdown-divider></b-dropdown-divider>
-            <b-dropdown-item @click="deleteEnv(environment.id)"><b-icon-exclamation-triangle variant="danger"></b-icon-exclamation-triangle> Delete</b-dropdown-item>
-          </b-dropdown>
-        </div>
 
         <div class="control_bar">
           <b-button-group>
-            <b-button @click="fakeDeploy()">Test</b-button>
             <b-dropdown right text="Run Actions" v-if="this.workflows">
               <b-dropdown-item v-for="workflow in this.workflows" :key="workflow.id" @click="runAction(workflow.id)">
                 {{ workflow.name }}
