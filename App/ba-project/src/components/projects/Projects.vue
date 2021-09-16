@@ -54,7 +54,11 @@
                         placeholder="Repo Name"
                         v-model="newProject.repoName"
                     ></b-form-input>
-                    <label class="sr-only" for="inline-form-input-id">GitHub Token</label>
+                    <label class="sr-only" for="inline-form-input-id">GitHub Token</label> 
+                    <b-icon-question-circle class="question_btn" id="tooltip-text"></b-icon-question-circle>
+                    <b-tooltip target="tooltip-text" triggers="hover">
+                      To generate a personal GitHub Access Token on GitHub, just go to your <b>GitHub Acctount > Settings > Developer Settings > Personal Access Token</b>, and generate a new token with <b>access to workflows</b>.
+                    </b-tooltip>
                     <b-form-input
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"
