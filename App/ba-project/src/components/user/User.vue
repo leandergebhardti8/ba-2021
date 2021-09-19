@@ -101,7 +101,11 @@ export default {
     ...mapGetters({user: "StateUser"}),
   },
   methods: {
-    ...mapActions(['GetUser', 'UpdateUser', 'DeleteUser']),
+    ...mapActions([
+      'GetUser', 
+      'UpdateUser', 
+      'DeleteUser']
+      ),
       navigateToHome() {
           this.$router.push('/');
       },

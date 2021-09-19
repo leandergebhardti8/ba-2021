@@ -1,6 +1,6 @@
 <template>
-    <div class="pipeline-wrapper">
-      <b-button v-b-toggle.sidebar-right>Logs</b-button>
+    <div class="pipeline-wrapper"> 
+      <img :src="workflow.badge_url" alt="badge"> <b-button v-b-toggle="`sidebar-right-${workflow.id}`">Logs</b-button>
       <ul class="pipe-container">
         <li 
           class="pipe-wrapper"
@@ -14,7 +14,12 @@
           </div>
         </li>
       </ul>
-    <b-sidebar id="sidebar-right" :title="workflowJobs.jobs[0].name + ' Logs'" right shadow>
+    <b-sidebar 
+      :id="`sidebar-right-${modalName}`" 
+      :title="workflow.name + ' Logs'" 
+      right 
+      shadow
+    >
       <div class="px-3 py-2 log-wrapper">
         <p class="log">
           {{ jobLog }}
@@ -40,17 +45,17 @@ export default {
     ...mapGetters({project: "StateProject"}),
   },
   props: [
-    'workflows'
+    'workflow',
+    'modalName',
+    'runId',
   ],
   methods: {
     getWorkflowRun(run_id) {
       // https://api.github.com/repos/leandergebhardti8/ba-2021/actions/runs/1224290133/jobs  3574855812
       const dispatchUrl = `https://api.github.com/repos/${this.project.repoOwner}/${this.project.repoName}/actions/runs/${run_id}/jobs`
-      console.log("Why is this working so great!")
       
       axios.interceptors.request.use(config => {
         // perform a task before the request is sent
-        console.log('Requesting runs from API');
         return config;
       }, error => {
         // handle the error
@@ -76,11 +81,10 @@ export default {
 
     getJobLog(jobId) {  
       const dispatchUrl = `https://api.github.com/repos/${this.project.repoOwner}/${this.project.repoName}/actions/jobs/${jobId}/logs`
-      console.log("Why is this working so great!")
       
       axios.interceptors.request.use(config => {
         // perform a task before the request is sent
-        console.log('Requesting runs from API');
+        console.log('Requesting logs from API');
         return config;
       }, error => {
         // handle the error
@@ -102,18 +106,43 @@ export default {
       .catch(error => {
         console.error("There was an error while getting workflow jobs", error);
       });
+    },
+    getWorkflowJobs(){
+      const dispatchUrl = `https://api.github.com/repos/${this.project.repoOwner}/${this.project.repoName}/actions/runs/${this.runId}/jobs`
+      
+      axios.interceptors.request.use(config => {
+        // perform a task before the request is sent
+        console.log('Requesting logs from API');
+        return config;
+      }, error => {
+        // handle the error
+        return Promise.reject(error);
+      })
+      axios
+        .get(dispatchUrl, {
+          headers: { 
+            Accept: "application/vnd.github.v3+json"
+          },
+          auth: {
+            username: this.project.repoOwner,
+            password: this.project.githubToken
+          },
+      })
+      .then(response => (
+        this.getJobLog(response.data.jobs[0].id)
+        // this.jobs = response.data
+      ))
+      .catch(error => {
+        console.error("There was an error while getting workflow jobs", error);
+      });
     }
 
   },
   created() {
-    //Get Project ID From route
-    let projectId = this.$route.params.projectId;
 
-    this.GetProject(projectId);
   },
   mounted() {
-    this.getWorkflowRun('1224290133');
-    this.getJobLog('3574855812');
+    this.getWorkflowRun(this.runId);
   }
 }
 </script>
@@ -134,7 +163,7 @@ export default {
       font-size: 11px;
     }
 
-    .pipeline-container {
+    .pipe-container {
       float: left;
       width: 100%;
     }
@@ -143,7 +172,7 @@ export default {
       list-style: none;
       position: relative;
       float: left;
-      max-width: 260px;
+      width: 260px;
 
       &:before {
         content: '';
@@ -160,7 +189,7 @@ export default {
     .pipe-node {
       border: 1px solid black;
       padding: 15px;
-      border-radius: 25px;
+      border-radius: 10px;
       margin: 2rem;
       display: inline-block;
       float: left;

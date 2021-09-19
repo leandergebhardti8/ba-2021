@@ -37,12 +37,18 @@ const actions = {
         let user = null
         commit('logOut', user)
     },
-    async GetProjects({commit}) {
-        // console.log('Getting projects for user: ' + user.username)
-        // let response = await axios.get(`projects/${user.id}`);
-        let response = await axios.get(`projects`);
+    async GetProjects({commit}, userId) {
+        let response = await axios.get(`projects/${userId}`);
         commit('setProjects', response.data);
     },
+    async GetProjektsFromUser({commit}, username) {
+        let response = await axios.get(`projects/${username}`);
+        commit('setProjects', response.data);
+    },
+    // async GetProjects({commit}) {
+    //     let response = await axios.get(`projects`);
+    //     commit('setProjects', response.data);
+    // },
     async GetProject({commit}, id) {
         let response = await axios.get(`project/${id}`);
         commit('setProject', response.data);
@@ -52,8 +58,7 @@ const actions = {
         commit('setUser', response.data);
     },
     async CreateProject({dispatch}, project) {
-        let res = await axios.post('project', project)
-        console.log(res.data._id)
+        await axios.post('project', project)
         await dispatch('GetProjects')
     },
     async UpdateProject({dispatch}, project) {

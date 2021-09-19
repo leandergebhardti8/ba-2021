@@ -55,14 +55,14 @@
           
           <div class="build_history">
             <h3>Workflow History</h3>
-            <p style="padding: 10px;">Total workflow runs: {{ apiData.total_count }}</p>
+            <p style="padding: 10px;">Total workflow runs: {{ runs.total_count }}</p>
             <hr style="color:black;">
-            <b-table hover :items="creteTableWithAPIData(apiData.workflow_runs)" v-if="apiData"></b-table>
+            <b-table hover :items="creteTableWithAPIData(runs.workflow_runs)" v-if="runs"></b-table>
           </div>
 
           <div class="stage_view">
             <h3>Stage View</h3>
-            <Pipelines :workfows="workflows" />
+            <Pipelines :workflows="workflows" :runs="runs" />
             <div v-if="deploying">
               <b-table striped hover :items="creteTableForStageView(deployStatus)"></b-table>
               <b-spinner style="width: 3rem; height: 3rem;" class="ml-auto"></b-spinner>
@@ -130,7 +130,7 @@ export default {
         methodName: undefined,
         projectId: undefined,
         deployMethod: undefined,
-        apiData: {},
+        runs: {},
         showGetErrorMessage: false,
         showPostErrorMessage: false,
         deploying: false,
@@ -347,7 +347,7 @@ export default {
     },
     getRunsFromGHApi(owner, repo, token) {
     // TODO check if API info is alread there
-    // if( !this.apiData) {
+    // if( !this.runs) {
       // Get Runs from API
       axios.interceptors.request.use(config => {
       // perform a task before the request is sent
@@ -366,7 +366,7 @@ export default {
           }
         })
         .then(response => (
-          this.apiData = response.data
+          this.runs = response.data
           // this.runs = response.data.workflow_runs
         ))
         .catch(error => {

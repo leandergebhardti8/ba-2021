@@ -33,13 +33,6 @@
                 ></b-form-input>
 
                 <div>
-                    <!-- <label class="sr-only" for="inline-form-input-id">Github URL</label>
-                    <b-form-input
-                        id="inline-form-input-name"
-                        class="mb-2 mr-sm-2 mb-sm-0"
-                        placeholder="GitHub HTTPS URL"
-                        v-model="newProject.githubURL"
-                    ></b-form-input> -->
                     <label class="sr-only" for="inline-form-input-id">Repositroy Owner</label>
                     <b-form-input
                         id="inline-form-input-name"
@@ -94,13 +87,13 @@ export default {
           },
       }
   },
-  created: function () {
-    //   this.GetUser(this.user);
-      this.GetProjects();
+  created() {
+    this.GetProjektsFromUser(this.user);
   },
   computed: {
     ...mapGetters({projects: "StateProjects"}),
     ...mapGetters({user: "StateUser"}),
+
     filteredProjects() {
         let projects = this.projects
 
@@ -119,35 +112,24 @@ export default {
       ...mapActions([
         'CreateProject', 
         'GetProjects', 
-        'GetUserProjects',
-        'CreateProject', 
-        'GetUser'
+        'GetUser', 
+        'GetProjektsFromUser', 
         ]),
       navigateHome() {
           this.$router.push('/');
-      },
-      async updateProject(project){
-        try {
-            await this.UpdateProject(project);
-            console.log(`Updating project`)
-        } catch (error) {
-            console.log('Something went wrong while trying to update a Project!')
-            throw new Error
-        }
       },
       async addProject() {
         this.newProject.githubURL = this.generatedGHURL;
         try {
             this.newProject.username = this.user;
-            console.log(this.newProject.name)
             await this.CreateProject(this.newProject);
-            this.newProject.name = '';
+            this.newProject = {};
             this.$nextTick(() => {
             this.$bvModal.hide('modal-prevent-closing')
         })
             console.log(`Updating projects`)
         } catch (error) {
-            console.log('Something went wrong while trying to create a new Project!')
+            console.log('Something went wrong while trying to create a new Project! ' + error)
             throw new Error
         }
       },

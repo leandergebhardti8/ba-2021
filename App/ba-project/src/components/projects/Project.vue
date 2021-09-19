@@ -1,7 +1,6 @@
 <template>
     <div class="project">
         <p class="info">{{ project.name }} <b-icon-github></b-icon-github></p>
-        <!-- <span class="edit-button"><b-icon-three-dots-vertical></b-icon-three-dots-vertical></span> -->
         <div class="settings_button">
           <b-dropdown right>
             <b-dropdown-item v-b-modal="`modal-rename-${project._id}`">Rename</b-dropdown-item>
@@ -11,7 +10,7 @@
           </b-dropdown>
         </div>
 
-        <!-- Rename Project -->
+        <!-- Rename Project Modal -->
         <b-modal 
             :id="`modal-rename-${modalName}`"
             title="Rename Project"
@@ -28,7 +27,7 @@
             </b-form>
         </b-modal>
 
-        <!-- Edit Project -->
+        <!-- Edit Project Modal -->
         <b-modal 
             :id="`modal-edit-${modalName}`"
             title="Edit Project"

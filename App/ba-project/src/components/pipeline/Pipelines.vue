@@ -1,52 +1,58 @@
 <template>
-    <div class="pipeline-wrapper">
-      <!-- <ul
+    <div class="pipeline-list-wrapper">
+      <ul
         v-for="workflow in workflows"
         :key="workflow.id"
-      > -->
-        <Pipeline />
-      <!-- </ul> -->
+      >
+        <Pipeline 
+          :runId="getRunIdForWorkflow(workflow.name)" 
+          :workflow="workflow"
+          :modalName="workflow.id"
+          class="pipeline-list-element"/>
+      </ul>
     </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'   
+import { mapGetters } from 'vuex'
 import Pipeline from './Pipeline.vue'
 
 export default {
   name: 'Pepelines',
   data() {
     return {
-        workflowJobs: null,
+
     }
+  },
+  created() {
+
+  },
+  mounted() {
+
   },
   computed: {
     ...mapGetters({project: "StateProject"}),
   },
   props: [
-    'workflows'
+    'workflows',
+    'runs',
   ],
   components: {
     Pipeline: Pipeline,
   },
   methods: {
-    generatePipeline() {
-      for(let index = 0; index < this.workflows.length; index++) {
-        this.workflows[index]; 
-        this.getWorkflowRun(this.workflows[index].jobs[0].id);
-      }  
+    getRunIdForWorkflow(workflowName){
+      let runId = null;
+      console.log(workflowName)
+        for(let index = 0; index < this.runs.workflow_runs.length; index++) {
+          if(workflowName === this.runs.workflow_runs[index].name){
+            runId = this.runs.workflow_runs[index].id
+            console.log("Found RunId for " + "workflowName" + runId)
+          }
+        }
+      return runId;
     }
-
   },
-  created() {
-    //Get Project ID From route
-    let projectId = this.$route.params.projectId;
-
-    this.GetProject(projectId);
-  },
-  mounted() {
-    this.getWorkflowRun('1224290133');
-  }
 }
 </script>
 
@@ -54,6 +60,11 @@ export default {
 <style scoped lang="scss">
     h1 {
       display: inline-block;
+    }
+
+    .pipeline-list-element {
+      width: 100%;
+      overflow: hidden;
     }
 
 </style>

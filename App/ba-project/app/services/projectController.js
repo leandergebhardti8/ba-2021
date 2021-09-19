@@ -16,10 +16,10 @@ exports.getAll = (req, res) => {
 
 // FETCH All Projects from User
 exports.getAllUserProjects = (req, res) => {
-    Project.find({user: req.params.username})
+    Project.find({user: req.params.userId})
         .exec()
         .then(projects => {
-            console.log('Sending projects')
+            console.log('Sending projects for user: ' + req.params.userId)
             res.send(projects)
         })
         .catch((error) => {
