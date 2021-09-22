@@ -2,7 +2,7 @@
     <div class="project-wrapper">
         <button @click="navigateHome" class="btn btn-primary close_btn"><b-icon-house></b-icon-house></button>
         <h1>Project Page</h1>
-        <label for="searchbar" class="search-bar-label">Search Projects</label>
+        <label for="searchbar" class="search-bar-label"><b-icon-search></b-icon-search> Search Projects</label>
         <b-form-input id="searchbar" type="search" class="search-bar" v-model="search"></b-form-input>
         <ul class="projects">
             <router-link 
@@ -163,6 +163,7 @@ export default {
     }
     .project-item {
         cursor: pointer;
+        margin: 15px 0 15px 0;
     }
     .close_btn {
         margin: 0.75rem;
@@ -177,6 +178,7 @@ export default {
     .search-bar {
         width: 25%;
         margin: 0 2rem 2rem 2rem;
+        border-radius: 12px;
     }
 
     .search-bar-label {

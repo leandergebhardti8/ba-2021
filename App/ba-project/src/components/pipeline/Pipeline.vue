@@ -1,7 +1,10 @@
 <template>
     <div class="pipeline-wrapper"> 
-      <img :src="workflow.badge_url" alt="badge"> <b-button v-b-toggle="`sidebar-right-${workflow.id}`">Logs</b-button>
+      <img :src="workflow.badge_url" alt="badge" class="job-badge">
       <ul class="pipe-container">
+        <div>
+            <p><strong>Started: {{ new Date(getStartingTime()) }}</strong></p>
+        </div>
         <li 
           class="pipe-wrapper"
           v-for="job in workflowJobs.jobs[0].steps"
@@ -9,23 +12,10 @@
         >
           <div :class="job.conclusion === 'success' ? 'pipe-node job-success' : 'pipe-node job-failure'">
             <h4>{{ job.name }}</h4>
-            <p>{{ job.started_at }}</p>
-            <p>{{ job.completed_at }}</p>
+            <p>Took {{ mesureTime(job.started_at, job.completed_at) }}s</p>
           </div>
         </li>
       </ul>
-    <b-sidebar 
-      :id="`sidebar-right-${modalName}`" 
-      :title="workflow.name + ' Logs'" 
-      right 
-      shadow
-    >
-      <div class="px-3 py-2 log-wrapper">
-        <p class="log">
-          {{ jobLog }}
-        </p>
-      </div>
-    </b-sidebar>
     </div>
 </template>
 
@@ -49,6 +39,12 @@ export default {
     'modalName',
     'runId',
   ],
+  created() {
+
+  },
+  mounted() {
+    this.getWorkflowRun(this.runId);
+  },
   methods: {
     getWorkflowRun(run_id) {
       // https://api.github.com/repos/leandergebhardti8/ba-2021/actions/runs/1224290133/jobs  3574855812
@@ -78,78 +74,20 @@ export default {
         console.error("There was an error while getting workflow jobs", error);
       });
     },
-
-    getJobLog(jobId) {  
-      const dispatchUrl = `https://api.github.com/repos/${this.project.repoOwner}/${this.project.repoName}/actions/jobs/${jobId}/logs`
-      
-      axios.interceptors.request.use(config => {
-        // perform a task before the request is sent
-        console.log('Requesting logs from API');
-        return config;
-      }, error => {
-        // handle the error
-        return Promise.reject(error);
-      })
-      axios
-        .get(dispatchUrl, {
-          headers: { 
-            Accept: "application/vnd.github.v3+json"
-          },
-          auth: {
-            username: this.project.repoOwner,
-            password: this.project.githubToken
-          },
-      })
-      .then(response => (
-        this.jobLog = response.data
-      ))
-      .catch(error => {
-        console.error("There was an error while getting workflow jobs", error);
-      });
+    mesureTime(startTime, endTime) {
+      let start = new Date(startTime)
+      let end = new Date(endTime)
+      return (end - start) / 1000;
     },
-    getWorkflowJobs(){
-      const dispatchUrl = `https://api.github.com/repos/${this.project.repoOwner}/${this.project.repoName}/actions/runs/${this.runId}/jobs`
-      
-      axios.interceptors.request.use(config => {
-        // perform a task before the request is sent
-        console.log('Requesting logs from API');
-        return config;
-      }, error => {
-        // handle the error
-        return Promise.reject(error);
-      })
-      axios
-        .get(dispatchUrl, {
-          headers: { 
-            Accept: "application/vnd.github.v3+json"
-          },
-          auth: {
-            username: this.project.repoOwner,
-            password: this.project.githubToken
-          },
-      })
-      .then(response => (
-        this.getJobLog(response.data.jobs[0].id)
-        // this.jobs = response.data
-      ))
-      .catch(error => {
-        console.error("There was an error while getting workflow jobs", error);
-      });
+    getStartingTime() {
+      return this.workflowJobs.jobs[0].steps[0].started_at;
     }
-
   },
-  created() {
-
-  },
-  mounted() {
-    this.getWorkflowRun(this.runId);
-  }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
- @import url('https://fonts.googleapis.com/css?family=Azeret Mono');
 
     h1 {
       display: inline-block;
@@ -172,31 +110,38 @@ export default {
       list-style: none;
       position: relative;
       float: left;
-      width: 260px;
+      width: 250px;
 
       &:before {
         content: '';
         position: absolute;
-        top: 5.9em;
-        left: 14.1em;
-        width: 4em;
+        top: 4.9em;
+        left: 14.4em;
+        width: 3.2em;
         height: .2em;
         background: dodgerblue;
         z-index: 1;
+        box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.65);
       }
+    }
+
+    .pipe-wrapper:last-of-type:before {
+        display: none;
     }
     
     .pipe-node {
       border: 1px solid black;
       padding: 15px;
-      border-radius: 10px;
+      border-radius: 6px;
       margin: 2rem;
       display: inline-block;
       float: left;
       position: relative;
-      -webkit-box-shadow: 0px 7px 21px 0px rgba(0,0,0,0.75);
-      -moz-box-shadow: 0px 7px 21px 0px rgba(0,0,0,0.75);
-      box-shadow: 0px 7px 21px 0px rgba(0,0,0,0.75);
+      width: 200px;
+      z-index: 2;
+      -webkit-box-shadow: 0px 3px 9px 0px rgba(0,0,0,0.75);
+      -moz-box-shadow: 0px 3px 9px 0px rgba(0,0,0,0.75);
+      box-shadow: 0px 3px 9px 0px rgba(0,0,0,0.75);
     }
 
     .job-success {
@@ -207,14 +152,9 @@ export default {
       background-color: #f8d7da;
     }
 
-    .log-wrapper {
-      text-align: left;
-      background-color: #1d1f21;
+    .job-badge {
+      float: left;
     }
 
-    .log {
-      font-family: 'Azeret Mono';
-      color: #C5C8C6;
-    }
 
 </style>

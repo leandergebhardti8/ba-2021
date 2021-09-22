@@ -13,15 +13,6 @@ describe("API Tests", function() {
         });
     })
 
-    describe("GET project", function () {
-        it("returns project with id 1", async function () {
-            const response = await request.get("project/1")
-
-            expect(response.status).to.eql(200)
-            expect(response).to.not.be.empty;
-        })
-    })
-
     describe("GET user", function () {
         it("returns user with username leander", async function () {
             const response = await request.get("user/leander")
@@ -36,11 +27,21 @@ describe("API Tests", function() {
             const response = await request
                 .post("project")
                 .send({name: "Projekt for automated testing"})
+            projectId = response.data._id;
 
             expect(response.status).to.eql(200)
             expect(response).to.not.be.empty;
         })
     })
+
+    // describe("GET project", function () {
+    //     it("returns test project created ", async function () {
+    //         const response = await request.get(`project/${projectId}`)
+
+    //         expect(response.status).to.eql(200)
+    //         expect(response).to.not.be.empty;
+    //     })
+    // })
 
     // describe("UPDATE project", function () {
     //     it("able to update a project", async function () {

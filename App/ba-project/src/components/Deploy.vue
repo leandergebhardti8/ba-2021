@@ -44,10 +44,12 @@ export default {
     .deploy-wrapper {
         text-align: left;
         background: white;
-        border-radius: 5px;
+        border-radius: 12px;
         color: black;
-        border-bottom: 1px solid black;
         padding: 15px;
+        -webkit-box-shadow: 0px 3px 9px 0px rgba(112, 112, 112, 0.65);
+        -moz-box-shadow: 0px 3px 9px 0px rgba(112, 112, 112, 0.65);
+        box-shadow: 0px 3px 9px 0px rgba(112, 112, 112, 0.65);
     }
 
     .s3-icon {
