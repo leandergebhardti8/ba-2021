@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
   push:
   repository_dispatch:
-    types: [build-test]
+    types: [Build & Test Project]
 
 jobs:
   build-test:
