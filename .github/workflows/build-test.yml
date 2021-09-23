@@ -1,8 +1,13 @@
 name: Build & Test Project
 
+
+
 on:
   workflow_dispatch:
   push:
+  repository_dispatch:
+    types: [build-test]
+
 jobs:
   build-test:
     name: Build & Test
