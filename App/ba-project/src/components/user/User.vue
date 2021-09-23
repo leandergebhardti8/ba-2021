@@ -1,5 +1,6 @@
 <template>
     <div class="user">
+        <button @click="navigateHome" class="btn btn-primary home-btn"><b-icon-house></b-icon-house></button>
         <h1>Userpage</h1>
         <hr>
           <h3>Profile</h3>
@@ -10,7 +11,7 @@
               label-for="full-name"
               class="info-field"
             >
-              <b-form-input id="full-name" v-model="user.full_name" placeholder="Full Name"></b-form-input>
+              <b-form-input id="full-name" v-model="fullUser.full_name" placeholder="Full Name"></b-form-input>
             </b-form-group>
             <b-form-group 
               id="full-name"
@@ -18,7 +19,7 @@
               label-for="username"
               class="info-field"
             >
-              <b-form-input id="username" v-model="user.username" placeholder="Username"></b-form-input>
+              <b-form-input id="username" v-model="fullUser.username" placeholder="Username"></b-form-input>
             </b-form-group>
           </div>
         <hr>
@@ -53,6 +54,9 @@
           </b-alert>
 
           <button @click="updateUser()" class="btn btn-secondary"><strong>Update Password</strong></button>
+          <b-alert show variant="danger" v-if="showPasswordUpdateSuccess">
+            <b-icon-exclamation font-scale="2"></b-icon-exclamation> The App has Trouble accessing GitHub with your given Information. Please Check if your <b>Repository Owner</b>, <b>Repository Name</b> and <b-icon-github></b-icon-github> <b>Token</b> are correct.
+          </b-alert>
         </div>
           <hr>
           <h3>Remove Account</h3>
@@ -61,7 +65,6 @@
             <p class="button-text">Deleting your account is irreversible!</p>
           </div>
           <hr>
-        <button @click="navigateToHome" class="btn btn-primary">Go to Home</button>
     </div>
 </template>
 
@@ -75,6 +78,7 @@ export default {
         onChangeUsername: false,
         onChangeFullName: false,
         showError: false,
+        showPasswordUpdateSuccess: false,
         passwordRepeat: '',
         userUpdate: {
           password: '',
@@ -98,15 +102,17 @@ export default {
     },
   },
   computed: {
+    ...mapGetters({fullUser: "StateFullUser"}),
     ...mapGetters({user: "StateUser"}),
   },
   methods: {
     ...mapActions([
       'GetUser', 
+      'GetFullUser', 
       'UpdateUser', 
       'DeleteUser']
       ),
-      navigateToHome() {
+      navigateHome() {
           this.$router.push('/');
       },
 
@@ -114,11 +120,11 @@ export default {
         if(this.checkRepeat(this.userUpdate.newpassword)) {
         try {
           if(this.userUpdate.username === '' || this.userUpdate.full_name === '') {
-            this.userUpdate.username = this.user.username;
-            this.userUpdate.full_name = this.user.full_name;
+            this.userUpdate.username = this.fullUser.username;
+            this.userUpdate.full_name = this.fullUser.full_name;
           }
           await this.UpdateUser(this.userUpdate);
-          this.$router.push("/login");
+          this.showPasswordUpdateSuccess = true;
         } catch (error) {
           console.log('Error accured while updating User info ' + error)
         }
@@ -188,6 +194,12 @@ export default {
   .button-text{
     display: inline;
     margin-left: 2rem;
+  }
+  .home-btn {
+    left: 0;
+    float: left;
+    position: absolute;
+    margin: 1.75rem;
   }
 
 </style>

@@ -8,7 +8,7 @@ axios.interceptors.response.use(function (response) {
 
 const state = {
     user: null,
-    rememberedUser: null,
+    fullUser: null,
     projects: null,
     project: null,
 };
@@ -16,6 +16,7 @@ const state = {
 const getters = {
     isAuthenticated: (state) => !!state.user,
     StateUser: (state) => state.user,
+    StateFullUser: (state) => state.fullUser,
     StateProjects: (state) => state.projects,
     StateProject: (state) => state.project,
     StateRememberedUser: (state) => state.rememberedUser,
@@ -40,17 +41,13 @@ const actions = {
         let response = await axios.get(`projects/${username}`);
         commit('setProjects', response.data);
     },
-    // async GetProjektsFromUser({commit}, username) {
-    //     let response = await axios.get(`projects/${username}`);
-    //     commit('setProjects', response.data);
-    // },
     async GetProject({commit}, id) {
         let response = await axios.get(`project/${id}`);
         commit('setProject', response.data);
     },
     async GetUser({commit}, username) {
         let response = await axios.get(`user/${username}`);
-        commit('setUser', response.data);
+        commit('setFullUser', response.data);
     },
     async CreateProject({dispatch}, project) {
         await axios.post('project', project)
@@ -64,7 +61,7 @@ const actions = {
         let res = await axios.put(`user/${user.username}`, user)
         if(res.status === 404)
             throw Error
-        await dispatch('setUser', res.data)
+        await dispatch('setFullUser', res.data)
     },
     async DeleteUser({commit}, userid) {
         console.log(userid)
@@ -80,6 +77,9 @@ const actions = {
 const mutations = {
     setUser(state, username) {
         state.user = username
+    },
+    setFullUser(state, user) {
+        state.fullUser = user
     },
     logOut(state) {
         state.user = null

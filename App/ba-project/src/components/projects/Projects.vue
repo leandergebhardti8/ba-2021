@@ -166,9 +166,6 @@ export default {
         margin: 15px 0 15px 0;
     }
     .close_btn {
-        margin: 0.75rem;
-    }
-    .close_btn {
       left: 0;
       float: left;
       position: absolute;
