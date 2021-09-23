@@ -113,7 +113,7 @@ export default {
       overflow: hidden;
     }
 
-    .pipeline-list-element:first-of-type {
+    .pipeline-list-element {
       margin-top: 1rem;
     }
 

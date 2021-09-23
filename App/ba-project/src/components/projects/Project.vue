@@ -122,7 +122,7 @@ export default {
     },
     async deleteProject() {
       try {
-        await this.RemoveProject(this.projectCopy._id);
+        await this.RemoveProject(this.projectCopy);
         console.log(`Removing project`)
         this.$emit('update')
       } catch (error) {

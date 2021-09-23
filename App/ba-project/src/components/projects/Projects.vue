@@ -79,7 +79,7 @@ export default {
           search: '',
           newProject: {
             name: '',
-            userId: null,
+            username: null,
             githubURL: '',
             repoOwner: '',
             repoName: '',
@@ -88,7 +88,7 @@ export default {
       }
   },
   created() {
-    this.GetProjektsFromUser(this.user);
+    this.GetProjects(this.user);
   },
   computed: {
     ...mapGetters({projects: "StateProjects"}),

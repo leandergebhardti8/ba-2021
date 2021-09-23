@@ -5,11 +5,21 @@
 
         <div class="control_bar">
           <b-button-group>
+            <div class="info" id="tooltip-text-action">
+                <b-icon-info id="tooltip-text-action"></b-icon-info> Info
+            </div>
             <b-dropdown right text="Run Actions" v-if="this.workflows">
-              <b-dropdown-item v-for="workflow in this.workflows" :key="workflow.id" @click="runAction(workflow.id)">
+              <b-dropdown-item v-for="workflow in this.workflows" :key="workflow.id" @click="runAction(workflow.name)">
                 {{ workflow.name }}
               </b-dropdown-item>
             </b-dropdown>
+            <b-tooltip target="tooltip-text-action" triggers="hover">
+              You need to have the respository_dispatch event in your GitHub Action set up. 
+              Here is an Example: 
+              repository_dispatch:
+                types: [{workflowName}]
+            </b-tooltip>
+            
             <b-dropdown right text="Deploy in ... 🚀">
               <b-dropdown-item v-for="env in this.deployMethod.environments" :key="env.name" @click="startDeployment(env.name)">
                 {{ env.name }} ({{ env.action }})
@@ -62,11 +72,19 @@
 
           <div class="stage_view">
             <h3>Stage View</h3>
-            <Pipelines :workflows="workflows" :runs="runs" />
+
+            <Pipelines v-if="!deploying && !action" :workflows="workflows" :runs="runs" />
+
             <div v-if="deploying">
               <b-table striped hover :items="creteTableForStageView(deployStatus)"></b-table>
               <b-spinner style="width: 3rem; height: 3rem;" class="ml-auto"></b-spinner>
             </div>
+
+            <div v-if="action">
+              <b-table striped hover :items="creteTableForStageView(actionStatus)"></b-table>
+              <b-spinner style="width: 3rem; height: 3rem;" class="ml-auto"></b-spinner>
+            </div>
+
           </div>
         </div>
         <div>
@@ -134,7 +152,9 @@ export default {
         showGetErrorMessage: false,
         showPostErrorMessage: false,
         deploying: false,
+        action: false,
         deployStatus: [{title: 'Deploying ...'}],
+        actionStatus: [{title: 'Running Action ...'}],
         workflows: [],
         buildHistoryItems: [],
         stageViewItems: [],
@@ -145,6 +165,16 @@ export default {
           builds: [],
         }
     }
+  },
+    mounted () {
+
+  },
+  created() {
+    this.projectId = this.$route.params.projectId;
+    this.methodName = this.$route.params.deployName;
+
+    this.GetProject(this.projectId);
+    this.updateProject();
   },
   computed: {
     ...mapGetters({project: "StateProject"}),
@@ -161,7 +191,7 @@ export default {
         for(let index = 0; index < data.length; index++) {
           if (data[index].conclusion === 'failure')
             element._rowVariant = 'danger';
-          element = { _rowVariant: data[index].conclusion, name: data[index].name, created: data[index].created_at };
+          element = { _rowVariant: data[index].conclusion, name: data[index].name, created: this.getEuropeanTime(data[index].created_at) };
           items.push(element)
         }
       }
@@ -170,6 +200,10 @@ export default {
       }
 
       return items;
+    },
+    getEuropeanTime(dateString) {
+      var date = new Date(dateString);
+      return date.getDate()+"."+(date.getMonth() + 1)+"."+date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
     },
     creteTableForStageView(data) {
       const items = []
@@ -200,6 +234,12 @@ export default {
         await this.UpdateProject(projectCopy);
         this.deployMethod = this.project.deployMethods.find(method => method.name === this.methodName);
         console.log(`Updating project`)
+        this.newEnv = {
+          name: '', 
+          action: '', 
+          url: '', 
+          builds: [],
+        }
       } catch (error) {
         console.error('Something went wrong while trying to update a Project!')
       }
@@ -210,6 +250,37 @@ export default {
           return this.project.deployMethods[i].environments;
         }
       }
+    },
+    runAction(actionName) {
+      this.action = true;
+
+      const owner = this.project.repoOwner;
+      const repo = this.project.repoName;
+      const token = this.project.githubToken;
+
+      this.checkAuthData(owner, repo, token);
+
+      const dispatchUrl = `https://api.github.com/repos/${owner}/${repo}/dispatches`;
+      const payload = { "event_type": actionName };
+
+      axios
+        .post(dispatchUrl, payload, {
+          headers: { 
+            Accept: "application/vnd.github.v3+json"
+          },
+          auth: {
+            username: owner,
+            password: token
+          },
+      })
+      .then(response => (
+        this.handleActionsResponse(response, actionName)
+      ))
+      .catch(error => {
+        this.errorMessage = error.message;
+        console.error("There was an error while executing an ACTION!", error);
+        this.showPostErrorMessage = true;
+      });
     },
     startDeployment(envName){
     // Trigger GitHub Action in Repo, which deploys the project
@@ -306,6 +377,12 @@ export default {
       //   this.deploying = false 
       // }, 3000);
       this.updateDeployHistoryInEnv(envName);
+    },
+    handleActionsResponse(response, actionName) {
+      console.log(response)
+
+      this.actionStatus.push({title: 'Finished running Action ' + actionName})
+      this.action = false
     },
     fakeDeploy() {
       this.deploying = true;
@@ -438,16 +515,6 @@ export default {
       }
     },
   },
-  mounted () {
-    // this.updateProject();    
-  },
-  created() {
-    this.projectId = this.$route.params.projectId;
-    this.methodName = this.$route.params.deployName;
-
-    this.GetProject(this.projectId);
-    this.updateProject();
-  }
 }
 </script>
 
@@ -528,4 +595,8 @@ export default {
     margin-left: 5px;
     cursor: pointer;
   }
+  .info {
+    margin: auto 15px;
+  }
+  
 </style>
