@@ -104,6 +104,7 @@ export default {
   computed: {
     ...mapGetters({fullUser: "StateFullUser"}),
     ...mapGetters({user: "StateUser"}),
+    ...mapGetters({fullUser: "StateFullUser"}),
   },
   methods: {
     ...mapActions([
@@ -140,8 +141,8 @@ export default {
 
       async deleteUser() {
         try {
-          let userId = this.user.id
-          await this.DeleteUser(userId);
+          let userID = this.fullUser.id
+          await this.DeleteUser(userID);
           this.$router.push('/login')
         } catch (error) {
           console.log('Error accured while deleting User ' + error)

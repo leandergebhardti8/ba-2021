@@ -33,14 +33,14 @@
                 ></b-form-input>
 
                 <div>
-                    <label class="sr-only" for="inline-form-input-id">Repositroy Owner</label>
+                    <label class="sr-only" for="inline-form-input-id">Repository Owner</label>
                     <b-form-input
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"
                         placeholder="Repo Owner"
                         v-model="newProject.repoOwner"
                     ></b-form-input>
-                    <label class="sr-only" for="inline-form-input-id">Repositroy Name</label>
+                    <label class="sr-only" for="inline-form-input-id">Repository Name</label>
                     <b-form-input
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"

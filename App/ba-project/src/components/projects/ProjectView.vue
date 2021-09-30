@@ -393,8 +393,7 @@ export default {
         this.deploying = false
         this.deployStatus = []; 
       }, 3000);
-      // this.deployStatus.push({title: 'Run Action #2'});
-      // this.deployStatus.push({title: 'Run Action #3'});
+
     },
     getCurrentTime() {
       // Get Current Time Stamp
@@ -407,9 +406,6 @@ export default {
     updateDeployHistoryInEnv(envName) {
       // Adding Deploy to Env Deploy History
       const currentTime = this.getCurrentTime();
-      // let environments = this.getEnvironments()
-      // const environment = environments.find(env => env.name === envName)
-      // environment.builds.push(`${currentTime}`);
 
       let projectCopy = this.project;
       for(let i = 0; i < projectCopy.deployMethods.length; i++) {
@@ -504,7 +500,7 @@ export default {
 
         this.deployMethod = this.project.deployMethods.find(method => method.name === this.methodName);
 
-        // Get Data from GH
+        // Get Data from GitHub API
         this.checkAuthData(owner, repo, token);
         if(!this.showGetErrorMessage && !this.showPostErrorMessage) {
           this.getRunsFromGHApi(owner, repo, token);

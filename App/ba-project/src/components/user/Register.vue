@@ -105,8 +105,41 @@ export default {
       repeatPassword: '',
       showError: false,
       showPassword: false,
-      repeatCorrect: false
+      repeatCorrect: false,
     }
+  },
+  computed: {
+    usernameValidation() {
+      return this.form.username.length > 4 && this.form.username.length < 13
+    },
+    passwordValidation() {
+      return this.form.password.length > 4
+    },
+    passwordValidationNumbers() {
+      return /\d/.test(this.form.password);
+    },
+    passwordSpecial() {
+      return /[!@#$%^&*)(+=._-]/.test(this.form.password);
+    },
+    password() {
+      return this.form.password;
+    }
+  },
+  watch: {
+    repeatPassword(val) {
+      if(val === this.form.password){
+        return this.repeatCorrect = true;
+      } else {
+        return this.repeatCorrect = false;
+      }
+    },
+    password(val) {
+      if(val === this.repeatPassword){
+        return this.repeatCorrect = true;
+      } else {
+        return this.repeatCorrect = false;
+      }
+    },
   },
   methods: {
     ...mapActions(["Register"]),
@@ -128,29 +161,6 @@ export default {
     },
 
   }, 
-  computed: {
-    usernameValidation() {
-      return this.form.username.length > 4 && this.form.username.length < 13
-    },
-    passwordValidation() {
-      return this.form.password.length > 4
-    },
-    passwordValidationNumbers() {
-      return /\d/.test(this.form.password);
-    },
-    passwordSpecial() {
-      return /[!@#$%^&*)(+=._-]/.test(this.form.password);
-    },
-  },
-  watch: {
-    repeatPassword(val) {
-      if(val === this.form.password){
-        return this.repeatCorrect = true;
-      } else {
-        return this.repeatCorrect = false;
-      }
-    },
-  }
 }
 </script>
 
