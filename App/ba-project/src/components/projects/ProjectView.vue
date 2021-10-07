@@ -62,6 +62,9 @@
         </div>
         
         <div class="project_details">
+
+
+          <!-- Workflow History -->
           
           <div class="build_history">
             <h3>Workflow History</h3>
@@ -70,9 +73,11 @@
             <b-table hover :items="creteTableWithAPIData(runs.workflow_runs)" v-if="runs"></b-table>
           </div>
 
+
+          <!-- Stage View -->
+
           <div class="stage_view">
             <h3>Stage View</h3>
-
             <Pipelines v-if="!deploying && !action" :workflows="workflows" :runs="runs" />
 
             <div v-if="deploying">
@@ -90,6 +95,7 @@
         <div>
 
           <!-- MODALS -->
+          
           <b-modal 
             id="modal-add-new-env" 
             title="Adding new Environment"
@@ -115,7 +121,8 @@
                       For the Deployment to work you have to setup a GitHub Action in your project <b>(in GitHub)</b>. After you have done that provide the Action name here.<br>
                       <router-link 
                         tag="a" 
-                        to="/setupguide" 
+                        to="/setupguide"
+                        target="_blank" 
                       >
                         Learn More here.
                       </router-link>
@@ -288,49 +295,6 @@ export default {
       this.deploying = true;
       this.deployStatus.push({title: 'Fetching Repo'});
       
-    // Fetching workflow ID
-      // let workflows = []
-
-      // axios.interceptors.request.use(config => {
-      // // perform a task before the request is sent
-      // console.log('Requesting workflows from API');
-
-      // return config;
-      // }, error => {
-      //   // handle the error
-      //   return Promise.reject(error);
-      // })
-      // axios
-      //   .get('https://api.github.com/repos/leandergebhardti8/ba-2021/actions/workflows', { 
-      //     auth: {
-      //       username,
-      //       password
-      //     }
-      //   })
-      //   .then(response => (
-      //     workflows = response.data.workflows
-      //     // this.runs = response.data.workflow_runs
-      //   ))
-      //   .catch(error => {
-      //     this.errorMessage = error.message;
-      //     console.error("There was an error!", error);
-      // });
-
-      // const workflowToBeExecuted = workflows.find(workflow => workflow.name === workflowName)
-      // console.log(`Filtered workflow: ${workflowToBeExecuted}`)
-
-      // // Create workflow dispatcher event
-      // axios.interceptors.request.use(config => {
-      // // perform a task before the request is sent
-      // console.log('Post workflow dispatcher event');
-
-      // return config;
-      // }, error => {
-      //   // handle the error
-      //   return Promise.reject(error);
-      // })
-
-
       const owner = this.project.repoOwner;
       const repo = this.project.repoName;
       const token = this.project.githubToken;
@@ -440,7 +404,6 @@ export default {
         })
         .then(response => (
           this.runs = response.data
-          // this.runs = response.data.workflow_runs
         ))
         .catch(error => {
           this.errorMessage = error.message;

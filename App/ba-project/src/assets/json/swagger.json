@@ -19,6 +19,10 @@
     {
       "name": "user",
       "description": "Operations about user"
+    },
+    {
+      "name": "projects",
+      "description": "Get all projects at once"
     }
   ],
   "schemes": [
