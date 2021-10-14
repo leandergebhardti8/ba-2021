@@ -20,11 +20,11 @@
           </b-button-group>
         </div>
         <div class="deploy-methods" v-if="deployMethodIsDefined">
-            <ul class="deploy-method-list">
-                <router-link 
+            <ul class="deploy-method-list" v-if="project">
+                <router-link
                     :to="'/project/' + project._id + '/' + deployMethod.name" 
                     tag="li"
-                    v-for="deployMethod in this.project.deployMethods" 
+                    v-for="deployMethod in project.deployMethods" 
                     :key="deployMethod.name"
                     class="method-item-button"
                 >
@@ -63,7 +63,7 @@ export default {
   computed: {
       ...mapGetters({project: "StateProject"}),
       deployMethodIsDefined() {
-          if(this.project.deployMethods){
+          if(this.project){
             return this.project.deployMethods.length > 0
           }
           return null

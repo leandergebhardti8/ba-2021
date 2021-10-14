@@ -27,7 +27,6 @@ describe("API Tests", function() {
             const response = await request
                 .post("project")
                 .send({name: "Projekt for automated testing"})
-            projectId = response.data._id;
 
             expect(response.status).to.eql(200)
             expect(response).to.not.be.empty;

@@ -122,7 +122,7 @@ export default {
     },
     async deleteProject() {
       try {
-        await this.RemoveProject(this.projectCopy._id);
+        await this.RemoveProject(this.projectCopy);
         console.log(`Removing project`)
         this.$emit('update')
       } catch (error) {
@@ -139,7 +139,6 @@ export default {
     background: white;
     border-radius: 12px;
     color: black;
-    // border: 1px solid black;
     display: flex;
     flex-wrap: wrap;
     -webkit-box-shadow: 0px 3px 9px 0px rgba(112, 112, 112, 0.65);
@@ -163,7 +162,8 @@ export default {
   }
 
   .settings_button {
-    flex: 1 1; /*  Stretching: */
+    // source: https://1linelayouts.glitch.me/
+    flex: 1 1;
     flex: 0 1;
     margin-top: auto;
     margin-bottom: auto;

@@ -7,23 +7,10 @@
         <Pipeline 
           :runId="getRunIdForWorkflow(workflow.name)" 
           :workflow="workflow"
-          :modalName="workflow.id"
+          :sidebarType="workflow.id"
           class="pipeline-list-element"/>
         <hr>
       </ul>
-      <b-button v-b-toggle.sidebar-right class="log-button">View Logs</b-button>
-      <b-sidebar 
-      id="sidebar-right" 
-      title="Logs" 
-      right 
-      shadow
-    >
-      <div class="px-3 py-2 log-wrapper">
-        <p class="log">
-          {{ jobLog }}
-        </p>
-      </div>
-    </b-sidebar>
     </div>
 </template>
 
@@ -36,7 +23,7 @@ export default {
   name: 'Pepelines',
   data() {
     return {
-      jobLog: null,
+      workflowJobs: null,
     }
   },
   props: [
@@ -59,21 +46,23 @@ export default {
   methods: {
     getRunIdForWorkflow(workflowName){
       let runId = null;
-      console.log(workflowName)
+      let found = false;
+        // Searching for fitting Run ID in workflow
         for(let index = 0; index < this.runs.workflow_runs.length; index++) {
+          if(found) break;
           if(workflowName === this.runs.workflow_runs[index].name){
             runId = this.runs.workflow_runs[index].id
-            console.log("Found RunId for " + "workflowName" + runId)
+            found = true;
+            if(runId) this.getWorkflowRun(runId);
           }
         }
       return runId;
     },
-     getJobLog() {  
-      const dispatchUrl = `https://api.github.com/repos/${this.project.repoOwner}/${this.project.repoName}/actions/jobs/3574855812/logs`
+    getWorkflowRun(run_id) {
+      const dispatchUrl = `https://api.github.com/repos/${this.project.repoOwner}/${this.project.repoName}/actions/runs/${run_id}/jobs`
       
       axios.interceptors.request.use(config => {
         // perform a task before the request is sent
-        console.log('Requesting logs from API');
         return config;
       }, error => {
         // handle the error
@@ -90,10 +79,10 @@ export default {
           },
       })
       .then(response => (
-        this.jobLog = response.data
+        this.workflowJobs = response.data
       ))
       .catch(error => {
-        console.error("There was an error while getting workflow job logs", error);
+        console.error("There was an error while getting workflow jobs", error);
       });
     },
   },
@@ -102,8 +91,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
- @import url('https://fonts.googleapis.com/css?family=Azeret Mono');
-
     h1 {
       display: inline-block;
     }
@@ -113,22 +100,8 @@ export default {
       overflow: hidden;
     }
 
-    .pipeline-list-element:first-of-type {
+    .pipeline-list-element {
       margin-top: 1rem;
-    }
-
-    .log-wrapper {
-      text-align: left;
-      background-color: #1d1f21;
-    }
-
-    .log {
-      font-family: 'Azeret Mono';
-      color: #C5C8C6;
-    }
-
-    .log-button {
-      margin: 1rem;
     }
 
 </style>

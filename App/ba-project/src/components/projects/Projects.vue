@@ -33,14 +33,14 @@
                 ></b-form-input>
 
                 <div>
-                    <label class="sr-only" for="inline-form-input-id">Repositroy Owner</label>
+                    <label class="sr-only" for="inline-form-input-id">Repository Owner</label>
                     <b-form-input
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"
                         placeholder="Repo Owner"
                         v-model="newProject.repoOwner"
                     ></b-form-input>
-                    <label class="sr-only" for="inline-form-input-id">Repositroy Name</label>
+                    <label class="sr-only" for="inline-form-input-id">Repository Name</label>
                     <b-form-input
                         id="inline-form-input-name"
                         class="mb-2 mr-sm-2 mb-sm-0"
@@ -79,7 +79,7 @@ export default {
           search: '',
           newProject: {
             name: '',
-            userId: null,
+            username: null,
             githubURL: '',
             repoOwner: '',
             repoName: '',
@@ -88,7 +88,7 @@ export default {
       }
   },
   created() {
-    this.GetProjektsFromUser(this.user);
+    this.GetProjects(this.user);
   },
   computed: {
     ...mapGetters({projects: "StateProjects"}),
@@ -164,9 +164,6 @@ export default {
     .project-item {
         cursor: pointer;
         margin: 15px 0 15px 0;
-    }
-    .close_btn {
-        margin: 0.75rem;
     }
     .close_btn {
       left: 0;

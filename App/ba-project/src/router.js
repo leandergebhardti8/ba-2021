@@ -12,6 +12,7 @@ import Login from './components/user/Login.vue'
 import Register from './components/user/Register.vue'
 import Deploys from './components/Deploys.vue'
 import SetupGuide from './components/SetupGuide.vue'
+import SwaggerUi from './components/SwaggerUi.vue'
 
 Vue.use(VueRouter);
 
@@ -21,6 +22,12 @@ export const routes = [
     path: '',
     component: Home,
     meta: { requiresAuth: true },
+  },
+  {
+    name: 'swagger',
+    path: '/docs',
+    component: SwaggerUi,
+    meta: { guest: true },
   },
   {
     path: '/login',
@@ -40,7 +47,7 @@ export const routes = [
   {
     path: '/setupguide',
     component: SetupGuide,
-    meta: { requiresAuth: true },
+    meta: { guest: true },
   },
   {
     path: '/projects',

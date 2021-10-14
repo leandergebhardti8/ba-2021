@@ -68,7 +68,7 @@
 </template>
 
 <script>
-  import { mapActions, mapMutations } from 'vuex'
+  import { mapActions } from 'vuex'
 
 export default {
   name: 'Login',
@@ -77,7 +77,7 @@ export default {
   data() {
     return {
       form: {
-        username: this.rememberedUser ? this.rememberedUser : '',
+        username: '',
         password: '',
       },
       type: 'password',
@@ -87,7 +87,6 @@ export default {
   },
   methods: {
     ...mapActions(['LogIn']),
-    ...mapMutations(['setRememberedUser']),
     async submit() {
       try {
         await this.LogIn(this.form);

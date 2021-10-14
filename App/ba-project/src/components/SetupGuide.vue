@@ -6,7 +6,7 @@
     <div class="guide_site">
         <h2>Step #1</h2>
         <hr>
-        <h3>Creating new Workflow on GitHub</h3>
+        <h3><strong>Creating new Workflow on GitHub</strong></h3>
         <p>
             Before you create a new Environment in your project, you need to go to your GitHub repository and setup an Action first. Learn more about GitHub Actions <a href="https://docs.github.com/en/actions" target="_blank">here.</a><br>
             We can do this by simply go to the <strong>"Actions"</strong> Tab in GitHub and click <strong>"New workflow"</strong>. You can choose from prebuild workflows, or set up your own.
@@ -15,7 +15,7 @@
     <div class="guide_site">
         <h2>Step #2</h2>
         <hr>
-        <h3>Adapt your workflow to work with Usus</h3>
+        <h3><strong>Adapt your workflow to work with Usus</strong></h3>
         <p>
             After you set up your Action in #1, it's now time to connect the Action to Usus. In your root directory there should be a <strong>workflows</strong> folder now. Open your Action inside that folder and edit the following lines.<br>
             <span class="code_snipped">on:<br>
@@ -50,7 +50,7 @@ export default {
     padding: 20px;
   }
   h3 {
-      font-size: 18px;
+      font-size: 14px;
   }
   .guide_site {
       background-color: white;
@@ -59,6 +59,10 @@ export default {
       margin: 2rem;
       padding: 1rem;
       text-align: left;
+      font-size: 12px;
+      -webkit-box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
+      -moz-box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
+      box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
   }
 
   .code_snipped {
@@ -68,5 +72,8 @@ export default {
       padding: 10px;
       display: block;
       width: 45%;
+      -moz-box-shadow:    inset 0 0 5px #000000a9;
+        -webkit-box-shadow: inset 0 0 5px #000000a9;
+        box-shadow:         inset 0 0 5px #000000a9;
   }
 </style>

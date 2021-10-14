@@ -8,6 +8,7 @@ axios.interceptors.response.use(function (response) {
 
 const state = {
     user: null,
+    fullUser: null,
     projects: null,
     project: null,
 };
@@ -15,6 +16,7 @@ const state = {
 const getters = {
     isAuthenticated: (state) => !!state.user,
     StateUser: (state) => state.user,
+    StateFullUser: (state) => state.fullUser,
     StateProjects: (state) => state.projects,
     StateProject: (state) => state.project,
 };
@@ -22,9 +24,6 @@ const getters = {
 const actions = {
     async Register({dispatch}, form) {
         await axios.post('register', form)
-        // let UserForm = new FormData()
-        // UserForm.append('username', form.username)
-        // UserForm.append('password', form.password)
         await dispatch('LogIn', form)
     },
     async LogIn({commit}, user) {
@@ -37,55 +36,49 @@ const actions = {
         let user = null
         commit('logOut', user)
     },
-    async GetProjects({commit}, userId) {
-        let response = await axios.get(`projects/${userId}`);
-        commit('setProjects', response.data);
-    },
-    async GetProjektsFromUser({commit}, username) {
+    async GetProjects({commit}, username) {
         let response = await axios.get(`projects/${username}`);
         commit('setProjects', response.data);
     },
-    // async GetProjects({commit}) {
-    //     let response = await axios.get(`projects`);
-    //     commit('setProjects', response.data);
-    // },
     async GetProject({commit}, id) {
         let response = await axios.get(`project/${id}`);
         commit('setProject', response.data);
     },
     async GetUser({commit}, username) {
         let response = await axios.get(`user/${username}`);
-        commit('setUser', response.data);
+        commit('setFullUser', response.data);
     },
     async CreateProject({dispatch}, project) {
         await axios.post('project', project)
-        await dispatch('GetProjects')
+        await dispatch('GetProjects', project.username)
     },
     async UpdateProject({dispatch}, project) {
         await axios.put(`project/${project._id}`, project)
-        await dispatch('GetProject', project.id)
+        await dispatch('GetProject', project._id)
     },
-    async UpdateUser({commit}, user) {
-        console.log(user.newpassword)
+    async UpdateUser({dispatch}, user) {
         let res = await axios.put(`user/${user.username}`, user)
         if(res.status === 404)
             throw Error
-        await commit('setUser', res.data)
+        await dispatch('setFullUser', res.data)
     },
     async DeleteUser({commit}, userid) {
         console.log(userid)
         await axios.delete(`user/${userid}`)
         await commit('logOut', null)
     },
-    async RemoveProject({dispatch}, _id) {
-        await axios.delete(`project/${_id}`)
-        await dispatch('GetProjects')
+    async RemoveProject({dispatch}, project) {
+        await axios.delete(`project/${project._id}`)
+        await dispatch('GetProjects', project.user)
     },
 };
 
 const mutations = {
     setUser(state, username) {
         state.user = username
+    },
+    setFullUser(state, user) {
+        state.fullUser = user
     },
     logOut(state) {
         state.user = null
