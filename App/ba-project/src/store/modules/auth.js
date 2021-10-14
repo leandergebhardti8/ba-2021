@@ -19,7 +19,6 @@ const getters = {
     StateFullUser: (state) => state.fullUser,
     StateProjects: (state) => state.projects,
     StateProject: (state) => state.project,
-    StateRememberedUser: (state) => state.rememberedUser,
 };
 
 const actions = {
@@ -55,7 +54,7 @@ const actions = {
     },
     async UpdateProject({dispatch}, project) {
         await axios.put(`project/${project._id}`, project)
-        await dispatch('GetProject', project.id)
+        await dispatch('GetProject', project._id)
     },
     async UpdateUser({dispatch}, user) {
         let res = await axios.put(`user/${user.username}`, user)

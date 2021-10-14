@@ -83,6 +83,22 @@ export default {
         latestDeploy: null,
     }
   },
+  created() {
+    //Get Environment ID From route
+    let envId = this.$route.params.environmentId;
+    let projectId = this.$route.params.projectId;
+    let methodName = this.$route.params.methodName;
+
+    this.GetProject(projectId);
+    this.deployMethod = this.project.deployMethods.find(method => method.name === methodName);
+    this.environment = this.deployMethod.environments.find(env => env._id === envId);
+    if(this.environment.builds) {
+      this.createDeployTable(this.environment.builds);
+    }
+  },
+  mounted() {
+
+  },
   computed: {
     ...mapGetters({project: "StateProject"}),
   },
@@ -128,22 +144,6 @@ export default {
       this.deployItems = items;
     },
   },
-  created() {
-    //Get Environment ID From route
-    let envId = this.$route.params.environmentId;
-    let projectId = this.$route.params.projectId;
-    let methodName = this.$route.params.methodName;
-
-    this.GetProject(projectId);
-    this.deployMethod = this.project.deployMethods.find(method => method.name === methodName);
-    this.environment = this.deployMethod.environments.find(env => env._id === envId);
-    if(this.environment.builds) {
-      this.createDeployTable(this.environment.builds);
-    }
-  },
-  mounted() {
-
-  }
 }
 </script>
 

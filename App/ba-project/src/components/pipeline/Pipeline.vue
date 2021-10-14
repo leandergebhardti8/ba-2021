@@ -8,8 +8,8 @@
           :key="job.id"
         >
           <div class="job-details">
-          <h4 class="job-detail-name">{{ job.name }}</h4>
-          <p class="job-detail-item"><strong>Started: {{ getEuropeanTime(job.started_at) }}</strong></p>
+            <h4 class="job-detail-name">{{ job.name }}</h4><p :class="`job-conclusion ${job.conclusion}`">{{ job.conclusion }}</p>
+            <p class="job-detail-item"><strong>Started: {{ getEuropeanTime(job.started_at) }}</strong></p>
           </div>
 
           <ul>
@@ -18,7 +18,7 @@
               v-for="step in job.steps"
               :key="step.name"
             >
-              <div :class="step.conclusion === 'success' ? 'pipe-node job-success' : 'pipe-node job-failure'">
+              <div :class="`pipe-node ${step.conclusion}`">
                 <h4>{{ step.name }}</h4>
                 <p>Took {{ mesureTime(step.started_at, step.completed_at) }}s</p>
               </div>
@@ -66,7 +66,6 @@ export default {
         workflowJobs: null,
         jobLog: '',
         loading: false,
-
     }
   },
   computed: {
@@ -225,14 +224,6 @@ export default {
       box-shadow: 0px 3px 9px 0px rgba(0,0,0,0.75);
     }
 
-    .job-success {
-      background-color: #d1e7dd;
-    }
-
-    .job-failure {
-      background-color: #f8d7da;
-    }
-
     .job-badge {
       float: left;
       margin: 15px 0;
@@ -255,6 +246,26 @@ export default {
       background-color: rgb(62, 68, 83);
       border-radius: 6px;
       font-weight: 600;
+    }
+
+    .job-conclusion {
+      float: left;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 6px;
+      margin: 4px;
+    }
+
+    .success {
+      background-color: #d1e7dd;
+    }
+
+    .failure {
+      background-color: #f8d7da;
+    }
+
+    .skipped {
+      background-color: rgb(184, 184, 184);
     }
 
     .log-wrapper {

@@ -28,7 +28,7 @@
             <b-dropdown right text="Environments">
               <router-link 
                 tag="b-dropdown-item" 
-                :to="'/environment/' + env._id + '/' + deployMethod.name + '/' + project.id" 
+                :to="'/environment/' + env._id + '/' + deployMethod.name + '/' + project._id" 
                 v-for="env in this.deployMethod.environments" 
                 :key="env.name"
               >
@@ -181,7 +181,7 @@ export default {
     this.methodName = this.$route.params.deployName;
 
     this.GetProject(this.projectId);
-    this.updateProject();
+    this.updateProjectView();
   },
   computed: {
     ...mapGetters({project: "StateProject"}),
@@ -232,6 +232,7 @@ export default {
     },
     async addNewEnv() {
       try {
+        // 
         let projectCopy = this.project;
         for(let i=0; i < projectCopy.deployMethods.length; i++){
           if(projectCopy.deployMethods[i].name === this.methodName){
@@ -362,7 +363,7 @@ export default {
     getCurrentTime() {
       // Get Current Time Stamp
       const today = new Date();
-      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      var date = today.getFullYear()+'-'+today.getMonth()+'-'+today.getDate();
       var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
       const dateTime = date+' '+time;
       return dateTime;
@@ -452,7 +453,7 @@ export default {
         console.error('Something went wrong while trying to update a Project!')
       }
     },
-    async updateProject() {
+    async updateProjectView() {
       try {
         await this.GetProject(this.project._id);
         console.log(`Updating project`)

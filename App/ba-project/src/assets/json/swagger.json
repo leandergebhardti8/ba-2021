@@ -3,7 +3,7 @@
   "info": {
     "description": "Usus is a CI / CD Tool working with GitHub Actions.",
     "version": "1.0.0",
-    "title": "Usus CI / CD",
+    "title": "Usus CI / CD API",
     "termsOfService": "http://swagger.io/terms/",
     "contact": {
       "email": "leander.gebhardt@student.htw-berlin.de"
@@ -246,7 +246,7 @@
         "tags": [
           "user"
         ],
-        "summary": "Creates list of users with given input array",
+        "summary": "Logging in user with given information.",
         "produces": [
           "application/json"
         ],

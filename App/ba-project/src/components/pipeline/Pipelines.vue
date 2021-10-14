@@ -47,14 +47,12 @@ export default {
     getRunIdForWorkflow(workflowName){
       let runId = null;
       let found = false;
-      console.log(workflowName)
         // Searching for fitting Run ID in workflow
         for(let index = 0; index < this.runs.workflow_runs.length; index++) {
           if(found) break;
           if(workflowName === this.runs.workflow_runs[index].name){
             runId = this.runs.workflow_runs[index].id
             found = true;
-            console.log("Found RunId: " + runId)
             if(runId) this.getWorkflowRun(runId);
           }
         }
