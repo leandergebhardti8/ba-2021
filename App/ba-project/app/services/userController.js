@@ -163,19 +163,3 @@ exports.delete =(req, res) => {
         });
     })
 }
-
-// Local Functions
-// function generateHash(username, password) {
-//     const saltRounds = 7
-//     // password is being hashed
-//     bcrypt
-//         .hash(password, saltRounds)
-//         .then(hash => {
-//             const generatedPassword = hash
-//             console.log('Generated password for: ' + username + generatedPassword)
-//             return generatedPassword
-//         })
-//         .catch(err => {
-//             console.log('Error accured during generating new Hash ' + err)
-//         })
-// }

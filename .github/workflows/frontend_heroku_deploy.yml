@@ -1,0 +1,23 @@
+name: Heroku Deploy
+
+env:
+  REPO_OWNER: leandergebhardti8
+  REPO_NAME: ba-2021
+  GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
+on: 
+  repository_dispatch:
+    types: [frontend-deploy]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/frontend'
+    steps:
+      - uses: actions/checkout@v2
+      - uses: akhileshns/heroku-deploy@v3.12.12
+        with:
+          heroku_api_key: ${{secrets.HEROKU_API_KEY_FRONTEND}}
+          heroku_app_name: "usus-ba-leander" #Must be unique in Heroku
+          heroku_email: "tools@integr8.com"
+          appdir: "/App/ba-project" 
