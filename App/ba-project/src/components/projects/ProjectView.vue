@@ -233,7 +233,6 @@ export default {
     },
     async addNewEnv() {
       try {
-        // 
         let projectCopy = this.project;
         for(let i=0; i < projectCopy.deployMethods.length; i++){
           if(projectCopy.deployMethods[i].name === this.methodName){
@@ -251,13 +250,6 @@ export default {
         }
       } catch (error) {
         console.error('Something went wrong while trying to update a Project!')
-      }
-    },
-    getEnvironments() {
-      for(let i=0; i < this.project.deployMethods.length; i++){
-        if(this.project.deployMethods[i].name === this.methodName){
-          return this.project.deployMethods[i].environments;
-        }
       }
     },
     runAction(actionName) {
@@ -473,7 +465,7 @@ export default {
           this.getBranchesFromGHApi(owner, repo, token);
         }
       } catch (error) {
-        console.error('Something went wrong while trying to update a Project!')
+        console.error('Something went wrong while trying to update the Project!')
       }
     },
   },

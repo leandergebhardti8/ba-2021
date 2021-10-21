@@ -112,8 +112,7 @@ export default {
       ...mapActions([
         'CreateProject', 
         'GetProjects', 
-        'GetUser', 
-        'GetProjektsFromUser', 
+        'GetUser',
         ]),
       navigateHome() {
           this.$router.push('/');

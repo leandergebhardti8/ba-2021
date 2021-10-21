@@ -14,7 +14,7 @@
         <b-modal 
             :id="`modal-rename-${modalName}`"
             title="Rename Project"
-            @ok="renameProject(projectCopy._id)"
+            @ok="updateProject"
         >
             <b-form inline>
               <label class="sr-only" for="inline-form-input-id">Project Name</label>
@@ -31,7 +31,7 @@
         <b-modal 
             :id="`modal-edit-${modalName}`"
             title="Edit Project"
-            @ok="editProject(projectCopy._id)"
+            @ok="updateProject"
         >
             <b-form inline>
               <label class="sr-only" for="inline-form-input-id"><strong>Project Name</strong></label>
@@ -71,7 +71,7 @@
               ></b-form-input>
             </b-form>
         </b-modal>
-        <!-- <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/leandergebhardti8/ba-2021/node"> -->
+
     </div>
 </template>
 
@@ -105,16 +105,10 @@ export default {
   },
   methods: {
     ...mapActions(['UpdateProject', 'GetProject', 'RemoveProject']),
-    renameProject() {
-     this.updateProject();
-    },
-    editProject() {
-      this.updateProject();
-    },
     async updateProject() {
       try {
         await this.UpdateProject(this.projectCopy);
-        console.log(`Updating project`)
+        console.log(`Project updated`)
       } catch (error) {
           console.log('Something went wrong while trying to update a Project!')
           throw new Error

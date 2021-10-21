@@ -17,7 +17,8 @@
         <!-- MODALS -->
         <b-modal 
             id="modal-edit-env" 
-            title="Edit Environment">
+            title="Edit Environment"
+            @ok="edit(environment._id)">
             <b-form inline>
                     <label class="sr-only" for="inline-form-input-id">Environment Name</label>
                     <b-form-input
@@ -45,7 +46,8 @@
 
           <b-modal 
             id="modal-rename" 
-            title="Edit Environment">
+            title="Edit Environment"
+            @ok="rename(environment._id)">
             <b-form inline>
                     <label class="sr-only" for="inline-form-input-id">Environment Name</label>
                     <b-form-input
@@ -105,29 +107,58 @@ export default {
   methods: {
     ...mapActions(['UpdateProject', 'GetProject']),
     navigateToProject() {
-      this.$router.push('/project/' + this.project.id + '/' + this.deployMethod.name);
+      this.$router.push('/project/' + this.project._id + '/' + this.deployMethod.name);
     },
     async deleteEnv(envId) {
-        // if (envId != null && envId != '') {
-        //   const index = this.project.deployMethods.environments.indexOf(envId)
-        //   this.project.deployMethods.environments.splice(index, 1);
-        // }
+        // Remove Environment from project
         for(let i=0; i < this.project.deployMethods.length; i++){
           if(this.project.deployMethods[i].name === this.deployMethod.name){
             const index = this.project.deployMethods[i].environments.indexOf(env => env._id === envId);
             this.project.deployMethods[i].environments.splice(index, 1);
           }
         }
-
+        // Update Project
         try {
             await this.UpdateProject(this.project);
-            console.log(`Updating project`)
+            console.log(`Updated Environment`)
         } catch (error) {
-            console.error('Something went wrong while trying to update a Project!' + error)
+            console.error('Something went wrong while trying to update an Environment!' + error)
         }
 
         // Go back to project
         this.$router.push(`/project/${this.project.id}/${this.deployMethod.name}`);
+    },
+    async edit(envId){
+      // prepare project for update
+      for(let i=0; i < this.project.deployMethods.length; i++){
+        if(this.project.deployMethods[i].name === this.deployMethod.name){
+          const index = this.project.deployMethods[i].environments.indexOf(env => env._id === envId);
+          this.project.deployMethods[i].environments[index] = this.environment;
+        }
+      }
+      // update project
+      try {
+        await this.UpdateProject(this.project);
+        console.log(`Updated Environment`)
+      } catch (error) {
+        console.error('Something went wrong while trying to edit an Environment!' + error)
+      }
+    },
+    async rename(envId){
+      // prepare project for update
+      for(let i=0; i < this.project.deployMethods.length; i++){
+        if(this.project.deployMethods[i].name === this.deployMethod.name){
+          const index = this.project.deployMethods[i].environments.indexOf(env => env._id === envId);
+          this.project.deployMethods[i].environments[index].name = this.environment.name;
+        }
+      }
+      // update project
+      try {
+        await this.UpdateProject(this.project);
+        console.log(`Updated Environment`)
+      } catch (error) {
+        console.error('Something went wrong while trying to edit an Environment!' + error)
+      }
     },
     getLatestBuildDate(builds) {
       new Date(Math.max(...builds.map(build => this.latestDeploy = new Date(build))));

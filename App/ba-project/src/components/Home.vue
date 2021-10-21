@@ -6,9 +6,9 @@
     <hr>
     <div class="build_history">
         <h3>Recent Builds</h3>
-        <p style="padding: 10px;">Total Builds: {{ allBuilds.length }}</p>
+        <p v-if="allBuilds" style="padding: 10px;">Total Builds: {{ allBuilds.length }}</p>
         <hr style="color:black;">
-        <b-table hover :items="creteTableWithAllBuilds()"></b-table>
+        <b-table v-if="allBuilds" hover :items="createTableWithAllBuilds()"></b-table>
     </div>
 </div>
 </template>
@@ -42,7 +42,6 @@ export default {
       for(let index = 0; index < this.projects.length; index++) {
         for(let deployIndex = 0; deployIndex < this.projects[index].deployMethods.length; deployIndex++) {
           for(let envIndex = 0; envIndex < this.projects[index].deployMethods[deployIndex].environments.length; envIndex++) {
-            console.log("In Project" + this.projects[index].name)
             let builds = {};
         
             if(this.projects[index].deployMethods[deployIndex].environments[envIndex].builds.length != 0) {
@@ -59,8 +58,8 @@ export default {
       }
 
     },
-    creteTableWithAllBuilds() {
-      if(this.allBuilds.length === 0 && typeof this.projects != "undefined")
+    createTableWithAllBuilds() {
+      if(this.allBuilds.length === 0 && typeof this.projects != undefined)
         this.getAllBuildsFromProjects();
 
       const items = []
@@ -70,7 +69,7 @@ export default {
       if(this.allBuilds) {
         for(let index = 0; index < this.allBuilds.length; index++) {
           // There is one build entry
-          if(this.allBuilds[index].builds.length <= 1){
+          if(this.allBuilds[index].builds.length <= 1 && this.allBuilds[index].environment != null){
             element = {
               Project: this.allBuilds[index].project, 
               DeployMethod: this.allBuilds[index].deployMethod, 
@@ -99,7 +98,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
   h1 {
     padding: 20px;
