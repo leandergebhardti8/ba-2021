@@ -5,7 +5,7 @@
 
         <div class="select_deploy_method">
           <b-button-group>
-            <b-dropdown right text="Select Deploy Method" variant="primary">
+            <b-dropdown right text="Add Deploy Method" variant="primary">
               <b-dropdown-item @click="addDeployMethod('Heroku')">
                 Heroku
               </b-dropdown-item>
@@ -13,7 +13,7 @@
                 (S3)
               </b-dropdown-item>
               <b-dropdown-divider></b-dropdown-divider>
-              <b-dropdown-item>
+              <b-dropdown-item class="coming-soon">
                 Coming soon
               </b-dropdown-item>
             </b-dropdown>
@@ -45,9 +45,6 @@
 
 export default {
   name: 'Deploys',
-//   inject: [
-//       'projects'
-//   ],
   data() {
       return {
         projectId : null,
@@ -153,5 +150,9 @@ export default {
         &:hover {
             transform: scale(1.5);
         }
+    }
+    .coming-soon {
+        font-style: italic;
+        opacity: 0.75;
     }
 </style>

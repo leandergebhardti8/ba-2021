@@ -8,10 +8,6 @@ const keys = require('./config/keys')
 app.use(bodyParser.json());
 app.use(cors());
 
-// app.use(express.static(__dirname + '/dist/'))
-// app.get(/.*/, function (req, res) {
-//   res.sendFile(__dirname + '/dist/index.html')
-// })
 
 app.listen(port)
 
@@ -32,7 +28,7 @@ if (keys.mongoURI) {
 }
 
 app.get('/', (req, res) => {
-  res.send('Hello from Usus Backend. To view the API Documentation go to /docs in the frontend.')
+  res.send('Hello from Usus Backend. To view the API Documentation go to <a href="https://usus-ba-leander.herokuapp.com/docs" target="_blank">https://usus-ba-leander.herokuapp.com/docs</a>.')
 });
 
 // Routes for Users

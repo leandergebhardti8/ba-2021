@@ -19,13 +19,14 @@
 export default {
   name: 'Home',
   created: function () {
-    this.GetProjects();
+    this.GetProjects(this.user);
   },
   mounted () {
     
   },
   computed: {
     ...mapGetters({projects: "StateProjects"}),
+    ...mapGetters({user: "StateUser"}),
   },
   data() {
     return {

@@ -60,9 +60,9 @@
             </router-link>
           </b-alert> 
         </div>
-        
-        <div class="project_details">
 
+
+        <div class="project_details">
 
           <!-- Workflow History -->
           
@@ -156,6 +156,7 @@ export default {
         projectId: undefined,
         deployMethod: undefined,
         runs: {},
+        branches: [{ text: 'Select a branch', value: null}],
         showGetErrorMessage: false,
         showPostErrorMessage: false,
         deploying: false,
@@ -198,7 +199,7 @@ export default {
         for(let index = 0; index < data.length; index++) {
           if (data[index].conclusion === 'failure')
             element._rowVariant = 'danger';
-          element = { _rowVariant: data[index].conclusion, name: data[index].name, created: this.getEuropeanTime(data[index].created_at) };
+          element = { _rowVariant: data[index].conclusion, name: data[index].name, started: this.getEuropeanTime(data[index].created_at) };
           items.push(element)
         }
       }
@@ -458,9 +459,9 @@ export default {
         await this.GetProject(this.project._id);
         console.log(`Updating project`)
 
-        let owner = this.project.repoOwner;
-        let repo = this.project.repoName;
-        let token = this.project.githubToken;
+        const owner = this.project.repoOwner;
+        const repo = this.project.repoName;
+        const token = this.project.githubToken;
 
         this.deployMethod = this.project.deployMethods.find(method => method.name === this.methodName);
 
@@ -469,6 +470,7 @@ export default {
         if(!this.showGetErrorMessage && !this.showPostErrorMessage) {
           this.getRunsFromGHApi(owner, repo, token);
           this.getWorkflowsFromGHApi(owner, repo, token);
+          this.getBranchesFromGHApi(owner, repo, token);
         }
       } catch (error) {
         console.error('Something went wrong while trying to update a Project!')

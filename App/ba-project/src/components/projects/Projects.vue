@@ -1,9 +1,12 @@
 <template>
     <div class="project-wrapper">
-        <button @click="navigateHome" class="btn btn-primary close_btn"><b-icon-house></b-icon-house></button>
+        <button @click="navigateHome" class="btn btn-primary navigate-btn"><b-icon-house></b-icon-house></button>
         <h1>Project Page</h1>
         <label for="searchbar" class="search-bar-label"><b-icon-search></b-icon-search> Search Projects</label>
         <b-form-input id="searchbar" type="search" class="search-bar" v-model="search"></b-form-input>
+        <button v-if="addBtn" class="btn btn-primary" v-b-modal.modal-prevent-closing>
+            Add new Project
+        </button>
         <ul class="projects">
             <router-link 
                 :to="'/deployjob/' + project._id" 
@@ -14,9 +17,6 @@
                 <Project :project="project" :modalName="project._id" @update="updateProject"/>
             </router-link>
         </ul>
-        <button v-if="addBtn" class="btn btn-primary" v-b-modal.modal-prevent-closing>
-            Add new Project
-        </button>
 
         <!-- Modals -->
         <b-modal 
@@ -165,19 +165,17 @@ export default {
         cursor: pointer;
         margin: 15px 0 15px 0;
     }
-    .close_btn {
+    .navigate-btn {
       left: 0;
       float: left;
       position: absolute;
       margin: 1.75rem;
     }
-
     .search-bar {
         width: 25%;
-        margin: 0 2rem 2rem 2rem;
+        margin: 0 2rem;
         border-radius: 12px;
     }
-
     .search-bar-label {
         margin: 0 2rem 0 2rem;
         font-weight: 600;

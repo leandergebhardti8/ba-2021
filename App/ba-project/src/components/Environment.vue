@@ -3,7 +3,7 @@
       <button @click="navigateToProject" class="btn btn-primary close_btn"><b-icon-arrow-left></b-icon-arrow-left> Go back to {{ project.name }}</button>
         <h1>{{ environment.name }}</h1>
         <div class="settings_button">  
-          <b-dropdown right>
+          <b-dropdown size="sm" right>
             <b-dropdown-item v-b-modal.modal-rename>Rename</b-dropdown-item>
             <b-dropdown-item v-b-modal.modal-edit-env><b-icon-pencil></b-icon-pencil> Edit</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>

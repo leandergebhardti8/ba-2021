@@ -2,7 +2,7 @@
     <div class="project">
         <p class="info">{{ project.name }} <b-icon-github></b-icon-github></p>
         <div class="settings_button">
-          <b-dropdown right>
+          <b-dropdown size="sm" right>
             <b-dropdown-item v-b-modal="`modal-rename-${project._id}`">Rename</b-dropdown-item>
             <b-dropdown-item v-b-modal="`modal-edit-${project._id}`"><b-icon-pencil></b-icon-pencil> Edit</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
