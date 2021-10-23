@@ -1,4 +1,4 @@
-name: Heroku Deploy
+name: Heroku Deploy Frontend
 
 env:
   REPO_OWNER: leandergebhardti8
