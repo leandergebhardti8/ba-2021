@@ -1,6 +1,9 @@
 name: Super-Linter
 
-on: push
+on: 
+  push:
+  repository_dispatch:
+    types: [Super-Linter]
 
 jobs:
   super-lint:
