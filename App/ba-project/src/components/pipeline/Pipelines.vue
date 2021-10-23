@@ -5,41 +5,32 @@
         :key="workflow.id"
       >
         <Pipeline 
-          :runId="getRunIdForWorkflow(workflow.name)" 
+          :runId="getRunIdForWorkflow(workflow.name)"
           :workflow="workflow"
           :sidebarType="workflow.id"
-          class="pipeline-list-element"/>
+          :running="running"
+          class="pipeline-list-element"
+        />
         <hr>
       </ul>
     </div>
 </template>
 
 <script>
-import axios from 'axios'
-import { mapGetters } from 'vuex'
 import Pipeline from './Pipeline.vue'
 
 export default {
   name: 'Pepelines',
   data() {
     return {
-      workflowJobs: null,
+
     }
   },
   props: [
     'workflows',
     'runs',
+    'running',
   ],
-  created() {
-
-  },
-    mounted() {
-    this.getJobLog();
-  },
-  computed: {
-    ...mapGetters({project: "StateProject"}),
-  },
-
   components: {
     Pipeline: Pipeline,
   },
@@ -47,49 +38,21 @@ export default {
     getRunIdForWorkflow(workflowName){
       let runId = null;
       let found = false;
-        // Searching for fitting Run ID in workflow
+
+        // Searching for RunID in workflows
         for(let index = 0; index < this.runs.workflow_runs.length; index++) {
           if(found) break;
           if(workflowName === this.runs.workflow_runs[index].name){
             runId = this.runs.workflow_runs[index].id
             found = true;
-            if(runId) this.getWorkflowRun(runId);
           }
         }
       return runId;
-    },
-    getWorkflowRun(run_id) {
-      const dispatchUrl = `https://api.github.com/repos/${this.project.repoOwner}/${this.project.repoName}/actions/runs/${run_id}/jobs`
-      
-      axios.interceptors.request.use(config => {
-        // perform a task before the request is sent
-        return config;
-      }, error => {
-        // handle the error
-        return Promise.reject(error);
-      })
-      axios
-        .get(dispatchUrl, {
-          headers: { 
-            Accept: "application/vnd.github.v3+json"
-          },
-          auth: {
-            username: this.project.repoOwner,
-            password: this.project.githubToken
-          },
-      })
-      .then(response => (
-        this.workflowJobs = response.data
-      ))
-      .catch(error => {
-        console.error("There was an error while getting workflow jobs", error);
-      });
     },
   },
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
     h1 {
       display: inline-block;

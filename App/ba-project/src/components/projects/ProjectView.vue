@@ -78,7 +78,7 @@
 
           <div class="stage_view">
             <h3>Stage View</h3>
-            <Pipelines v-if="!deploying && !action" :workflows="workflows" :runs="runs" />
+            <Pipelines v-if="!deploying && !action" :workflows="workflows" :runs="runs" :running="running"/>
 
             <div v-if="deploying">
               <b-table striped hover :items="creteTableForStageView(deployStatus)"></b-table>
@@ -161,6 +161,7 @@ export default {
         showPostErrorMessage: false,
         deploying: false,
         action: false,
+        running: false,
         deployStatus: [{title: 'Deploying ...'}],
         actionStatus: [{title: 'Running Action ...'}],
         workflows: [],
@@ -197,12 +198,21 @@ export default {
       let element = {}
       if(data) {
         for(let index = 0; index < data.length; index++) {
-          if (data[index].conclusion === 'failure')
-            element._rowVariant = 'danger';
-          element = { _rowVariant: data[index].conclusion, name: data[index].name, started: this.getEuropeanTime(data[index].created_at) };
+          // Coloring depending on run conclusion
+          if (data[index].conclusion === 'failure'){
+            element._rowVariant = 'danger'
+          } 
+          else if(data[index].conclusion === 'success'){
+            element._rowVariant = 'success'
+          }
+          else if(data[index].conclusion === 'canceld'){
+            element._rowVariant = 'secondary'
+          }
+          element = { name: data[index].name, started: this.getEuropeanTime(data[index].created_at) ,Branch: data[index].head_branch };
           items.push(element)
         }
       }
+      // Create empty table for projects with no runs
       if(items.length === 0){
         items.push({name: '', created: ''});
       }
@@ -211,6 +221,8 @@ export default {
     },
     getEuropeanTime(dateString) {
       var date = new Date(dateString);
+      if(date.getMinutes()< 10)
+        return date.getDate()+"."+(date.getMonth() + 1)+"."+date.getFullYear()+" "+date.getHours()+":0"+date.getMinutes();
       return date.getDate()+"."+(date.getMonth() + 1)+"."+date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
     },
     creteTableForStageView(data) {
@@ -325,33 +337,16 @@ export default {
       });
     },
     handleDeployResponse(response, envName) {
-      console.log('Inside handleDeployResponse')
       console.log(response)
-      // this.deployStatus.push({title: 'Deploying Porject in Environment ...'});
-      // TODO Get Verification action is finished
-      // this.deployStatus.push({title: 'Done!'});
-
-      // setTimeout(() => { 
-      //   this.deploying = false 
-      // }, 3000);
+      this.running = true
+      this.updateProjectView()
       this.updateDeployHistoryInEnv(envName);
     },
-    handleActionsResponse(response, actionName) {
+    handleActionsResponse(response) {
       console.log(response)
-
-      this.actionStatus.push({title: 'Finished running Action ' + actionName})
+      this.running = true;
+      this.updateProjectView();
       this.action = false
-    },
-    fakeDeploy() {
-      this.deploying = true;
-      this.deployStatus.push({title: 'Run Action #1'});
-      // this.deployStatus.push({title: 'Done!'});
-      this.deploying = false;
-      setTimeout(() => { 
-        this.deploying = false
-        this.deployStatus = []; 
-      }, 3000);
-
     },
     getCurrentTime() {
       // Get Current Time Stamp
@@ -377,8 +372,6 @@ export default {
       this.updateProjectData(projectCopy)
     },
     getRunsFromGHApi(owner, repo, token) {
-    // TODO check if API info is alread there
-    // if( !this.runs) {
       // Get Runs from API
       axios.interceptors.request.use(config => {
       // perform a task before the request is sent
@@ -406,7 +399,6 @@ export default {
       });
     },
     getWorkflowsFromGHApi(owner, repo, token) {
-      // TODO check if API info is alread there
         axios.interceptors.request.use(config => {
         // perform a task before the request is sent
         console.log('Requesting workflows from API');
@@ -552,5 +544,6 @@ export default {
   .info {
     margin: auto 15px;
   }
+
   
 </style>

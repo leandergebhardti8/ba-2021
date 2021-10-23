@@ -23,7 +23,7 @@
             </b-form-group>
           </div>
         <hr>
-        <h3>Password</h3>
+        <h3>Change Password</h3>
         <div class="profile">
           <b-form-group
             id="current-password"
@@ -49,13 +49,25 @@
           >
             <b-form-input id="confirmpassword" v-model="passwordRepeat" type="password" placeholder="enter the password again"></b-form-input>
           </b-form-group>
+
+
+          <!-- Alerts -->
+
           <b-alert v-if="showError" show variant="danger">
-              <p class="error">Passwords do not match!</p>
+              <p class="alert-text">Passwords do not match!</p>
+          </b-alert>
+
+          <b-alert v-if="noChangePasswordError" show variant="danger">
+              <p class="alert-text">Choose a new password!</p>
           </b-alert>
 
           <button @click="updateUser()" class="btn btn-secondary"><strong>Update Password</strong></button>
-          <b-alert show variant="danger" v-if="showPasswordUpdateSuccess">
-            <b-icon-exclamation font-scale="2"></b-icon-exclamation> The App has Trouble accessing GitHub with your given Information. Please Check if your <b>Repository Owner</b>, <b>Repository Name</b> and <b-icon-github></b-icon-github> <b>Token</b> are correct.
+
+          <b-alert show variant="success" v-if="showPasswordUpdateSuccess">
+            <p class="alert-text">Password changed!</p>
+          </b-alert>
+          <b-alert show variant="danger" v-if="showPasswordUpdateError">
+            <p class="alert-text"><b-icon-exclamation font-scale="2"></b-icon-exclamation> Something went wrong while updating your password.</p>
           </b-alert>
         </div>
           <hr>
@@ -79,6 +91,8 @@ export default {
         onChangeFullName: false,
         showError: false,
         showPasswordUpdateSuccess: false,
+        showPasswordUpdateError: false,
+        noChangePasswordError: false,
         passwordRepeat: '',
         userUpdate: {
           password: '',
@@ -93,7 +107,15 @@ export default {
   },
   watch: {
     passwordRepeat: function (val){
-      if(val != this.userUpdate.newpassword) {
+      if(val != this.userUpdate.newpassword){
+        this.showError = true;
+      }
+      else {
+        this.showError = false;
+      }
+    },
+    password(val) {
+      if(val != this.passwordRepeat){
         this.showError = true;
       }
       else {
@@ -105,6 +127,9 @@ export default {
     ...mapGetters({fullUser: "StateFullUser"}),
     ...mapGetters({user: "StateUser"}),
     ...mapGetters({fullUser: "StateFullUser"}),
+    password() {
+      return this.userUpdate.newpassword;
+    }
   },
   methods: {
     ...mapActions([
@@ -118,7 +143,7 @@ export default {
       },
 
       async updateUser() {
-        if(this.checkRepeat(this.userUpdate.newpassword)) {
+        if(this.checkPassword(this.userUpdate.newpassword)) {
         try {
           if(this.userUpdate.username === '' || this.userUpdate.full_name === '') {
             this.userUpdate.username = this.fullUser.username;
@@ -128,15 +153,20 @@ export default {
           this.showPasswordUpdateSuccess = true;
         } catch (error) {
           console.log('Error accured while updating User info ' + error)
+          this.showPasswordUpdateError = true;
         }
-        }
-        else {
-          this.showError = true;
         }
       },
 
-      checkRepeat(newpassword) {
-        return newpassword === this.passwordRepeat;
+      checkPassword(newpassword) {
+        if(newpassword === this.userUpdate.password){
+          this.noChangePasswordError = true
+          return false
+        } 
+        else {
+          return true
+        }
+          
       },
 
       async deleteUser() {
@@ -148,14 +178,6 @@ export default {
           console.log('Error accured while deleting User ' + error)
         }
       },
-
-      saveUser() {
-
-      },
-
-      cancel() {
-
-      }
   }
 }
 </script>
@@ -201,6 +223,9 @@ export default {
     float: left;
     position: absolute;
     margin: 1.75rem;
+  }
+  .alert-text {
+    margin: 0;
   }
 
 </style>

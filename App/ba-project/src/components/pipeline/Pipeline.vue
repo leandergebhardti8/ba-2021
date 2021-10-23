@@ -8,8 +8,10 @@
           :key="job.id"
         >
           <div class="job-details">
-            <h4 class="job-detail-name">{{ job.name }}</h4><p :class="`job-conclusion ${job.conclusion}`">{{ job.conclusion }}</p>
+            <h4 class="job-detail-name">{{ job.name }}</h4>
+            <p :class="`job-conclusion ${job.conclusion?job.conclusion:'running'}`">{{ job.conclusion?job.conclusion:'running' }}</p>
             <p class="job-detail-item"><strong>Started: {{ getEuropeanTime(job.started_at) }}</strong></p>
+            <p v-if="job.conclusion"><b-icon-stopwatch-fill font-scale="1.25"></b-icon-stopwatch-fill> <strong>{{ mesureTime(job.started_at, job.completed_at) }}</strong></p>
           </div>
 
           <ul>
@@ -18,9 +20,12 @@
               v-for="step in job.steps"
               :key="step.name"
             >
+            
               <div :class="`pipe-node ${step.conclusion}`">
                 <h4>{{ step.name }}</h4>
-                <p>Took {{ mesureTime(step.started_at, step.completed_at) }}s</p>
+                <p v-if="step.conclusion"><b-icon-stopwatch></b-icon-stopwatch> {{ mesureTime(step.started_at, step.completed_at) }} </p>
+                <p v-else>{{ step.status }}</p>
+                <a v-if="step.conclusion == 'failure'" :href="job.html_url" target="_blank">Inspect Error</a>
               </div>
             </li>
           </ul>
@@ -35,6 +40,7 @@
       :title="workflow.name + ' Logs'" 
       right 
       shadow
+      width="25%"
     >
       <div class="px-3 py-2 log-wrapper">
         <b-skeleton-wrapper :loading="loading">
@@ -74,13 +80,24 @@ export default {
   props: [
     'workflow',
     'runId',
-    'sidebarType'
+    'sidebarType',
+    'running',
   ],
   created() {
 
   },
+  watch: {
+    running(val) {
+      if(val) {
+        this.getWorkflowRun(this.runId)
+      }
+    }
+  },
   mounted() {
     this.getWorkflowRun(this.runId);
+  },
+  update() {
+    this.getWorkflowRun(this.runId)
   },
   methods: {
     getWorkflowRun(run_id) {
@@ -143,12 +160,33 @@ export default {
       this.loading = false
     },
     mesureTime(startTime, endTime) {
-      let start = new Date(startTime)
-      let end = new Date(endTime)
-      return (end - start) / 1000;
+      const start = new Date(startTime)
+      const end = new Date(endTime)
+      let delta = Math.abs(end - start);
+
+      const hours = Math.floor(delta / (1000 * 60 * 60))
+      delta -= hours * (1000 * 120)
+      const minutes = Math.floor(delta / (1000 * 60))
+      delta -= minutes * 60000
+      const seconds = Math.floor(delta / 1000)
+      delta -= seconds * 1000 
+      
+      
+      if(hours && minutes && seconds)
+        return hours + ' h ' + minutes + ' m ' + seconds + ' s '
+      if(minutes && seconds)
+        return  minutes + ' m ' + seconds + ' s '
+      if(seconds)
+        return seconds + 's'
+      if(delta == 0)
+        return 0 + ' s'
     },
     getEuropeanTime(dateString) {
       var date = new Date(dateString);
+
+      if(date.getMinutes() < 10)
+        return date.getDate()+"."+(date.getMonth() + 1)+"."+date.getFullYear()+" "+date.getHours()+":0"+date.getMinutes();
+
       return date.getDate()+"."+(date.getMonth() + 1)+"."+date.getFullYear()+" "+date.getHours()+":"+date.getMinutes();
     },
   },
@@ -168,6 +206,11 @@ export default {
 
     p {
       font-size: 11px;
+    }
+
+    a{
+      text-decoration: none;
+      color: black;
     }
 
     .pipe-container {
@@ -256,21 +299,24 @@ export default {
       margin: 4px;
     }
 
+    .running {
+      background-color: white;
+    }
     .success {
       background-color: #d1e7dd;
     }
-
     .failure {
       background-color: #f8d7da;
     }
-
     .skipped {
       background-color: rgb(184, 184, 184);
     }
 
+
     .log-wrapper {
       text-align: left;
       background-color: #1d1f21;
+      line-break: strict;
     }
 
     .log {
