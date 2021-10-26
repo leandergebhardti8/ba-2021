@@ -45,7 +45,7 @@ heroku login
 ```
 Add the git remote
 ```bash
-heroku git:remote -a ba-2021-frontend
+heroku git:remote -a usus-ba-leander
 ```
 from root directory
 ```bash
