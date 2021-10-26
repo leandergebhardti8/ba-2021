@@ -1,5 +1,6 @@
 module.exports = function(app) {
     var userController = require('../services/userController.js');
+    var authController = require('../services/authController.js');
     
     // Create new User
     app.post('/api/register', userController.create);
@@ -14,5 +15,5 @@ module.exports = function(app) {
     app.put('/api/user/:username', userController.update);
 
     // Delete a User with Username
-    app.delete('/api/user/:id', userController.delete);
+    app.delete('/api/user/:id', authController.verifyJWT ,userController.delete);
 }

@@ -1,5 +1,6 @@
 const User = require ('../models/user');
-// import {User, Project} from '../models/user.js';
+const jsonWebToken = require('jsonwebtoken')
+const passport = require('passport')
 const bcrypt = require('bcrypt');
 
 
@@ -16,8 +17,6 @@ exports.create = (req, res) => {
                 full_name: req.body.full_name,
                 username: req.body.username,
                 password: hash,
-                attributes: req.body.attributes,
-                projects: [],
             });
             // Save User in MongoDB
             user.save()
@@ -39,6 +38,25 @@ exports.create = (req, res) => {
     
 }
 
+exports.auth = (req, res) => {
+    const signedToken = generateTokenForId(req.body.apiKey)
+    res.status(200).send({
+        JWT: signedToken
+    })
+}
+const JWT_ENCODING_PASSPHRASE = 'random_string_asdfasdf'
+const generateTokenForId = (id) => {
+    const signedToken = jsonWebToken.sign(
+        {
+            data: id,
+            exp: new Date().setDate(new Date().getDate() + 1)
+        },
+        JWT_ENCODING_PASSPHRASE
+    );
+    return signedToken;
+}
+
+
 // FIND ONE User with Username and compare password
 exports.logIn = (req, res) => {
     User.findOne({ username: req.body.username })
@@ -56,9 +74,11 @@ exports.logIn = (req, res) => {
                         message: 'Password doesn`t match!'
                     })
                 } else {
+                    const signedToken = generateTokenForId(user._id)
                     res.status(200).send({
                         message: `Successfully logged in ${req.body.username}`,
                         user: user,
+                        JWT: signedToken,
                     })
                 }
             })
@@ -69,6 +89,13 @@ exports.logIn = (req, res) => {
         })
     })
 }
+
+exports.authenticate = passport.authenticate('local', {
+    failureRedirect: '/login',
+    failureFlash: 'Failed to authenticate',
+    successRedirect: '/',
+    successFlash: 'Authenticated',
+})
 
 // FIND ONE User with Username and compare password
 exports.findOne = (req, res) => {
@@ -147,7 +174,7 @@ exports.update = (req, res) => {
 
 }
 
-// DELETE a Project
+// DELETE a User with ID
 exports.delete =(req, res) => {
     User.findByIdAndRemove(req.params.id)
     .then(user => {

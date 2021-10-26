@@ -9,6 +9,7 @@ axios.interceptors.response.use(function (response) {
 const state = {
     user: null,
     fullUser: null,
+    token: null,
     projects: null,
     project: null,
 };
@@ -19,6 +20,7 @@ const getters = {
     StateFullUser: (state) => state.fullUser,
     StateProjects: (state) => state.projects,
     StateProject: (state) => state.project,
+    StateToken: (state) => state.token,
 };
 
 const actions = {
@@ -27,10 +29,11 @@ const actions = {
         await dispatch('LogIn', form)
     },
     async LogIn({commit}, user) {
-        let res = await axios.post('login', user)
+        const res = await axios.post('login', user)
         if(res.status === 404)
             throw Error
         await commit('setUser', user.username)
+        await commit('setToken', res.data.JWT)
     },
     async LogOut({commit}) {
         let user = null
@@ -62,13 +65,20 @@ const actions = {
             throw Error
         await dispatch('setFullUser', res.data)
     },
-    async DeleteUser({commit}, userid) {
-        console.log(userid)
-        await axios.delete(`user/${userid}`)
+    async DeleteUser({commit, state}, userid) {
+        await axios.delete(`user/${userid}`, {
+            headers: {
+                token: state.token
+            }
+        })
         await commit('logOut', null)
     },
-    async RemoveProject({dispatch}, project) {
-        await axios.delete(`project/${project._id}`)
+    async RemoveProject({dispatch, state}, project) {
+        await axios.delete(`project/${project._id}`, {
+            headers: {
+                token: state.token
+            }
+        })
         await dispatch('GetProjects', project.user)
     },
 };
@@ -89,6 +99,9 @@ const mutations = {
     },
     setProject(state, project) {
         state.project = project
+    },
+    setToken(state, token) {
+        state.token = token
     },
 };
 

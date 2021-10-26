@@ -149,6 +149,13 @@
           "500": {
             "description": "Project not found with Id."
           }
+        },
+        "security": {
+          "api_key": {
+            "type": "apiKey",
+            "name": "api_key",
+            "in": "header"
+          }
         }
       }
     },
@@ -376,6 +383,13 @@
         "responses": {
           "default": {
             "description": "successful operation"
+          }
+        },
+        "security": {
+          "api_key": {
+            "type": "apiKey",
+            "name": "api_key",
+            "in": "header"
           }
         }
       }

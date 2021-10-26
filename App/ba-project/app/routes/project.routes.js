@@ -1,5 +1,6 @@
 module.exports = function(app) {
     var projectController = require('../services/projectController.js');
+    var authController = require('../services/authController.js');
     
     // Create a new project
     app.post('/api/project', projectController.create);
@@ -17,5 +18,5 @@ module.exports = function(app) {
     app.put('/api/project/:id', projectController.update);
 
     // Delete a Project with Id
-    app.delete('/api/project/:id', projectController.delete);
+    app.delete('/api/project/:id',authController.verifyJWT, projectController.delete);
 }
