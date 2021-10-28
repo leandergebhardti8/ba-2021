@@ -74,6 +74,7 @@ export default {
         flex-wrap: wrap;
         cursor: pointer;
         color: black;
+        margin-left: 25px;
     }
 
     .deployment-name {

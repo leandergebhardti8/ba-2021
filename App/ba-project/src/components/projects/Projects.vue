@@ -1,12 +1,21 @@
 <template>
     <div class="project-wrapper">
-        <button @click="navigateHome" class="btn btn-primary navigate-btn"><b-icon-house></b-icon-house></button>
+        <button @click="navigateHome" class="btn btn-primary home-btn"><b-icon-house></b-icon-house></button>
         <h1>Project Page</h1>
-        <label for="searchbar" class="search-bar-label"><b-icon-search></b-icon-search> Search Projects</label>
-        <b-form-input id="searchbar" type="search" class="search-bar" v-model="search"></b-form-input>
-        <button v-if="addBtn" class="btn btn-primary" v-b-modal.modal-prevent-closing>
+
+        <b-form-input 
+            id="searchbar" 
+            type="search" 
+            class="search-bar" 
+            v-model="search" 
+            placeholder="Search projects"
+        >
+        </b-form-input>
+
+        <button v-if="addBtn" class="btn btn-primary space-medium-bottom" v-b-modal.modal-prevent-closing>
             Add new Project
         </button>
+
         <ul class="projects">
             <router-link 
                 :to="'/deployjob/' + project._id" 
@@ -157,26 +166,29 @@ export default {
     button {
         margin: 15px 2rem;
     }
-    label {
-        margin: 0;
-    }
     .project-item {
         cursor: pointer;
-        margin: 15px 0 15px 0;
-    }
-    .navigate-btn {
-      left: 0;
-      float: left;
-      position: absolute;
-      margin: 1.75rem;
+        margin: 10px 0 10px 0;
     }
     .search-bar {
-        width: 25%;
-        margin: 0 2rem;
-        border-radius: 12px;
+        width: 15%;
+        margin: 2rem 2rem 0;
+        padding: 15px;
+        border-radius: 25px;
+        background-color: transparent !important;
+        color: white !important;
     }
-    .search-bar-label {
-        margin: 0 2rem 0 2rem;
-        font-weight: 600;
+    .search-bar:active {
+        border: 1px solid white;
     }
+    .search-bar:focus {
+        border: 1px solid white;
+    }
+    .search-bar::placeholder {
+        color: white;
+        opacity: 75%;
+        font-weight: 500;
+        padding-left: 25px;
+    }
+    
 </style>

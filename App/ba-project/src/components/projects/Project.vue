@@ -2,7 +2,10 @@
     <div class="project">
         <p class="info">{{ project.name }} <b-icon-github></b-icon-github></p>
         <div class="settings_button">
-          <b-dropdown size="sm" right>
+          <b-dropdown right no-caret>
+            <template #button-content>
+                <b-icon-chevron-down font-scale="2"></b-icon-chevron-down>
+            </template>
             <b-dropdown-item v-b-modal="`modal-rename-${project._id}`">Rename</b-dropdown-item>
             <b-dropdown-item v-b-modal="`modal-edit-${project._id}`"><b-icon-pencil></b-icon-pencil> Edit</b-dropdown-item>
             <b-dropdown-divider></b-dropdown-divider>
@@ -129,15 +132,19 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
   .project{
     background: white;
-    border-radius: 12px;
+    border-radius: 6px;
     color: black;
     display: flex;
     flex-wrap: wrap;
-    -webkit-box-shadow: 0px 3px 9px 0px rgba(112, 112, 112, 0.65);
-    -moz-box-shadow: 0px 3px 9px 0px rgba(112, 112, 112, 0.65);
-    box-shadow: 0px 3px 9px 0px rgba(112, 112, 112, 0.65);
+    padding: 6px;
+  }
+
+  .info {
+    font-size: 18px;
+    padding-left: 35px;
   }
   
   p {

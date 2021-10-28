@@ -2,7 +2,7 @@
     <div class="user">
         <button @click="navigateHome" class="btn btn-primary home-btn"><b-icon-house></b-icon-house></button>
         <h1>Userpage</h1>
-        <hr>
+        <div class="space-medium">
           <h3>Profile</h3>
           <div class="profile">
             <b-form-group
@@ -22,61 +22,63 @@
               <b-form-input id="username" v-model="fullUser.username" placeholder="Username"></b-form-input>
             </b-form-group>
           </div>
-        <hr>
-        <h3>Change Password</h3>
-        <div class="profile">
-          <b-form-group
-            id="current-password"
-            label="Current Password"
-            label-for="current-password"
-            class="info-field"
-          >
-            <b-form-input id="current-password" v-model="userUpdate.password" type="password" placeholder="enter your current password"></b-form-input>
-          </b-form-group>
-          <b-form-group
-            id="newpassword"
-            label="New Password: "
-            label-for="newpassword"
-            class="info-field"
-          >
-            <b-form-input id="newpassword" v-model="userUpdate.newpassword" type="password" placeholder="enter a new password"></b-form-input>
-          </b-form-group>
-          <b-form-group
-            id="confirmpassword"
-            label="Confirm New Password: "
-            label-for="confirmpassword"
-            class="info-field"
-          >
-            <b-form-input id="confirmpassword" v-model="passwordRepeat" type="password" placeholder="enter the password again"></b-form-input>
-          </b-form-group>
-
-
-          <!-- Alerts -->
-
-          <b-alert v-if="showError" show variant="danger">
-              <p class="alert-text">Passwords do not match!</p>
-          </b-alert>
-
-          <b-alert v-if="noChangePasswordError" show variant="danger">
-              <p class="alert-text">Choose a new password!</p>
-          </b-alert>
-
-          <button @click="updateUser()" class="btn btn-secondary"><strong>Update Password</strong></button>
-
-          <b-alert show variant="success" v-if="showPasswordUpdateSuccess">
-            <p class="alert-text">Password changed!</p>
-          </b-alert>
-          <b-alert show variant="danger" v-if="showPasswordUpdateError">
-            <p class="alert-text"><b-icon-exclamation font-scale="2"></b-icon-exclamation> Something went wrong while updating your password.</p>
-          </b-alert>
         </div>
-          <hr>
+        <div class="space-medium">
+          <h3>Change Password</h3>
+          <div class="profile">
+            <b-form-group
+              id="current-password"
+              label="Current Password"
+              label-for="current-password"
+              class="info-field"
+            >
+              <b-form-input id="current-password" v-model="userUpdate.password" type="password" placeholder="enter your current password"></b-form-input>
+            </b-form-group>
+            <b-form-group
+              id="newpassword"
+              label="New Password: "
+              label-for="newpassword"
+              class="info-field"
+            >
+              <b-form-input id="newpassword" v-model="userUpdate.newpassword" type="password" placeholder="enter a new password"></b-form-input>
+            </b-form-group>
+            <b-form-group
+              id="confirmpassword"
+              label="Confirm New Password: "
+              label-for="confirmpassword"
+              class="info-field"
+            >
+              <b-form-input id="confirmpassword" v-model="passwordRepeat" type="password" placeholder="enter the password again"></b-form-input>
+            </b-form-group>
+
+
+            <!-- Alerts -->
+
+            <b-alert v-if="showError" show variant="danger">
+                <p class="alert-text">Passwords do not match!</p>
+            </b-alert>
+
+            <b-alert v-if="noChangePasswordError" show variant="danger">
+                <p class="alert-text">Choose a new password!</p>
+            </b-alert>
+
+            <button @click="updateUser()" class="btn btn-primary"><strong>Update Password</strong></button>
+
+            <b-alert show variant="success" v-if="showPasswordUpdateSuccess">
+              <p class="alert-text">Password changed!</p>
+            </b-alert>
+            <b-alert show variant="danger" v-if="showPasswordUpdateError">
+              <p class="alert-text"><b-icon-exclamation font-scale="2"></b-icon-exclamation> Something went wrong while updating your password.</p>
+            </b-alert>
+          </div>
+        </div>
+        <div class="space-medium">
           <h3>Remove Account</h3>
           <div class="profile">
             <button @click="deleteUser" class="btn btn-danger"> <b-icon-exclamation-octagon></b-icon-exclamation-octagon> <strong>Delete Account</strong></button>
             <p class="button-text">Deleting your account is irreversible!</p>
           </div>
-          <hr>
+        </div>
     </div>
 </template>
 
@@ -184,6 +186,9 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+  .user {
+    color: white;
+  }
   .navbar {
     background: black;
     color: white;
@@ -217,12 +222,6 @@ export default {
   .button-text{
     display: inline;
     margin-left: 2rem;
-  }
-  .home-btn {
-    left: 0;
-    float: left;
-    position: absolute;
-    margin: 1.75rem;
   }
   .alert-text {
     margin: 0;

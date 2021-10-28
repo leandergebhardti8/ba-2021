@@ -1,14 +1,11 @@
 <template>
 <div class="home">
     <h1>Home</h1>
-    <hr>
-    <button @click="navigateToProjects" class="btn btn-primary">Go to Projects</button>
-    <hr>
+    <button @click="navigateToProjects" class="btn btn-primary space-medium">Go to Projects</button>
     <div class="build_history">
         <h3>Recent Builds</h3>
-        <p v-if="allBuilds" style="padding: 10px;">Total Builds: {{ allBuilds.length }}</p>
-        <hr style="color:black;">
-        <b-table v-if="allBuilds" hover :items="createTableWithAllBuilds()"></b-table>
+        <p v-if="builds" style="padding: 10px;">Total Builds: {{ builds.length }}</p>
+        <b-table v-if="builds" hover :items="builds"></b-table>
     </div>
 </div>
 </template>
@@ -20,6 +17,7 @@ export default {
   name: 'Home',
   created: function () {
     this.GetProjects(this.user);
+    this.createTableWithBuilds()
   },
   mounted () {
     
@@ -30,7 +28,8 @@ export default {
   },
   data() {
     return {
-      allBuilds: [],
+      buildsFromProjects: [],
+      builds: [] 
     }
   },
    methods: {
@@ -38,61 +37,63 @@ export default {
     navigateToProjects() {
         this.$router.push('/projects');
     },
-    getAllBuildsFromProjects() {
+    getBuildsFromProjects() {
+      // Itarating through projects
       for(let index = 0; index < this.projects.length; index++) {
+        // Itarate through deploy Methods
         for(let deployIndex = 0; deployIndex < this.projects[index].deployMethods.length; deployIndex++) {
+          // Itarate through Environments
           for(let envIndex = 0; envIndex < this.projects[index].deployMethods[deployIndex].environments.length; envIndex++) {
             let builds = {};
+            const currentEnvironment = this.projects[index].deployMethods[deployIndex].environments[envIndex]; 
         
-            if(this.projects[index].deployMethods[deployIndex].environments[envIndex].builds.length != 0) {
-              builds.builds = this.projects[index].deployMethods[deployIndex].environments[envIndex].builds;
+            if(currentEnvironment.builds.length != 0) {
+              builds.builds = currentEnvironment.builds;
               builds.project = this.projects[index].name;
               builds.deployMethod = this.projects[index].deployMethods[deployIndex].name;
-              builds.environment = this.projects[index].deployMethods[deployIndex].environments[envIndex].name;
+              builds.environment = currentEnvironment.name;
             }
             if(Object.keys(builds).length != 0) {
-              this.allBuilds.push(builds);
+              this.buildsFromProjects.push(builds);
             }
           }
         } 
       }
 
     },
-    createTableWithAllBuilds() {
-      if(this.allBuilds.length === 0 && typeof this.projects != undefined)
-        this.getAllBuildsFromProjects();
+    createTableWithBuilds() {
+      if(this.buildsFromProjects.length === 0 && typeof this.projects != undefined)
+        this.getBuildsFromProjects();
 
-      const items = []
+      const allBuilds = this.buildsFromProjects;
       let element = {}
 
       // Create Table Element based on Entries stored in allBuilds
-      if(this.allBuilds) {
-        for(let index = 0; index < this.allBuilds.length; index++) {
+      if(allBuilds) {
+        for(let index = 0; index < allBuilds.length; index++) {
           // There is one build entry
-          if(this.allBuilds[index].builds.length <= 1 && this.allBuilds[index].environment != null){
+          if(allBuilds[index].builds.length <= 1 && allBuilds[index].environment != null){
             element = {
-              Project: this.allBuilds[index].project, 
-              DeployMethod: this.allBuilds[index].deployMethod, 
-              Environment: this.allBuilds[index].environment, 
-              'Build Timestamp': this.allBuilds[index].builds[0]};
-            items.push(element)
+              Project: allBuilds[index].project, 
+              DeployMethod: allBuilds[index].deployMethod, 
+              Environment: allBuilds[index].environment, 
+              'Build Timestamp': allBuilds[index].builds[0]};
+            this.builds.push(element)
           }
           // There are more then one build entries in the same environment of a project. Make multiple entries in the table for this project & environment.
           else {
-            for(let buildIndex = 0; buildIndex < this.allBuilds[index].builds.length; buildIndex++) {
+            for(let buildIndex = 0; buildIndex < allBuilds[index].builds.length; buildIndex++) {
               let buildElement = {}
               buildElement = {
-                Project: this.allBuilds[index].project, 
-                DeployMethod: this.allBuilds[index].deployMethod, 
-                Environment: this.allBuilds[index].environment, 
-                'Build Timestamp': this.allBuilds[index].builds[buildIndex]};
-              items.push(buildElement)
+                Project: allBuilds[index].project, 
+                DeployMethod: allBuilds[index].deployMethod, 
+                Environment: allBuilds[index].environment, 
+                'Build Timestamp': allBuilds[index].builds[buildIndex]};
+              this.builds.push(buildElement)
             }
           }
         }
       }
-
-      return items;
     },
   }
 }
@@ -105,17 +106,32 @@ export default {
 
   .build_history {
     background: white;
-    padding: 20px;
-    margin: 2rem;
+    margin: 2rem 2rem 0 15px;
     width: 50%;
     margin: auto;
-    -webkit-box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
-    -moz-box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
-    box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
     color: black;
+    border-radius: 15px 15px 0 0;
     h3{
-      color: black;
-      padding: 15px;
+      color: white;
+      padding: 20px;
+      background-color: #2B1DAE;
+      border-radius: 12px 12px 0 0;
+    }
+  }
+
+  .stage_view {
+    margin: 2rem 2rem 0 15px;
+    margin-left: 0;
+    background-color: white;
+    color: black;
+    border-radius: 15px 15px 0 0;
+    h3 {
+      color: white;
+      text-align: center;
+      background-color: #2B1DAE;
+      padding: 20px;
+      font-weight: 800;
+      border-radius: 12px 12px 0 0;
     }
   }
 </style>

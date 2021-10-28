@@ -1,14 +1,20 @@
 <template>
     <div class="project">
-        <button @click="navigateToDeployMethods" class="btn btn-primary close_btn"><b-icon-arrow-left></b-icon-arrow-left> Go back to Deploy Methods</button>
+        <button @click="navigateToDeployMethods" class="btn btn-secondary close_btn"><b-icon-chevron-left></b-icon-chevron-left> go back to Deploy Methods</button>
         <h1>{{project.name}} ({{ deployMethod.name }})</h1>
 
         <div class="control_bar">
           <b-button-group>
+
             <div class="info" id="tooltip-text-action">
-                <b-icon-info id="tooltip-text-action"></b-icon-info> Info
+              Info <b-icon-info-circle id="tooltip-text-action" font-scale="0.8"></b-icon-info-circle>
             </div>
-            <b-dropdown right text="Run Actions" v-if="this.workflows">
+
+            <b-dropdown right v-if="this.workflows">
+              <template #button-content>
+                Run Actions <b-icon-chevron-down></b-icon-chevron-down>
+              </template>
+
               <b-dropdown-item v-for="workflow in this.workflows" :key="workflow.id" @click="runAction(workflow.name)">
                 {{ workflow.name }}
               </b-dropdown-item>
@@ -20,12 +26,19 @@
                 types: [{workflowName}]
             </b-tooltip>
             
-            <b-dropdown right text="Deploy in ... 🚀">
+            <b-dropdown right>
+              <template #button-content>
+                Deploy in ...<b-icon-chevron-down></b-icon-chevron-down>
+              </template>
+
               <b-dropdown-item v-for="env in this.deployMethod.environments" :key="env.name" @click="startDeployment(env.name)">
                 {{ env.name }} ({{ env.action }})
               </b-dropdown-item>
             </b-dropdown>
-            <b-dropdown right text="Environments">
+            <b-dropdown right>
+              <template #button-content>
+                Environments <b-icon-chevron-down></b-icon-chevron-down>
+              </template>
               <router-link 
                 tag="b-dropdown-item" 
                 :to="'/environment/' + env._id + '/' + deployMethod.name + '/' + project._id" 
@@ -40,10 +53,10 @@
             
           </b-button-group>
         </div>
-        <hr>
+
         <div></div>
         <p class="github-url">
-          <b-icon-github></b-icon-github> <a :href="project.githubURL" target="_blank">{{ project.githubURL }}</a>
+          <b-icon-github font-scale="1.3"></b-icon-github> <a :href="project.githubURL" target="_blank">{{ project.githubURL }}</a>
         </p>
 
         <div class="error_msg">
@@ -68,8 +81,7 @@
           
           <div class="build_history">
             <h3>Workflow History</h3>
-            <p style="padding: 10px;">Total workflow runs: {{ runs.total_count }}</p>
-            <hr style="color:black;">
+            <p class="total-runs">Total workflow runs: {{ runs.total_count }}</p>
             <b-table hover :items="creteTableWithAPIData(runs.workflow_runs)" v-if="runs"></b-table>
           </div>
 
@@ -77,7 +89,9 @@
           <!-- Stage View -->
 
           <div class="stage_view">
-            <h3>Stage View</h3>
+            <div class="stage-view-headline">
+              <h3>Stage View</h3>
+            </div>
             <Pipelines v-if="!deploying && !action" :workflows="workflows" :runs="runs" :running="running"/>
 
             <div v-if="deploying">
@@ -208,6 +222,7 @@ export default {
           else if(data[index].conclusion === 'canceld'){
             element._rowVariant = 'secondary'
           }
+
           element = { name: data[index].name, started: this.getEuropeanTime(data[index].created_at) ,Branch: data[index].head_branch };
           items.push(element)
         }
@@ -341,6 +356,7 @@ export default {
       this.running = true
       this.updateProjectView()
       this.updateDeployHistoryInEnv(envName);
+      this.running = false
     },
     handleActionsResponse(response) {
       console.log(response)
@@ -479,14 +495,12 @@ export default {
     border-radius: 15px;
   }
   .github-url {
-    color: black;
+    color: white;
     margin: auto;
-    text-decoration: none;
     a{
-      background: white;
       padding: 5px;
-      border-radius: 5px;
-      text-decoration: none;
+      text-decoration: underline;
+      color: white;
     }
   }
   .project_details {
@@ -498,41 +512,31 @@ export default {
     text-align: left;
     background-color: white;
     color: black;
-    margin: 2rem;
-    -webkit-box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
-    -moz-box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
-    box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
+    margin: 2rem 15px 0  2rem;
+    border-radius: 15px 15px 0 0;
     h3 {
       color: white;
       text-align: center;
-      background-color: #1E92CC;
-      padding: 15px;
-      margin: 0;
+      background-color: #2B1DAE;
+      padding: 20px;
       font-weight: 800;
+      border-radius: 12px 12px 0 0;
     }
   }
   .stage_view {
-    margin: 2rem;
+    margin: 2rem 2rem 0 15px;
     margin-left: 0;
     background-color: white;
     color: black;
-    -webkit-box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
-    -moz-box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
-    box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
+    border-radius: 15px 15px 0 0;
     h3 {
       color: white;
       text-align: center;
-      background-color: #1E92CC;
-      padding: 15px;
-      margin: 0;
+      background-color: #2B1DAE;
+      padding: 20px;
       font-weight: 800;
+      border-radius: 12px 12px 0 0;
     }
-  }
-  .close_btn {
-      left: 0;
-      float: left;
-      position: absolute;
-      margin: 1.75rem;
   }
   .error_msg {
     margin: 2rem;
@@ -543,6 +547,12 @@ export default {
   }
   .info {
     margin: auto 15px;
+    color: white;
+    margin-right: 2rem;
+  }
+  .total-runs {
+    margin: 25px 25px 55px 25px;
+    font-size: 16px;
   }
 
   

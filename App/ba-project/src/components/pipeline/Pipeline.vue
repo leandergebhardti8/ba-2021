@@ -32,7 +32,7 @@
         </li>
       </ul>
       
-      <b-button v-b-toggle="`sidebar-right-${sidebarType}`" @click="getJobLog(workflowJobs.jobs[0].id)" class="log-button">View Logs</b-button>
+      <b-button variant="dark" v-b-toggle="`sidebar-right-${sidebarType}`" @click="getJobLog(workflowJobs.jobs[0].id)" class="log-button">View Logs</b-button>
 
       <!-- Sidebar -->
       <b-sidebar 

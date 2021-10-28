@@ -1,6 +1,6 @@
 <template>
     <div class="deploy-wrapper">
-        <button @click="navigateToProjects" class="btn btn-primary close_btn"><b-icon-arrow-left></b-icon-arrow-left> Go back to Projects</button>
+        <button @click="navigateToProjects" class="btn btn-secondary close_btn"><b-icon-chevron-left></b-icon-chevron-left> go back to Projects</button>
         <h1>Deploy Methods</h1>
 
         <div class="select_deploy_method">
@@ -115,13 +115,6 @@ export default {
 
     li {
         list-style: none;
-    }
-
-    .close_btn {
-      left: 0;
-      float: left;
-      position: absolute;
-      margin: 1.75rem;
     }
 
     .select_deploy_method {

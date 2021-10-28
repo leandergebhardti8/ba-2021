@@ -1,6 +1,6 @@
 <template>
     <div class="environments">
-      <button @click="navigateToProject" class="btn btn-primary close_btn"><b-icon-arrow-left></b-icon-arrow-left> Go back to {{ project.name }}</button>
+      <button @click="navigateToProject" class="btn btn-secondary close_btn"><b-icon-chevron-left></b-icon-chevron-left> Go back to {{ project.name }}</button>
         <h1>{{ environment.name }}</h1>
         <div class="settings_button">  
           <b-dropdown size="sm" right>
@@ -11,7 +11,6 @@
           </b-dropdown>
         </div>
         <p><b-icon-arrow-right></b-icon-arrow-right> Visit Here: <a :href="environment.url" target="_blank" class="env_url">{{ environment.url }}</a></p>
-        <hr>
         <p>Environment Action Name <i>(needed to deploy Project in Environment)</i>: <strong>{{environment.action}}</strong></p>
         
         <!-- MODALS -->
@@ -180,16 +179,18 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+  .environments{
+    color: white;
+  }
     h1 {
       display: inline-block;
     }
     .env_url {
-      background: white;
+      color: white;
       padding: 5px;
-      border-radius: 5px;
-      text-decoration: none;
-      :hover {
-        color: rgb(134, 134, 255);
+      a {
+        text-decoration: underline;
+        color: white;
       }
     }
     .settings_button {
@@ -209,13 +210,15 @@ export default {
       background: white;
       width: 50%;
       margin: auto;
+      border-radius: 15px 15px 0 0;
       h3 {
         color: white;
         text-align: center;
-        background-color: #1E92CC;
-        padding: 15px;
+        background-color: #2B1DAE;
+        padding: 20px;
         margin: 0;
         font-weight: 800;
+        border-radius: 12px 12px 0 0;
       }
     }
     .close_btn {
