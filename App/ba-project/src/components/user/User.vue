@@ -218,6 +218,9 @@ export default {
   .info-field {
     margin-bottom: 1rem;
   }
+  .home-btn {
+    margin: 15px 2rem;
+  }
 
   .button-text{
     display: inline;

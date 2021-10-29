@@ -60,15 +60,23 @@
                   <button type="submit" variant="success" class="login-button">Login</button>
               </b-form>
             </div>
+
+          <!-- Error Messages -->
+
           <b-alert v-if="showError" show variant="danger">
               <p class="error">Username or Password incorrect!</p>
           </b-alert>
+
+          <b-alert v-if="tokenError" show variant="danger">
+            <b-icon-exclamation font-scale="2"></b-icon-exclamation>Check if your <b-icon-github></b-icon-github> <b>Token</b> is still valid.
+          </b-alert>
       </div>
+
     </div>
 </template>
 
 <script>
-  import { mapActions } from 'vuex'
+  import { mapActions, mapGetters } from 'vuex'
 
 export default {
   name: 'Login',
@@ -84,6 +92,21 @@ export default {
       showError: false,
       showPassword: false
     }
+  },
+  computed: {
+    ...mapGetters({tokenError: "StateTokenNotValid"}),
+    usernameValidation() {
+      return this.form.username.length > 4 && this.form.username.length < 13
+    },
+    passwordValidation() {
+      return this.form.password.length > 6
+    },
+    passwordValidationNumbers() {
+      return /\d/.test(this.form.password);
+    },
+    passwordSpecial() {
+      return /[!@#$%^&*)(+=._-]/.test(this.form.password);
+    },
   },
   methods: {
     ...mapActions(['LogIn']),
@@ -105,20 +128,6 @@ export default {
       else if(this.type === 'text') this.type = 'password';
     },
   }, 
-  computed: {
-    usernameValidation() {
-      return this.form.username.length > 4 && this.form.username.length < 13
-    },
-    passwordValidation() {
-      return this.form.password.length > 6
-    },
-    passwordValidationNumbers() {
-      return /\d/.test(this.form.password);
-    },
-    passwordSpecial() {
-      return /[!@#$%^&*)(+=._-]/.test(this.form.password);
-    },
-  }
 }
 </script>
 

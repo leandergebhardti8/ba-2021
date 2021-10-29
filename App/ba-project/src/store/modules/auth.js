@@ -10,6 +10,7 @@ const state = {
     user: null,
     fullUser: null,
     token: null,
+    tokenNotValid: false,
     projects: null,
     project: null,
 };
@@ -21,6 +22,7 @@ const getters = {
     StateProjects: (state) => state.projects,
     StateProject: (state) => state.project,
     StateToken: (state) => state.token,
+    StateTokenNotValid: (state) => state.tokenNotValid,
 };
 
 const actions = {
@@ -34,6 +36,7 @@ const actions = {
             throw Error
         await commit('setUser', user.username)
         await commit('setToken', res.data.JWT)
+        await commit('setTokenValid')
     },
     async LogOut({commit}) {
         let user = null
@@ -102,6 +105,12 @@ const mutations = {
     },
     setToken(state, token) {
         state.token = token
+    },
+    setTokenNotValid(state) {
+        state.tokenNotValid = true
+    },
+    setTokenValid(state) {
+        state.tokenNotValid = false
     },
 };
 

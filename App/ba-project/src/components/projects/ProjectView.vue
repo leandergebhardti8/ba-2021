@@ -59,10 +59,13 @@
           <b-icon-github font-scale="1.3"></b-icon-github> <a :href="project.githubURL" target="_blank">{{ project.githubURL }}</a>
         </p>
 
+        <!-- Error Messages -->
+
         <div class="error_msg">
           <b-alert show variant="danger" v-if="showGetErrorMessage">
             <b-icon-exclamation font-scale="2"></b-icon-exclamation> The App has Trouble accessing GitHub with your given Information. Please Check if your <b>Repository Owner</b>, <b>Repository Name</b> and <b-icon-github></b-icon-github> <b>Token</b> are correct.
           </b-alert>
+
           <b-alert show variant="danger" v-if="showPostErrorMessage">
             <b-icon-exclamation font-scale="2"></b-icon-exclamation> The App has Trouble accessing GitHub with your given Information. Please Check if your <b>Repository Owner</b>, <b>Repository Name</b> and <b-icon-github></b-icon-github> <b>Token</b> are correct. <b>Especially check if your action Name is correct.</b>
             <router-link 
@@ -390,14 +393,14 @@ export default {
     getRunsFromGHApi(owner, repo, token) {
       // Get Runs from API
       axios.interceptors.request.use(config => {
-      // perform a task before the request is sent
-      console.log('Requesting runs from API');
+        // perform a task before the request is sent
+        console.log('Requesting workflows from API');
 
-      return config;
-      }, error => {
-        // handle the error
-        return Promise.reject(error);
-      })
+        return config;
+        }, error => {
+          // handle the error
+          return Promise.reject(error);
+        })
       axios
         .get(`https://api.github.com/repos/${owner}/${repo}/actions/runs`, { 
           auth: {
@@ -409,8 +412,9 @@ export default {
           this.runs = response.data
         ))
         .catch(error => {
-          this.errorMessage = error.message;
-          console.error("There was an error GETTING RUNS from GitHub!", error);
+          const errorMessage = error.message;
+          this.error
+          console.error("There was an error GETTING RUNS from GitHub!", errorMessage);
           this.showGetErrorMessage = true;
       });
     },
@@ -436,8 +440,8 @@ export default {
             // this.runs = response.data.workflow_runs
           ))
           .catch(error => {
-            this.errorMessage = error.message;
-            console.error("There was an error GETTING WORKFLOWS from GitHub!", error);
+            const errorMessage = error.message;
+            console.error("There was an error GETTING WORKFLOWS from GitHub!", errorMessage);
             this.showGetErrorMessage = true;
         });
     },

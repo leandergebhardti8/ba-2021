@@ -20,11 +20,11 @@ export default {
     this.createTableWithBuilds()
   },
   mounted () {
-    
+  
   },
   computed: {
-    ...mapGetters({projects: "StateProjects"}),
     ...mapGetters({user: "StateUser"}),
+    ...mapGetters({projects: "StateProjects"}),
   },
   data() {
     return {
