@@ -186,7 +186,7 @@ export default {
     }
     .search-bar::placeholder {
         color: white;
-        opacity: 75%;
+        opacity: 0.75;
         font-weight: 500;
         padding-left: 25px;
     }

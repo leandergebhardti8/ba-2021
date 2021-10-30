@@ -35,6 +35,7 @@
                 {{ env.name }} ({{ env.action }})
               </b-dropdown-item>
             </b-dropdown>
+
             <b-dropdown right>
               <template #button-content>
                 Environments <b-icon-chevron-down></b-icon-chevron-down>
@@ -71,6 +72,7 @@
             <router-link 
               tag="a" 
               to="/setupguide" 
+              target="_blank" 
             >
             Learn More here.
             </router-link>

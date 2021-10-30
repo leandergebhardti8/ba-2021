@@ -1,10 +1,10 @@
 <template>
     <div class="login">
       <div class="left-half">
+        <h1>Welcome!</h1>
         <h2>Login to continue</h2>
       </div>
       <div class="right-half">
-        <h1>Welcome!</h1>
         <p>Please login with your personal data.</p>
             <div>
               <label class="sr-only" for="inline-form-input-username">Username</label>
@@ -22,6 +22,8 @@
                   <b-form-valid-feedback :state="usernameValidation">
                     <b-icon-check></b-icon-check>Looks Good.
                   </b-form-valid-feedback>
+                  <br>
+
                   <label class="sr-only" for="inline-form-input-username">Password</label>
                   <div @click="togglePassword" class="eye-icon">
                     <b-icon-eye v-if="!showPassword"></b-icon-eye>
@@ -57,7 +59,7 @@
                   <b-icon-check></b-icon-check> Your password contains Special Characters.
                   </b-form-valid-feedback>
 
-                  <button type="submit" variant="success" class="login-button">Login</button>
+                  <button type="submit" class="btn btn-primary space-medium">Login</button>
               </b-form>
             </div>
 
@@ -133,6 +135,9 @@ export default {
 
 
 <style scoped lang="scss">
+  h1 {
+    color: black;
+  }
   .navbar {
     background: black;
     color: white;
@@ -151,12 +156,9 @@ export default {
       display: flex;
       place-items: center;
       margin: 5% 25% 10% 25%;
-      padding: 5%;
+      padding: 2.5% 5%;
       border-radius: 25px;
       border: 4px solid white;
-      -webkit-box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
-      -moz-box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
-      box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
       background-color: white;
       color: black;
       overflow: hidden;
@@ -199,20 +201,6 @@ export default {
 
   form {
     width: 350px;
-  }
-
-  button {
-    background: linear-gradient(139deg, #1CB5E0 50%, #000851 150%);
-    border: none;
-    border-radius: 15px;
-    padding: 10px 35px 10px 35px;
-    color: white;
-    font-weight: 600;
-
-    &:hover {
-      filter: brightness(75%);
-      // border: 1px solid white;
-    }
   }
 
   @media screen and (max-width: 400px) {

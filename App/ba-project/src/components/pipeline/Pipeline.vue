@@ -195,7 +195,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
- @import url('https://fonts.googleapis.com/css?family=Azeret Mono');
+ @import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
     h1 {
       display: inline-block;
     }
@@ -320,7 +320,7 @@ export default {
     }
 
     .log {
-      font-family: 'Azeret Mono';
+      font-family: 'Roboto Mono';
       color: white;
       overflow: auto;
     }

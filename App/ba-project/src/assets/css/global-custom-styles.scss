@@ -17,9 +17,14 @@
     color: black;
     border: none;
 }
+.btn-secondary.close_btn:hover {
+    background-color: transparent;
+    font-weight: 600;
+}
 .btn-secondary:hover {
     background-color: transparent;
     font-weight: 600;
+    color: black;
 }
 .btn-secondary:active {
     background-color: transparent;
@@ -33,6 +38,13 @@
 .btn-secondary.button {
     background-color: transparent;
     color: black;
+}
+.btn-secondary.dropdown-toggle {
+    color: black;
+}
+
+.btn-secondary.dropdown-toggle:visited {
+    border: none;
 }
 
 .close_btn {

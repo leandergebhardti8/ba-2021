@@ -4,10 +4,6 @@
     <router-link to="/" tag="b-navbar-brand" active-class="active"><a>Usus ⚙️</a></router-link>
     <router-link to="/projects" tag="b-nav-item" active-class="active"><a>Projects</a></router-link>
     <router-link to="/user" tag="b-nav-item" active-class="active"><a>Profile</a></router-link> 
-    <!-- <b-nav-item-dropdown text="Design">
-      <b-dropdown-item href="#" @click="defineDesign('dark')"><b-icon-moon></b-icon-moon> Dark</b-dropdown-item>
-      <b-dropdown-item href="#" @click="defineDesign('light')"><b-icon-brightness-high></b-icon-brightness-high> Light</b-dropdown-item>
-    </b-nav-item-dropdown> -->
     <span v-if="isLoggedIn">
       <b-nav-item><a @click="logout"><b-icon-box-arrow-left style="color=white"></b-icon-box-arrow-left> Logout</a></b-nav-item>
     </span>
@@ -68,7 +64,7 @@ export default {
     
     &:hover {
       border-radius: 5px 5px 0 0;
-      background-color: #1CB5E0;
+      background-color: #2B1DAE;
     }
   }
 

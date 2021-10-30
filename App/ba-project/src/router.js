@@ -47,7 +47,7 @@ export const routes = [
   {
     path: '/setupguide',
     component: SetupGuide,
-    meta: { guest: true },
+    meta: { requiresAuth: true },
   },
   {
     path: '/projects',

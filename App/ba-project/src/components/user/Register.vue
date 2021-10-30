@@ -1,10 +1,10 @@
 <template>
-    <div class="login">
+    <div class="register">
       <div class="left-half">
+        <h1>Welcome!</h1>
         <h2>Register to continue</h2>
       </div>
       <div class="right-half">
-        <h1>Welcome!</h1>
         <p>Please register with your personal data.</p>
             <div>
               <label class="sr-only" for="inline-form-input-username">Username</label>
@@ -31,7 +31,7 @@
                     name="full_name"
                     placeholder="Full name"
                     v-model="form.full_name"
-                    class="space-bottom-m"
+                    class="space-medium-bottom"
                   >
                   </b-form-input>
                   <label class="sr-only" for="inline-form-input-password">Password</label>
@@ -77,7 +77,7 @@
                     <b-icon icon="exclamation-triangle"></b-icon>Passwords must match.
                   </b-form-invalid-feedback>
 
-                  <button type="submit" variant="success" class="login-button">Register</button>
+                  <button type="submit" class="btn btn-primary">Register</button>
               </b-form>
             </div>
             <b-alert v-if="showError" show variant="danger">
@@ -166,6 +166,9 @@ export default {
 
 
 <style scoped lang="scss">
+  h1 {
+    color: black;
+  }
   .navbar {
     background: black;
     color: white;
@@ -180,16 +183,13 @@ export default {
       color: white;
     }
   }
-  .login {
+  .register {
       display: flex;
       place-items: center;
-      margin: 5% 25% 10% 25%;
-      padding: 5%;
+      margin: 3.5% 25% 10% 25%;
+      padding: 2.5% 5%;
       border-radius: 25px;
       border: 4px solid white;
-      -webkit-box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
-      -moz-box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
-      box-shadow: 10px 10px 19px 0px rgba(0,0,0,0.75);
       background-color: white;
       color: black;
       overflow: hidden;
@@ -217,6 +217,9 @@ export default {
     display: inline-block;
     cursor: pointer;
   }
+  button {
+    margin: 2rem 0;
+  }
 
   .error {
     margin: 0 !important;
@@ -232,23 +235,5 @@ export default {
 
   form {
     width: 350px;
-  }
-
-  button {
-    background: linear-gradient(139deg, #1CB5E0 50%, #000851 150%);
-    border: none;
-    border-radius: 15px;
-    padding: 10px 35px 10px 35px;
-    color: white;
-    font-weight: 600;
-
-    &:hover {
-      filter: brightness(75%);
-      // border: 1px solid white;
-    }
-  }
-
-  .space-bottom-m {
-    margin-bottom: 2rem;
   }
 </style>
