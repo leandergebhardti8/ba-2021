@@ -99,13 +99,8 @@
             </div>
             <Pipelines v-if="!deploying && !action" :workflows="workflows" :runs="runs" :running="running"/>
 
-            <div v-if="deploying">
-              <b-table striped hover :items="creteTableForStageView(deployStatus)"></b-table>
-              <b-spinner style="width: 3rem; height: 3rem;" class="ml-auto"></b-spinner>
-            </div>
-
-            <div v-if="action">
-              <b-table striped hover :items="creteTableForStageView(actionStatus)"></b-table>
+            <div v-if="deploying || action || running">
+              <b-table striped hover :items="creteTableForStageView(statusItems)"></b-table>
               <b-spinner style="width: 3rem; height: 3rem;" class="ml-auto"></b-spinner>
             </div>
 
@@ -181,8 +176,7 @@ export default {
         deploying: false,
         action: false,
         running: false,
-        deployStatus: [{title: 'Deploying ...'}],
-        actionStatus: [{title: 'Running Action ...'}],
+        statusItems: [{title: 'Working ...'}],
         workflows: [],
         buildHistoryItems: [],
         stageViewItems: [],
@@ -286,6 +280,7 @@ export default {
     },
     runAction(actionName) {
       this.action = true;
+      this.deploying = true;
 
       const owner = this.project.repoOwner;
       const repo = this.project.repoName;
@@ -317,9 +312,7 @@ export default {
     },
     startDeployment(envName){
     // Trigger GitHub Action in Repo, which deploys the project
-
       this.deploying = true;
-      this.deployStatus.push({title: 'Fetching Repo'});
       
       const owner = this.project.repoOwner;
       const repo = this.project.repoName;
@@ -359,15 +352,22 @@ export default {
     handleDeployResponse(response, envName) {
       console.log(response)
       this.running = true
+      this.update
       this.updateProjectView()
       this.updateDeployHistoryInEnv(envName);
       this.running = false
+      this.deploying = false;
     },
     handleActionsResponse(response) {
       console.log(response)
       this.running = true;
+      this.update
       this.updateProjectView();
       this.action = false
+      this.deploying = false;
+    },
+    update() {
+      this.$mount();
     },
     getCurrentTime() {
       // Get Current Time Stamp
