@@ -27,7 +27,6 @@ export const routes = [
     name: 'swagger',
     path: '/docs',
     component: SwaggerUi,
-    meta: { guest: true },
   },
   {
     path: '/login',
