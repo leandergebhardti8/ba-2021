@@ -20,7 +20,7 @@ jobs:
           rm -rf node_modules
 
       - name: Lint Code Base
-        uses: github/super-linter@v3
+        uses: github/super-linter@v3.17.0
         env:
           DEFAULT_BRANCH: main
           VALIDATE_ALL_CODEBASE: false
