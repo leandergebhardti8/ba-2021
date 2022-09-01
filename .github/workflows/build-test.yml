@@ -17,8 +17,5 @@ jobs:
       - name: Build & Test
         working-directory: ./App/ba-project        # switch to app
         run: |
-            if [ -e package-lock.json ]; then
-            npm ci                   # install packages
-            else
             npm i
             npm test                 # run tests (configured to use jest-junit reporter)
