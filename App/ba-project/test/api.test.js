@@ -6,7 +6,7 @@ const expect = require("chai").expect;
 describe("API Tests", function() {
     describe("GET projects", function () {
         it("returns all projects", async function () {
-            const response = await request.get("project")
+            const response = await request.get("projects")
 
             expect(response.status).to.eql(200)
             expect(response).to.not.be.empty;
