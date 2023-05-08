@@ -65,7 +65,7 @@
     "rules": {}
   },
   "engines": {
-    "node": "16.13.0",
+    "node": "12.18.4",
     "npm": ">= 3.0.0"
   },
   "browserslist": [
