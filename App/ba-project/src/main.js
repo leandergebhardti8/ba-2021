@@ -12,7 +12,8 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import './assets/css/global-custom-styles.scss'
 
 // axios.defaults.withCredentials = true
-axios.defaults.baseURL = 'https://ba-2021.herokuapp.com/api/';
+// axios.defaults.baseURL = 'https://ba-2021.herokuapp.com/api/';
+axios.defaults.baseURL = 'https://ba-project-backend.herokuapp.com/api/';
 
 // Handle expired Token
 axios.interceptors.response.use(undefined, function(error) {
