@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "start": "nodemon server.js",
+    "start": "nodemon functions/server.js",
     "seed": "node seeder.js"
   },
   "dependencies": {
@@ -21,6 +21,8 @@
     "core-js": "^3.6.5",
     "cors": "2.8.5",
     "express": "4.17.1",
+    "netlify-cli": "^15.0.2",
+    "serverless-http": "3.2.0",
     "jsonwebtoken": "9.0.0",
     "mongodb": "3.6.10",
     "mongoose": "5.13.2",
